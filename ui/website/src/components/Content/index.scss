@@ -1,0 +1,41 @@
+
+@import '../../styles/main';
+@media (max-width: $width-small) {
+  // 一个
+  .content {
+    display: flex;
+    flex-flow: row wrap;
+    max-width: 312px;
+    margin: 0 auto;
+  }
+}
+@media (max-width: $width-medium) and (min-width: $width-small) {
+  // 两个
+  .content {
+    display: flex;
+    flex-flow: row wrap;
+    max-width: 624px;
+    margin: 0 auto;
+
+  }
+}
+@media (max-width: $width-large) and (min-width: $width-medium) {
+  // 三个
+  .content {
+    display: flex;
+    flex-flow: row wrap;
+    max-width: 936px;
+    margin: 0 auto;
+
+  }
+}
+@media (min-width: $width-large) {
+  // 四个
+  .content {
+    display: flex;
+    flex-flow: row wrap;
+    max-width: 1248px;
+    margin: 0 auto;
+
+  }
+}

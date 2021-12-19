@@ -1,0 +1,134 @@
+@import "../../styles/_main.scss";
+@media (max-width: $width-small) {
+  // 小屏幕
+  $header-font-size: 14px;
+  .header-right {
+    font-size: $header-font-size;
+    line-height: $header-height;
+  }
+  .item {
+    display: block;
+    font-size: $header-font-size;
+    cursor: pointer;
+    padding: 0 10px;
+    height: 100%;
+    line-height: $header-height;
+    user-select: none;
+    transform: translateY(4px);
+  }
+  .header {
+    background-color: $header-bg;
+    color: #fafafa;
+    width: 100%;
+    position: fixed;
+    z-index: 10;
+    left: 0;
+    top: 0;
+    height: $header-height;
+    display: flex;
+    justify-content: space-between;
+  
+  }
+}
+@media (max-width: $width-medium) and (min-width: $width-small) {
+  $header-font-size: 18px;
+  .header-right {
+    font-size: $header-font-size;
+    line-height: $header-height;
+  }
+  .item {
+    display: block;
+    font-size: $header-font-size;
+    cursor: pointer;
+    padding: 0 30px;
+    height: 100%;
+    line-height: $header-height;
+    user-select: none;
+    transform: translateY(4px);
+  }
+  .header {
+    background-color: $header-bg;
+    color: #fafafa;
+    width: 100%;
+    position: fixed;
+    z-index: 10;
+    left: 0;
+    top: 0;
+    height: $header-height;
+    display: flex;
+    justify-content: space-between;
+  
+  }
+}
+@media (min-width: $width-medium) {
+  $header-font-size: 18px;
+  .header-right {
+    font-size: $header-font-size;
+    line-height: $header-height;
+  }
+  .item {
+    display: block;
+    font-size: $header-font-size;
+    cursor: pointer;
+    padding: 0 30px;
+    height: 100%;
+    line-height: $header-height;
+    user-select: none;
+    transform: translateY(4px);
+  }
+  .header {
+    background-color: $header-bg;
+    color: #fafafa;
+    width: 100%;
+    position: fixed;
+    z-index: 10;
+    left: 0;
+    top: 0;
+    height: $header-height;
+    display: flex;
+    justify-content: space-between;
+  
+  }
+}
+
+.header {
+  background-color: $header-bg;
+  color: #fafafa;
+  width: 100%;
+  position: fixed;
+  z-index: 10;
+  left: 0;
+  top: 0;
+  height: $header-height;
+  display: flex;
+  justify-content: space-between;
+
+}
+.header-left{
+  padding: 0;
+  display: flex;
+  margin: 0 auto;
+  height: $header-height;
+  align-items: center;
+}
+
+.about {
+  padding: 0 30px;
+  cursor: pointer;
+  user-select: none;
+}
+.about:hover {
+  color:#5cdbd3;
+}
+
+.item-hover {
+  color:#595959;
+  /* #5cdbd3 */
+  background-color: #f5f5f5;
+  border-radius: 4px 4px 0 0;
+}
+ul li {
+  list-style: none;
+  padding: 0px;
+  margin: 0px;
+}

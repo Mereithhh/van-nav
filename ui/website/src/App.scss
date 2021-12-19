@@ -1,0 +1,9 @@
+@import "styles/_main.scss";
+// 一个card 是 312
+// 所以最大的宽度就是 80vw
+.main {
+  padding-top: $header-height + 30;
+  margin: 0 auto;
+  // max-width: 90vw;
+}
+
