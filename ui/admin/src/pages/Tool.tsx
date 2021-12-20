@@ -4,6 +4,7 @@ import ProCard from '@ant-design/pro-card';
 import { Form, Input, Button, message, Space, Table, Popconfirm, Modal,Select } from 'antd';
 import { useCallback, useState, useMemo } from 'react';
 import { addTool, removeTool } from '@/services/ant-design-pro/api';
+import styles from "./index.less";
 
 const ToolPage = () => {
   const { initialState, setInitialState } = useModel('@@initialState');
@@ -169,6 +170,8 @@ const ToolPage = () => {
   return (
     <PageHeaderWrapper title={`工具管理`}>
       <ProCard
+      className={styles.myCard}
+      headerBordered
         title={null}
         extra={
           <Space>

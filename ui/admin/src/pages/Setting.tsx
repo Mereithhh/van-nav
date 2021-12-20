@@ -16,7 +16,7 @@ const Setting = () => {
     setLoading(true)
     if (!user?.id) {
       message.error("未登录,无法更新~！")
-      return 
+      return
     }
     const r = await updateUser({...values,id: user?.id});
     if (r) {
@@ -59,9 +59,10 @@ const Setting = () => {
 
   return (
     <PageHeaderWrapper title={`你好，${user?.name}`}>
-      <ProCard title={'修改用户信息'} loading={loading}>
-        <Form onFinish={onFinishUpdateUser} form={userForm} labelCol={{ span: 8 }} wrapperCol={{ span: 16 }}
+      <ProCard title={'修改用户信息'} loading={loading} headerBordered>
+        <Form onFinish={onFinishUpdateUser} form={userForm}
         initialValues={initUserVal}
+
         >
           <Form.Item label="用户名" name="name" required>
             <Input placeholder="请输入新用户名"></Input>
@@ -76,8 +77,8 @@ const Setting = () => {
           </Form.Item>
         </Form>
       </ProCard>
-      <ProCard title={'修改网站配置'} style={{marginTop: 8}} loading={loading}>
-        <Form onFinish={onFinishUpdateSetting} form={settingForm} labelCol={{ span: 8 }} wrapperCol={{ span: 16 }}
+      <ProCard title={'修改网站配置'} style={{marginTop: 8}} loading={loading} headerBordered>
+        <Form onFinish={onFinishUpdateSetting} form={settingForm}
         initialValues={initSettingVal}
         >
           <Form.Item label="网站 logo" name="favicon" required>

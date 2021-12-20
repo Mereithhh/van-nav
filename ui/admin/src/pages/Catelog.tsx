@@ -4,6 +4,7 @@ import ProCard from '@ant-design/pro-card';
 import { Form, Input, Button, message, Space, Table, Popconfirm, Modal } from 'antd';
 import { useCallback, useState, useMemo } from 'react';
 import { addCatelog, removeCatelog } from '@/services/ant-design-pro/api';
+import styles from "./index.less";
 
 const CatelogPage = () => {
   const { initialState, setInitialState } = useModel('@@initialState');
@@ -102,6 +103,9 @@ const CatelogPage = () => {
   return (
     <PageHeaderWrapper title={`分类管理`}>
       <ProCard
+            className={styles.myCard}
+
+      headerBordered
         title={null}
         extra={
           <Space>
