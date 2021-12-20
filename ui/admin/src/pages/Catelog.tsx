@@ -4,7 +4,7 @@ import ProCard from '@ant-design/pro-card';
 import { Form, Input, Button, message, Space, Table, Popconfirm, Modal } from 'antd';
 import { useCallback, useState, useMemo } from 'react';
 import { addCatelog, removeCatelog } from '@/services/ant-design-pro/api';
-import styles from "./index.less";
+import styles from './index.less';
 
 const CatelogPage = () => {
   const { initialState, setInitialState } = useModel('@@initialState');
@@ -31,7 +31,7 @@ const CatelogPage = () => {
       setLoading(false);
       setShowAddModel(false);
     },
-    [fetchReload, setLoading,setShowAddModel],
+    [fetchReload, setLoading, setShowAddModel],
   );
   const fetchRemoveCatelog = useCallback(
     async (values) => {
@@ -46,7 +46,7 @@ const CatelogPage = () => {
     [fetchReload, setLoading],
   );
 
-  const CateFilters = useMemo(()=>{
+  const CateFilters = useMemo(() => {
     if (!catelogs) {
       return [];
     }
@@ -54,11 +54,9 @@ const CatelogPage = () => {
       return {
         text: item.name,
         value: item.name,
-      }
-    })
-  },[catelogs])
-
-
+      };
+    });
+  }, [catelogs]);
 
   const columns = [
     {
@@ -103,10 +101,9 @@ const CatelogPage = () => {
   return (
     <PageHeaderWrapper title={`分类管理`}>
       <ProCard
-            className={styles.myCard}
-
-      headerBordered
-        title={null}
+        className={styles.myCard}
+        headerBordered
+        title={`当前共 ${catelogs?.length || 0} 个分类`}
         extra={
           <Space>
             <Button
@@ -134,20 +131,22 @@ const CatelogPage = () => {
           }}
         ></Table>
       </ProCard>
-      <Modal visible={showAddModel} title={"新建分类"}
-
-      onCancel={()=>{setShowAddModel(false)}}
-      onOk={()=>{
-        const values = addForm?.getFieldsValue();
-        fetchAddCatelog(values);
-      }}
+      <Modal
+        visible={showAddModel}
+        title={'新建分类'}
+        onCancel={() => {
+          setShowAddModel(false);
+        }}
+        onOk={() => {
+          const values = addForm?.getFieldsValue();
+          fetchAddCatelog(values);
+        }}
       >
-        <Form form={addForm} >
+        <Form form={addForm}>
           <Form.Item name="name" required>
-             <Input placeholder='请输入分类名称' />
+            <Input placeholder="请输入分类名称" />
           </Form.Item>
         </Form>
-
       </Modal>
     </PageHeaderWrapper>
   );

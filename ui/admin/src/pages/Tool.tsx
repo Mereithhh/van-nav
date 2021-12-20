@@ -1,17 +1,17 @@
 import { useModel } from 'umi';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import ProCard from '@ant-design/pro-card';
-import { Form, Input, Button, message, Space, Table, Popconfirm, Modal,Select } from 'antd';
+import { Form, Input, Button, message, Space, Table, Popconfirm, Modal, Select } from 'antd';
 import { useCallback, useState, useMemo } from 'react';
 import { addTool, removeTool } from '@/services/ant-design-pro/api';
-import styles from "./index.less";
+import styles from './index.less';
 
 const ToolPage = () => {
   const { initialState, setInitialState } = useModel('@@initialState');
   const [showAddModel, setShowAddModel] = useState(false);
   const [showUpdateModel, setShowUpdateModel] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [currUpdateId,setCurrUpdateId] = useState<number>();
+  const [currUpdateId, setCurrUpdateId] = useState<number>();
   const tools = initialState?.tools;
   const catelogs = initialState?.catelogs;
   const [addForm] = Form.useForm();
@@ -33,9 +33,9 @@ const ToolPage = () => {
         await fetchReload();
       }
       setLoading(false);
-      setShowAddModel(false)
+      setShowAddModel(false);
     },
-    [fetchReload, setLoading,setShowAddModel],
+    [fetchReload, setLoading, setShowAddModel],
   );
   const fetchRemoveTool = useCallback(
     async (values) => {
@@ -58,11 +58,11 @@ const ToolPage = () => {
         await fetchReload();
       }
       setLoading(false);
-      setShowUpdateModel(false)
+      setShowUpdateModel(false);
     },
-    [fetchReload, setLoading,setShowUpdateModel],
+    [fetchReload, setLoading, setShowUpdateModel],
   );
-  const CateData = useMemo(()=>{
+  const CateData = useMemo(() => {
     if (!catelogs) {
       return null;
     }
@@ -70,12 +70,11 @@ const ToolPage = () => {
       return {
         label: item.name,
         value: item.name,
-      }
-    })
+      };
+    });
+  }, [catelogs]);
 
-  },[catelogs])
-
-  const CateFilters = useMemo(()=>{
+  const CateFilters = useMemo(() => {
     if (!catelogs) {
       return [];
     }
@@ -83,23 +82,21 @@ const ToolPage = () => {
       return {
         text: item.name,
         value: item.name,
-      }
-    })
-  },[catelogs])
+      };
+    });
+  }, [catelogs]);
 
-  const NameFilters = useMemo(()=>{
-    if(!tools) {
+  const NameFilters = useMemo(() => {
+    if (!tools) {
       return [];
     }
     // 获取所有类型
-    const types = Array.from(new Set(tools.map((item:any) => (item.name))));
+    const types = Array.from(new Set(tools.map((item: any) => item.name)));
     return types.map((item: any) => ({
       text: item,
-      value: item
-    }))
-  },[tools])
-
-
+      value: item,
+    }));
+  }, [tools]);
 
   const columns = [
     {
@@ -145,7 +142,7 @@ const ToolPage = () => {
             <a
               onClick={() => {
                 updateForm?.setFieldsValue(record);
-                setCurrUpdateId(record.id)
+                setCurrUpdateId(record.id);
                 setShowUpdateModel(true);
               }}
               href="#"
@@ -170,9 +167,9 @@ const ToolPage = () => {
   return (
     <PageHeaderWrapper title={`工具管理`}>
       <ProCard
-      className={styles.myCard}
-      headerBordered
-        title={null}
+        title={`当前共 ${catelogs?.length || 0} 个工具`}
+        className={styles.myCard}
+        headerBordered
         extra={
           <Space>
             <Button
@@ -200,59 +197,64 @@ const ToolPage = () => {
           }}
         ></Table>
       </ProCard>
-      <Modal visible={showAddModel} title={"新建工具"}
-
-      onCancel={()=>{setShowAddModel(false)}}
-      onOk={()=>{
-        const values = addForm?.getFieldsValue();
-        fetchAddTool(values);
-      }}
+      <Modal
+        visible={showAddModel}
+        title={'新建工具'}
+        onCancel={() => {
+          setShowAddModel(false);
+        }}
+        onOk={() => {
+          const values = addForm?.getFieldsValue();
+          fetchAddTool(values);
+        }}
       >
-        <Form form={addForm} >
+        <Form form={addForm}>
           <Form.Item name="name" required>
-             <Input placeholder='请输入工具名称' />
+            <Input placeholder="请输入工具名称" />
           </Form.Item>
           <Form.Item name="url" required>
-             <Input placeholder='请输入 url' />
+            <Input placeholder="请输入 url" />
           </Form.Item>
           <Form.Item name="logo" required>
-             <Input placeholder='请输入 logo url' />
+            <Input placeholder="请输入 logo url" />
           </Form.Item>
           <Form.Item name="catelog" required>
-             <Select options={CateData} placeholder="请选择分类"/>
+            <Select options={CateData} placeholder="请选择分类" />
           </Form.Item>
           <Form.Item name="desc" required>
-             <Input placeholder='请输入描述' />
+            <Input placeholder="请输入描述" />
           </Form.Item>
         </Form>
-
       </Modal>
-      <Modal visible={showUpdateModel} title={"修改工具"}
-      onCancel={()=>{setShowUpdateModel(false)}}
-      onOk={()=>{
-        const values = updateForm?.getFieldsValue();
-        values['id'] = currUpdateId;
-        fetchUpdateTool(values);
-      }}
+      <Modal
+        visible={showUpdateModel}
+        title={'修改工具'}
+        onCancel={() => {
+          setShowUpdateModel(false);
+        }}
+        onOk={() => {
+          const values = updateForm?.getFieldsValue();
+          values['id'] = currUpdateId;
+          fetchUpdateTool(values);
+        }}
       >
-        <Form form={updateForm} >
+        <Form form={updateForm}>
           <Form.Item name="name" required>
-             <Input placeholder='请输入工具名称' />
+            <Input placeholder="请输入工具名称" />
           </Form.Item>
           <Form.Item name="url" required>
-             <Input placeholder='请输入 url' />
+            <Input placeholder="请输入 url" />
           </Form.Item>
           <Form.Item name="logo" required>
-             <Input placeholder='请输入 logo url' />
+            <Input placeholder="请输入 logo url" />
           </Form.Item>
           <Form.Item name="catelog" required>
-             <Select options={CateData} placeholder="请选择分类"/>
+            <Select options={CateData} placeholder="请选择分类" />
           </Form.Item>
           <Form.Item name="desc" required>
-             <Input placeholder='请输入描述' />
+            <Input placeholder="请输入描述" />
           </Form.Item>
         </Form>
-
       </Modal>
     </PageHeaderWrapper>
   );
