@@ -155,7 +155,7 @@ func addCatelog(data addCatelogDto, db *sql.DB) {
 		INSERT INTO nav_catelog (id,name)
 		VALUES (?,?);
 		`
-  fmt.Println("增加分类：",data)
+  // fmt.Println("增加分类：",data)
 	stmt, err := db.Prepare(sql_add_catelog)
 	checkErr(err)
 	res, err := stmt.Exec(generateId(), data.Name)
