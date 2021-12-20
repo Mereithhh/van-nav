@@ -11,7 +11,8 @@ import (
 	"github.com/gin-gonic/contrib/static"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt"
-	_ "github.com/mattn/go-sqlite3"
+	_ "modernc.org/sqlite"
+	// _ "github.com/mattn/go-sqlite3"
 )
 const INDEX = "index.html"
 type User struct {
@@ -197,7 +198,7 @@ var db *sql.DB
 
 func initDB() {
 	// 创建数据库
-	db, _ = sql.Open("sqlite3", "./nav.db")
+	db, _ = sql.Open("sqlite", "./nav.db")
 	// 创建表
 	sql_create_table := `
 		CREATE TABLE IF NOT EXISTS nav_user (

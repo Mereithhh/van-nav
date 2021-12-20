@@ -28,8 +28,9 @@ const CatelogPage = () => {
         await fetchReload();
       }
       setLoading(false);
+      setShowAddModel(false);
     },
-    [fetchReload, setLoading],
+    [fetchReload, setLoading,setShowAddModel],
   );
   const fetchRemoveCatelog = useCallback(
     async (values) => {

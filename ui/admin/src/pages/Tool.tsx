@@ -32,8 +32,9 @@ const ToolPage = () => {
         await fetchReload();
       }
       setLoading(false);
+      setShowAddModel(false)
     },
-    [fetchReload, setLoading],
+    [fetchReload, setLoading,setShowAddModel],
   );
   const fetchRemoveTool = useCallback(
     async (values) => {
@@ -56,8 +57,9 @@ const ToolPage = () => {
         await fetchReload();
       }
       setLoading(false);
+      setShowUpdateModel(false)
     },
-    [fetchReload, setLoading],
+    [fetchReload, setLoading,setShowUpdateModel],
   );
   const CateData = useMemo(()=>{
     if (!catelogs) {
