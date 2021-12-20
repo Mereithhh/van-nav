@@ -1,7 +1,7 @@
 import './index.scss';
 import { useState } from 'react';
 const Header = (props: any) => {
-  const {onClick, data, curr, handleShowAbout} = props;
+  const {onClick, data, curr} = props;
   const [Hover, setHover] = useState("");
   const renderList = () => {
     const lls: any = [];
@@ -41,7 +41,7 @@ const Header = (props: any) => {
     <header className='header'>
       <ul className='header-left'>{renderList()}</ul>
       <div className="header-right">
-        <div className="about" onClick={()=>{handleShowAbout(true)}}>帮助</div>
+        <a className="about" href="/admin" >登录</a>
       </div>
     </header>
   );

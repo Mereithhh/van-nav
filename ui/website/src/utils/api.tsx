@@ -1,7 +1,8 @@
 import axios from "axios";
-const baseUrl = "https://api.mereith.com";
+const baseUrl = "/api";
+// const baseUrl = "https://api.mereith.com";
 export const FetchList =async () => {
-    const response = await axios.get(baseUrl+"/tool");
+    const response = await axios.get(baseUrl);
     return response.data;
 };
 export default FetchList;

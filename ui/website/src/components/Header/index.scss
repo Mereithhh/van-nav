@@ -114,8 +114,10 @@
 
 .about {
   padding: 0 30px;
+  color: inherit;
   cursor: pointer;
   user-select: none;
+  text-decoration: none;
 }
 .about:hover {
   color:#5cdbd3;

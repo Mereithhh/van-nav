@@ -13,9 +13,9 @@ const Content = (props:ContentProps) => {
   const { curr, data } = props;
   const renderCards = () => {
     if (data) {
-      const currData: ToolDataItem[] = data.find((item) => item.type === curr).list;
+      const currData: ToolDataItem[] = data.find((item) => item.type === curr)?.list;
       return currData.map((item) => {
-        return <Card title={item.title} url={item.url} des={item.des} logo={item.logo} key={item.title} />
+        return <Card title={item.name} url={item.url} des={item.desc} logo={item.logo} key={item.id} />
       });
     }
   };

@@ -5,23 +5,29 @@ import (
 	"fmt"
 	"net/http"
 	"time"
-
+  "embed"
+	"path"
+	"strings"
 	"github.com/gin-gonic/contrib/static"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt"
 	_ "github.com/mattn/go-sqlite3"
 )
-
+const INDEX = "index.html"
 type User struct {
 	Id       int    `json:"id"`
 	Name     string `json:"name"`
 	Password string `json:"password"`
 }
 
+type resUserDto struct {
+	Name string `json:"name"`
+}
+
 type updateUserDto struct {
-	Id       int
-	Name     string
-	Password string
+	Id       int64 `json:"id"`
+	Name     string `json:"name"`
+	Password string `json:"password"`
 }
 
 type Tool struct {
@@ -42,16 +48,16 @@ type addToolDto struct {
 }
 
 type updateToolDto struct {
-	Id      int
-	Name    string
-	Url     string
-	Logo    string
-	Catelog string
-	Desc    string
+	Id      int `json:"id"`
+	Name    string `json:"name"`
+	Url     string `json:"url"`
+	Logo    string `json:"logo"`
+	Catelog string `json:"catelog"`
+	Desc    string `json:"desc"`
 }
 type updateCatelogDto struct {
-	Id   int
-	Name string
+	Id   int `json:"id"`
+	Name string  `json:"name"`
 }
 
 type addCatelogDto struct {
@@ -124,6 +130,7 @@ func addCatelog(data addCatelogDto, db *sql.DB) {
 		INSERT INTO nav_catelog (id,name)
 		VALUES (?,?);
 		`
+  fmt.Println("增加分类：",data)
 	stmt, err := db.Prepare(sql_add_catelog)
 	checkErr(err)
 	res, err := stmt.Exec(generateId(), data.Name)
@@ -160,6 +167,7 @@ func getAllTool(db *sql.DB) []Tool {
 		checkErr(err)
 		results = append(results, tool)
 	}
+  defer rows.Close()
 	return results
 }
 
@@ -176,6 +184,7 @@ func getAllCatelog(db *sql.DB) []Catelog {
 		checkErr(err)
 		results = append(results, catelog)
 	}
+  defer rows.Close()
 	return results
 }
 
@@ -238,20 +247,66 @@ func initDB() {
 		checkErr(err)
 		fmt.Println(id)
 	}
+  defer rows.Close()
 	fmt.Println("数据库初始化成功。。。")
 }
+//go:embed public
+var fs embed.FS
 
+type binaryFileSystem struct {
+	fs http.FileSystem
+	root string
+}
+func (b *binaryFileSystem) Open(name string) (http.File, error) {
+	// fmt.Println("打开文件",name)
+	openPath := path.Join(b.root,name)
+	return b.fs.Open(openPath)
+}
+
+func (b *binaryFileSystem) Exists(prefix string, filepath string) bool {
+	if p := strings.TrimPrefix(filepath, prefix); len(p) < len(filepath) {
+		var name string
+		if p == "" {
+			// fmt.Println("找 index")
+			name = path.Join(b.root, p,INDEX)
+		} else {
+			name = path.Join(b.root,p)
+		}
+		// 判断
+		// fmt.Println("文件是否存在？",name)
+		if _, err := b.fs.Open(name); err != nil {
+			return false
+		}
+		return true
+	}
+	return false
+}
+func BinaryFileSystem(data embed.FS,root string) *binaryFileSystem {
+	fs := http.FS(data)
+	return &binaryFileSystem{
+		fs,
+		root,
+	}
+}
 func main() {
 	initDB()
-	// gin.SetMode(gin.ReleaseMode)
+	gin.SetMode(gin.ReleaseMode)
 	router := gin.Default()
+	// 嵌入文件夹
 
-	router.Use(static.Serve("/", static.LocalFile("./public", true)))
+  // public,_ := fs.ReadDir("./public")
+	// router.StaticFS("/",http.FS(fs))
+	
+	
+
+	router.Use(static.Serve("/", BinaryFileSystem(fs,"public")))
+	// router.Use(static.Serve("/", static.LocalFile("./public", true)))
 	api := router.Group("/api")
 	{
 		// 获取数据的路由
 		api.GET("/", GetAllHandler)
-
+		// 获取用户信息
+		
 		api.POST("/login", LoginHandler)
 		api.GET("/logout", LogoutHandler)
 
@@ -259,6 +314,7 @@ func main() {
 		admin := api.Group("/admin")
 		admin.Use(JWTMiddleware())
 		{
+			admin.GET("/all",GetAdminAllDataHandler)
 
 			admin.PUT("/user", UpdateUserHandler)
 
@@ -271,9 +327,10 @@ func main() {
 			admin.PUT("/catelog/:id", UpdateCatelogHandler)
 		}
 	}
-
+	
 	router.Run(":8080")
 }
+
 
 func UpdateUserHandler(c *gin.Context) {
 	var data updateUserDto
@@ -305,6 +362,27 @@ func GetAllHandler(c *gin.Context) {
 	})
 }
 
+func GetAdminAllDataHandler(c *gin.Context) {
+	// 管理员获取全部数据，还有个用户名。
+	tools := getAllTool(db)
+	catelogs := getAllCatelog(db)
+	userId,ok := c.Get("uid")
+	if !ok {
+		fmt.Println("不存在 uid!")
+	}
+	c.JSON(200,gin.H{
+		"success": true,
+		"data": gin.H{
+			"tools":    tools,
+			"catelogs": catelogs,
+			"user": gin.H{
+				"name": c.GetString("username"),
+				"id": userId,
+			},
+		},
+	})
+}
+
 func getUser(name string, db *sql.DB) User {
 	sql_get_user := `
 		SELECT * FROM nav_user WHERE name = ?;
@@ -330,14 +408,14 @@ func LoginHandler(c *gin.Context) {
 	if user.Name == "" {
 		c.JSON(200, gin.H{
 			"success": false,
-			"message": "用户名不存在",
+			"errorMessage": "用户名不存在",
 		})
 		return
 	}
 	if user.Password != data.Password {
 		c.JSON(200, gin.H{
 			"success": false,
-			"message": "密码错误",
+			"errorMessage": "密码错误",
 		})
 		return
 	}
@@ -348,7 +426,10 @@ func LoginHandler(c *gin.Context) {
 	c.JSON(200, gin.H{
 		"success": true,
 		"message": "登录成功",
-		"jwt":     token,
+		"data": gin.H{
+			"user": user,
+			"token": token,
+		},
 	})
 
 }
@@ -481,6 +562,7 @@ var jwtSecret = []byte("boy_next_door")
 func SignJWT(user User) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"name": user.Name,
+		"id": user.Id,
 		"exp":  time.Now().Add(time.Hour * 24).Unix(),
 	})
 	tokenString, err := token.SignedString([]byte(jwtSecret))
@@ -502,7 +584,7 @@ func JWTMiddleware() gin.HandlerFunc {
 		if rawToken == "" {
 			c.JSON(http.StatusUnauthorized, gin.H{
 				"success": false,
-				"message": "未登录",
+				"errorMessage": "未登录",
 			})
 			c.Abort()
 			return
@@ -512,7 +594,7 @@ func JWTMiddleware() gin.HandlerFunc {
 		if err != nil {
 			c.JSON(http.StatusUnauthorized, gin.H{
 				"success": false,
-				"message": "未登录",
+				"errorMessage": "未登录",
 			})
 			c.Abort()
 			return
@@ -520,11 +602,12 @@ func JWTMiddleware() gin.HandlerFunc {
 		// 把名称加到上下文
 		if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
 			c.Set("username", claims["name"])
+			c.Set("uid", claims["id"])
 			c.Next()
 		} else {
 			c.JSON(http.StatusUnauthorized, gin.H{
 				"success": false,
-				"message": "未登录",
+				"errorMessage": "未登录",
 			})
 			c.Abort()
 			return

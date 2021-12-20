@@ -8,14 +8,13 @@ import FetchList from './utils/api';
 import { useState, useEffect,useCallback } from 'react';
 
 function App() {
-  const [curr, setCurr] = useState('实用工具');
-  const [showAbout, setShowAbout] = useState(false);
+  const [curr, setCurr] = useState<string>();
   const [currData,setCurrData] = useState([]);
   const dealData = (old) => {
     // 把老的无序数据洗一下
     const newData = [];
     const type1 = old.map((item) => {
-      return item.type;
+      return item.catelog;
     });
     const newTypes = Array.from(new Set(type1));
     // 遍历新的类型，然后挨个找
@@ -24,7 +23,7 @@ function App() {
       const l = [];
       // 搜索全部的数据找
       for (let olditem of old){
-        if (olditem.type === item){
+        if (olditem.catelog === item){
           l.push(olditem);
         }
       }
@@ -36,13 +35,17 @@ function App() {
   const loadData = useCallback(async()=>{
     try {
       const r = await FetchList();
+      const newData = dealData(r?.data?.tools);
+      if (!curr && newData.length) {
+        setCurr(newData[0]?.type)
+      }
       // 判断数据
       if(window.localStorage.getItem('door') ){
         // 改成根据字段进行判断了
-        setCurrData(dealData(r?.data));
+        setCurrData(newData);
       } else {
-        setCurrData(dealData( r?.data.filter((item) => {
-          if (r.meta && r.meta.privateList && r.meta.privateList.includes(item.type)) {
+        setCurrData(dealData(r?.data?.tools?.filter((item) => {
+          if (r.data && r.data.privateList && r.data.privateList.includes(item.catelog)) {
             return false;
           } else {
             return true;
@@ -52,7 +55,7 @@ function App() {
     } catch (e) {
       console.log(e);
     }
-  },[]);
+  },[setCurrData,curr,setCurr]);
   useEffect(()=>{
     if (window.location.search === "?door"){
       window.localStorage.setItem("door","1")}
@@ -62,6 +65,8 @@ function App() {
     if (window.localStorage.getItem("curr")){
       setCurr(window.localStorage.getItem("curr"));
     }
+
+
   },[currData,loadData]);
 
 
@@ -69,34 +74,19 @@ function App() {
     window.localStorage.setItem("curr",newType);
     setCurr(newType);
   }
-  const handleShowAbout = (newState: boolean) => {
-    setShowAbout(newState);
-  };
+
   const renderMain = () => {
-    if (currData.length && !showAbout){
+    if (currData.length){
       return (
         <Content data={currData} curr={curr} />
       );
     }
-    if (showAbout) {
-      return (
-        <About/>
-      )
-    }
   };
   return (
-    <div className="App" onClick={
-      () => {
-        if (showAbout) {
-          setShowAbout(false);
-        }
-      }
-    }>
-      <Header onClick={handleChangeHeader} data={currData} curr={curr} handleShowAbout={handleShowAbout}/>
+    <div className="App" >
+      <Header onClick={handleChangeHeader} data={currData} curr={curr} />
       <div className="main">
-        {/* {console.log(currData)} */}
         {renderMain()}
-        {/* <Footer /> */}
       </div>
     </div>
   );

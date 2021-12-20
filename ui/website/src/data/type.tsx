@@ -4,9 +4,9 @@ export interface ToolDataList {
 }
 
 export interface ToolDataItem {
-  title: string;
+  id: number;
+  name: string;
   url: string;
-  des: string;
+  desc: string;
   logo: string;
-  linkType?: "webpage" | "service"
 }
