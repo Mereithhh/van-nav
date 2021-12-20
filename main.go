@@ -386,8 +386,8 @@ func main() {
 			admin.PUT("/catelog/:id", UpdateCatelogHandler)
 		}
 	}
-	fmt.Println("应用启动成功，网址:   http://127.0.0.1:8080")
-	router.Run(":8080")
+	fmt.Println("应用启动成功，网址:   http://localhost:8233")
+	router.Run(":8233")
 }
 
 
