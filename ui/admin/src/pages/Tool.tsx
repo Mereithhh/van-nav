@@ -143,6 +143,7 @@ const ToolPage = () => {
           <Space>
             <a
               onClick={() => {
+                updateForm?.setFieldsValue(record);
                 setCurrUpdateId(record.id)
                 setShowUpdateModel(true);
               }}
