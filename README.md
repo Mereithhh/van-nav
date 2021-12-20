@@ -5,6 +5,7 @@
 ![后台登录](images/login.png)
 ![后台设置](images/admin-overview.png)
 ![增加工具](images/add-tool.png)
+![修改配置](images/setting.png)
 
 
 ## 故事
@@ -37,11 +38,9 @@
 
 ## 参与项目
 可以优化的点太多了，慢慢完善吧……
-- [ ] 多平台构建流水线
-- [ ] Docker 支持
-- [ ] 多平台流水线
+- [x] 多平台构建流水线
+- [x] 定制化 logo 和标题
 - [ ] 私有分类功能，对外隐藏
-- [ ] 定制化 logo 和标题
 - [ ] 主题切换
 - [ ] 移动端优化
 

@@ -26,6 +26,14 @@ export const updateUser = async (data: any) => {
 
   return res?.message;
 }
+export const updateSetting = async (data: any) => {
+  const res = await request(
+    `${baseUrl}/admin/setting`,
+    {  method: 'PUT',data },
+  );
+
+  return res?.message;
+}
 export const updateCatelog = async (data: any) => {
   const res = await request(
     `${baseUrl}/admin/catelog/${data?.id}`,

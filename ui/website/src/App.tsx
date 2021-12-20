@@ -1,7 +1,8 @@
 import './App.scss';
 import Header from './components/Header';
 import Content from './components/Content';
-import About from "./components/About";
+// import About from "./components/About";
+import {Helmet} from "react-helmet";
 // import Footer from './components/Footer';
 // import data from './data';
 import FetchList from './utils/api';
@@ -9,6 +10,11 @@ import { useState, useEffect,useCallback } from 'react';
 
 function App() {
   const [curr, setCurr] = useState<string>();
+  const [hasInited,setHasInited] = useState(false);
+  const [setting,setSetting] =useState<any>({
+    title: "Van Nav",
+    favicon: "https://pic.mereith.com/img/male.svg",
+  });
   const [currData,setCurrData] = useState([]);
   const dealData = (old) => {
     // 把老的无序数据洗一下
@@ -35,6 +41,9 @@ function App() {
   const loadData = useCallback(async()=>{
     try {
       const r = await FetchList();
+      if(r?.data?.setting) {
+        setSetting(r?.data?.setting);
+      }
       const newData = dealData(r?.data?.tools);
       if (!curr && newData.length) {
         setCurr(newData[0]?.type)
@@ -55,11 +64,12 @@ function App() {
     } catch (e) {
       console.log(e);
     }
-  },[setCurrData,curr,setCurr]);
+    setHasInited(true)
+  },[setCurrData,curr,setCurr,setSetting,setHasInited]);
   useEffect(()=>{
     if (window.location.search === "?door"){
       window.localStorage.setItem("door","1")}
-    if (currData.length === 0) {
+    if (currData.length === 0 && !hasInited) {
       loadData();
     }
     if (window.localStorage.getItem("curr")){
@@ -67,7 +77,7 @@ function App() {
     }
 
 
-  },[currData,loadData]);
+  },[currData,loadData,setCurr,hasInited]);
 
 
   const handleChangeHeader = (newType: string) => {
@@ -84,6 +94,11 @@ function App() {
   };
   return (
     <div className="App" >
+          <Helmet>
+              <meta charSet="utf-8" />
+              <link rel="icon" href={setting?.favicon} />
+              <title>{setting?.title}</title>
+          </Helmet>
       <Header onClick={handleChangeHeader} data={currData} curr={curr} />
       <div className="main">
         {renderMain()}

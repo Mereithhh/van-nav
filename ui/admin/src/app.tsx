@@ -24,6 +24,7 @@ export async function getInitialState(): Promise<{
   user?: any;
   catelogs?: any;
   tools?: any;
+  setting?: any;
   fetchData?: () => Promise<API.CurrentUser | undefined>;
 }> {
   const fetchData = async () => {
@@ -68,7 +69,12 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
             <span>OpenAPI 文档</span>
           </Link>,
         ]
-      : [],
+      : [
+        // <Link to="/" target="_blank">
+        //     <LinkOutlined />
+        //     <span>主站</span>
+        //   </Link>
+      ],
     menuHeaderRender: undefined,
     // 自定义 403 页面
     // unAccessible: <div>unAccessible</div>,

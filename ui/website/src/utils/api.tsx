@@ -1,5 +1,5 @@
 import axios from "axios";
-const baseUrl = "/api";
+const baseUrl = "/api/";
 // const baseUrl = "https://api.mereith.com";
 export const FetchList =async () => {
     const response = await axios.get(baseUrl);

@@ -15,6 +15,14 @@ import (
 	// _ "github.com/mattn/go-sqlite3"
 )
 const INDEX = "index.html"
+
+// 默认是 0
+type Setting struct {
+	Id int `json:"id"`
+	Favicon string `json:"favicon"`
+	Title string `json:"title"`
+}
+
 type User struct {
 	Id       int    `json:"id"`
 	Name     string `json:"name"`
@@ -72,7 +80,7 @@ type Catelog struct {
 
 func checkErr(err error) {
 	if err != nil {
-		fmt.Println(err)
+		fmt.Println("捕获到错误：",err)
 	}
 }
 
@@ -91,9 +99,9 @@ func updateCatelog(data updateCatelogDto, db *sql.DB) {
 	checkErr(err)
 	res, err := stmt.Exec(data.Name, data.Id)
 	checkErr(err)
-	affect, err := res.RowsAffected()
+	_, err = res.RowsAffected()
 	checkErr(err)
-	fmt.Println(affect)
+	// fmt.Println(affect)
 }
 
 func updateTool(data updateToolDto, db *sql.DB) {
@@ -106,10 +114,26 @@ func updateTool(data updateToolDto, db *sql.DB) {
 	checkErr(err)
 	res, err := stmt.Exec(data.Name, data.Url, data.Logo, data.Catelog, data.Desc, data.Id)
 	checkErr(err)
-	affect, err := res.RowsAffected()
+	_, err = res.RowsAffected()
 	checkErr(err)
-	fmt.Println(affect)
+	// fmt.Println(affect)
 }
+
+func updateSetting(data Setting, db *sql.DB) {
+	sql_update_setting := `
+		UPDATE nav_setting
+		SET favicon = ?, title = ?
+		WHERE id = ?;
+		`
+	stmt, err := db.Prepare(sql_update_setting)
+	checkErr(err)
+	res, err := stmt.Exec(data.Favicon, data.Title, 0)
+	checkErr(err)
+	_, err = res.RowsAffected()
+	checkErr(err)
+	// fmt.Println(affect)
+}
+
 
 func updateUser(data updateUserDto, db *sql.DB) {
 	sql_update_user := `
@@ -121,9 +145,9 @@ func updateUser(data updateUserDto, db *sql.DB) {
 	checkErr(err)
 	res, err := stmt.Exec(data.Name, data.Password, data.Id)
 	checkErr(err)
-	affect, err := res.RowsAffected()
+	_, err = res.RowsAffected()
 	checkErr(err)
-	fmt.Println(affect)
+	// fmt.Println(affect)
 }
 
 func addCatelog(data addCatelogDto, db *sql.DB) {
@@ -136,9 +160,9 @@ func addCatelog(data addCatelogDto, db *sql.DB) {
 	checkErr(err)
 	res, err := stmt.Exec(generateId(), data.Name)
 	checkErr(err)
-	id, err := res.LastInsertId()
+	_, err = res.LastInsertId()
 	checkErr(err)
-	fmt.Println(id)
+	// fmt.Println(id)
 }
 
 func addTool(data addToolDto, db *sql.DB) {
@@ -150,9 +174,9 @@ func addTool(data addToolDto, db *sql.DB) {
 	checkErr(err)
 	res, err := stmt.Exec(generateId(), data.Name, data.Url, data.Logo, data.Catelog, data.Desc)
 	checkErr(err)
-	id, err := res.LastInsertId()
+	_, err = res.LastInsertId()
 	checkErr(err)
-	fmt.Println(id)
+	// fmt.Println(id)
 }
 
 func getAllTool(db *sql.DB) []Tool {
@@ -199,7 +223,7 @@ var db *sql.DB
 func initDB() {
 	// 创建数据库
 	db, _ = sql.Open("sqlite", "./nav.db")
-	// 创建表
+	// user 表
 	sql_create_table := `
 		CREATE TABLE IF NOT EXISTS nav_user (
 			id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -209,6 +233,17 @@ func initDB() {
 		`
 	_, err := db.Exec(sql_create_table)
 	checkErr(err)
+		// setting 表
+	sql_create_table = `
+	CREATE TABLE IF NOT EXISTS nav_setting (
+		id INTEGER PRIMARY KEY AUTOINCREMENT,
+		favicon TEXT,
+		title TEXT
+	);
+	`
+	_, err = db.Exec(sql_create_table)
+	checkErr(err)
+	// 默认 tools 用的 表 
 	sql_create_table = `
 		CREATE TABLE IF NOT EXISTS nav_table (
 			id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -221,6 +256,7 @@ func initDB() {
 		`
 	_, err = db.Exec(sql_create_table)
 	checkErr(err)
+	// 分类表
 	sql_create_table = `
 		CREATE TABLE IF NOT EXISTS nav_catelog (
 			id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -244,11 +280,31 @@ func initDB() {
 		checkErr(err)
 		res, err := stmt.Exec(generateId(), "admin", "admin")
 		checkErr(err)
-		id, err := res.LastInsertId()
+		_, err = res.LastInsertId()
 		checkErr(err)
-		fmt.Println(id)
+		// fmt.Println(id)
 	}
-  defer rows.Close()
+	rows.Close()
+	// 如果不存在设置，就初始化
+	sql_get_setting := `
+		SELECT * FROM nav_setting;
+		`
+	rows, err = db.Query(sql_get_setting)
+	checkErr(err)
+	if !rows.Next() {
+		sql_add_setting := `
+			INSERT INTO nav_setting (id, favicon, title)
+			VALUES (?, ?, ?);
+			`
+		stmt, err := db.Prepare(sql_add_setting)
+		checkErr(err)
+		res, err := stmt.Exec(0, "https://pic.mereith.com/img/male.svg", "Van Nav")
+		checkErr(err)
+		_, err = res.LastInsertId()
+		checkErr(err)
+		// fmt.Println(id)
+	}
+  rows.Close()
 	fmt.Println("数据库初始化成功。。。")
 }
 //go:embed public
@@ -319,6 +375,8 @@ func main() {
 
 			admin.PUT("/user", UpdateUserHandler)
 
+			admin.PUT("/setting", UpdateSettingHandler)
+
 			admin.POST("/tool", AddToolHandler)
 			admin.DELETE("/tool/:id", DeleteToolHandler)
 			admin.PUT("/tool/:id", UpdateToolHandler)
@@ -328,8 +386,26 @@ func main() {
 			admin.PUT("/catelog/:id", UpdateCatelogHandler)
 		}
 	}
-	
+	fmt.Println("应用启动成功，网址:   http://127.0.0.1:8080")
 	router.Run(":8080")
+}
+
+
+func UpdateSettingHandler(c *gin.Context) {
+	var data Setting
+	if err := c.ShouldBindJSON(&data); err != nil {
+		checkErr(err)
+		c.JSON(http.StatusBadRequest, gin.H{
+			"success":      false,
+			"errorMessage": err.Error(),
+		})
+		return
+	}
+	updateSetting(data, db)
+	c.JSON(200, gin.H{
+		"success": true,
+		"message": "更新配置成功",
+	})
 }
 
 
@@ -350,15 +426,19 @@ func UpdateUserHandler(c *gin.Context) {
 	})
 }
 
+
+
 func GetAllHandler(c *gin.Context) {
 	// 获取全部数据
 	tools := getAllTool(db)
 	catelogs := getAllCatelog(db)
+	setting := getSetting(db)
 	c.JSON(200, gin.H{
 		"success": true,
 		"data": gin.H{
 			"tools":    tools,
 			"catelogs": catelogs,
+			"setting": setting,
 		},
 	})
 }
@@ -367,21 +447,40 @@ func GetAdminAllDataHandler(c *gin.Context) {
 	// 管理员获取全部数据，还有个用户名。
 	tools := getAllTool(db)
 	catelogs := getAllCatelog(db)
+	setting := getSetting(db)
 	userId,ok := c.Get("uid")
 	if !ok {
-		fmt.Println("不存在 uid!")
+		c.JSON(http.StatusBadRequest, gin.H{
+			"success":      false,
+			"errorMessage": "不存在该用户！",
+		})
+		return
 	}
 	c.JSON(200,gin.H{
 		"success": true,
 		"data": gin.H{
 			"tools":    tools,
 			"catelogs": catelogs,
+			"setting": setting,
 			"user": gin.H{
 				"name": c.GetString("username"),
 				"id": userId,
 			},
 		},
 	})
+}
+
+
+
+func getSetting(db *sql.DB) Setting {
+	sql_get_user := `
+		SELECT * FROM nav_setting WHERE id = ?;
+		`
+	var setting Setting
+	row := db.QueryRow(sql_get_user, 0)
+	err := row.Scan(&setting.Id,&setting.Favicon,&setting.Title)
+	checkErr(err)
+	return setting
 }
 
 func getUser(name string, db *sql.DB) User {
@@ -437,7 +536,7 @@ func LoginHandler(c *gin.Context) {
 
 // 退出登录
 func LogoutHandler(c *gin.Context) {
-	fmt.Println("TODO： 销毁 JWT")
+	// fmt.Println("TODO： 销毁 JWT")
 	c.JSON(200, gin.H{
 		"success": true,
 		"message": "登出成功",
@@ -472,9 +571,9 @@ func DeleteToolHandler(c *gin.Context) {
 	checkErr(err)
 	res, err := stmt.Exec(id)
 	checkErr(err)
-	affect, err := res.RowsAffected()
+	_, err = res.RowsAffected()
 	checkErr(err)
-	fmt.Println(affect)
+	// fmt.Println(affect)
 	c.JSON(200, gin.H{
 		"success": true,
 		"message": "删除成功",
@@ -528,9 +627,9 @@ func DeleteCatelogHandler(c *gin.Context) {
 	checkErr(err)
 	res, err := stmt.Exec(id)
 	checkErr(err)
-	affect, err := res.RowsAffected()
+	_, err = res.RowsAffected()
 	checkErr(err)
-	fmt.Println(affect)
+	// fmt.Println(affect)
 	c.JSON(200, gin.H{
 		"success": true,
 		"message": "删除分类成功",
