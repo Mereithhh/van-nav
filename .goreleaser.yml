@@ -19,7 +19,7 @@ builds:
         goarch: arm64
 archives:
   - replacements:
-      # darwin: Darwin
+      darwin: Darwin
       linux: Linux
       windows: Windows
       amd64: x86_64

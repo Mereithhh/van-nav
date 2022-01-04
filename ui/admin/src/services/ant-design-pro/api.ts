@@ -80,4 +80,18 @@ export const removeTool = async (id: any) => {
   );
   return res?.message;
 }
+export const importTools = async (data: any) => {
+  const res = await request(
+    `${baseUrl}/admin/importTools`,
+    {  method: 'POST',data },
+  );
+  return res;
+}
+export const exportTools = async () => {
+  const res = await request(
+    `${baseUrl}/admin/exportTools`,
+    {  method: 'GET' },
+  );
+  return res;
+}
 

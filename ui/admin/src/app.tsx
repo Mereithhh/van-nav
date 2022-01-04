@@ -94,7 +94,7 @@ const authHeaderInterceptors = (url: string, options: any) => {
 };
 export const request: RequestConfig = {
   errorHandler: (err) => {
-    // console.log(err);
+    console.log(err);
     message.warn("未登录")
     // message.error(err?.message)
   },

@@ -1,9 +1,9 @@
 import { useModel } from 'umi';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import ProCard from '@ant-design/pro-card';
-import { Form, Input, Button, message, Space, Table, Popconfirm, Modal, Select } from 'antd';
+import { Form, Input, Button, message, Space, Table, Popconfirm, Modal, Select,Upload  } from 'antd';
 import { useCallback, useState, useMemo } from 'react';
-import { addTool, removeTool } from '@/services/ant-design-pro/api';
+import { addTool, removeTool,importTools,exportTools } from '@/services/ant-design-pro/api';
 import styles from './index.less';
 
 const ToolPage = () => {
@@ -62,6 +62,45 @@ const ToolPage = () => {
     },
     [fetchReload, setLoading, setShowUpdateModel],
   );
+  const fetchImportTools = useCallback(
+    async (values) => {
+      setLoading(true);
+      const r = await importTools(values);
+      if (r) {
+        message.success(r?.message);
+        await fetchReload();
+      }
+      setLoading(false);
+    },
+    [fetchReload, setLoading],
+  );
+  const fetchExportTools = useCallback(
+    async () => {
+      setLoading(true);
+      const r = await exportTools();
+      if (r) {
+        // 获取数据
+        const jsr = JSON.stringify(r?.data);
+        const blob = new Blob([jsr], {type : 'application/json'});
+        const url = URL.createObjectURL(blob);
+
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'tools.json';
+        document.documentElement.appendChild(a)
+        a.click()
+        document.documentElement.removeChild(a)
+        message.success(r?.message);
+        await fetchReload();
+      }
+      setLoading(false);
+    },
+    [fetchReload, setLoading],
+  );
+
+
+
+
   const CateData = useMemo(() => {
     if (!catelogs) {
       return null;
@@ -182,6 +221,24 @@ const ToolPage = () => {
             </Button>
             <Button type="primary" onClick={fetchReload}>
               刷新
+            </Button>
+              <Upload name="tools.json" maxCount={1} accept='.json' fileList={[]}  beforeUpload={(file,fileList) => {
+                const reader = new FileReader();
+                reader.readAsText(file);
+                reader.onload=(result)=>{
+                    let tools =result?.target?.result;
+                    if(tools){
+                      fetchImportTools(JSON.parse(tools as string))
+                    }
+                }
+                return false;
+              }}>
+                <Button type="primary">
+                  导入
+                </Button>
+              </Upload>
+            <Button type="primary" onClick={fetchExportTools}>
+              导出
             </Button>
           </Space>
         }
