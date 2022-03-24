@@ -5,91 +5,18 @@ import (
 	"embed"
 	"fmt"
 	"net/http"
+	"os"
 	"path"
 	"strings"
 	"time"
 
 	"github.com/gin-gonic/contrib/static"
 	"github.com/gin-gonic/gin"
-	"github.com/golang-jwt/jwt"
 	_ "modernc.org/sqlite"
 	// _ "github.com/mattn/go-sqlite3"
 )
 
 const INDEX = "index.html"
-
-// 默认是 0
-type Setting struct {
-	Id      int    `json:"id"`
-	Favicon string `json:"favicon"`
-	Title   string `json:"title"`
-}
-
-type User struct {
-	Id       int    `json:"id"`
-	Name     string `json:"name"`
-	Password string `json:"password"`
-}
-
-type resUserDto struct {
-	Name string `json:"name"`
-}
-
-type updateUserDto struct {
-	Id       int64  `json:"id"`
-	Name     string `json:"name"`
-	Password string `json:"password"`
-}
-
-type Tool struct {
-	Id      int    `json:"id"`
-	Name    string `json:"name"`
-	Url     string `json:"url"`
-	Logo    string `json:"logo"`
-	Catelog string `json:"catelog"`
-	Desc    string `json:"desc"`
-}
-
-type addToolDto struct {
-	Name    string `json:"name"`
-	Url     string `json:"url"`
-	Logo    string `json:"logo"`
-	Catelog string `json:"catelog"`
-	Desc    string `json:"desc"`
-}
-
-type updateToolDto struct {
-	Id      int    `json:"id"`
-	Name    string `json:"name"`
-	Url     string `json:"url"`
-	Logo    string `json:"logo"`
-	Catelog string `json:"catelog"`
-	Desc    string `json:"desc"`
-}
-type updateCatelogDto struct {
-	Id   int    `json:"id"`
-	Name string `json:"name"`
-}
-
-type addCatelogDto struct {
-	Name string `json:"name"`
-}
-
-type Catelog struct {
-	Id   int    `json:"id"`
-	Name string `json:"name"`
-}
-
-func checkErr(err error) {
-	if err != nil {
-		fmt.Println("捕获到错误：", err)
-	}
-}
-
-type loginDto struct {
-	Name     string `json:"name"`
-	Password string `json:"password"`
-}
 
 func updateCatelog(data updateCatelogDto, db *sql.DB) {
 	sql_update_catelog := `
@@ -221,9 +148,18 @@ func generateId() int {
 
 var db *sql.DB
 
+func PathExistsOrCreate(path string) {
+	_, err := os.Stat(path)
+	if err == nil {
+		return
+	}
+	os.Mkdir(path, os.ModePerm)
+}
+
 func initDB() {
+	PathExistsOrCreate("./data")
 	// 创建数据库
-	db, _ = sql.Open("sqlite", "./nav.db")
+	db, _ = sql.Open("sqlite", "./data/nav.db")
 	// user 表
 	sql_create_table := `
 		CREATE TABLE IF NOT EXISTS nav_user (
@@ -395,23 +331,6 @@ func main() {
 	router.Run(":8233")
 }
 
-func UpdateSettingHandler(c *gin.Context) {
-	var data Setting
-	if err := c.ShouldBindJSON(&data); err != nil {
-		checkErr(err)
-		c.JSON(http.StatusBadRequest, gin.H{
-			"success":      false,
-			"errorMessage": err.Error(),
-		})
-		return
-	}
-	updateSetting(data, db)
-	c.JSON(200, gin.H{
-		"success": true,
-		"message": "更新配置成功",
-	})
-}
-
 func importTools(data []Tool) {
 	for _, v := range data {
 		sql_add_tool := `
@@ -425,65 +344,6 @@ func importTools(data []Tool) {
 		_, err = res.LastInsertId()
 		checkErr(err)
 	}
-}
-
-func UpdateUserHandler(c *gin.Context) {
-	var data updateUserDto
-	if err := c.ShouldBindJSON(&data); err != nil {
-		checkErr(err)
-		c.JSON(http.StatusBadRequest, gin.H{
-			"success":      false,
-			"errorMessage": err.Error(),
-		})
-		return
-	}
-	updateUser(data, db)
-	c.JSON(200, gin.H{
-		"success": true,
-		"message": "更新用户成功",
-	})
-}
-
-func GetAllHandler(c *gin.Context) {
-	// 获取全部数据
-	tools := getAllTool(db)
-	catelogs := getAllCatelog(db)
-	setting := getSetting(db)
-	c.JSON(200, gin.H{
-		"success": true,
-		"data": gin.H{
-			"tools":    tools,
-			"catelogs": catelogs,
-			"setting":  setting,
-		},
-	})
-}
-
-func GetAdminAllDataHandler(c *gin.Context) {
-	// 管理员获取全部数据，还有个用户名。
-	tools := getAllTool(db)
-	catelogs := getAllCatelog(db)
-	setting := getSetting(db)
-	userId, ok := c.Get("uid")
-	if !ok {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"success":      false,
-			"errorMessage": "不存在该用户！",
-		})
-		return
-	}
-	c.JSON(200, gin.H{
-		"success": true,
-		"data": gin.H{
-			"tools":    tools,
-			"catelogs": catelogs,
-			"setting":  setting,
-			"user": gin.H{
-				"name": c.GetString("username"),
-				"id":   userId,
-			},
-		},
-	})
 }
 
 func getSetting(db *sql.DB) Setting {
@@ -506,225 +366,4 @@ func getUser(name string, db *sql.DB) User {
 	err := row.Scan(&user.Id, &user.Name, &user.Password)
 	checkErr(err)
 	return user
-}
-
-func LoginHandler(c *gin.Context) {
-	var data loginDto
-	if err := c.ShouldBindJSON(&data); err != nil {
-		checkErr(err)
-		c.JSON(http.StatusBadRequest, gin.H{
-			"success":      false,
-			"errorMessage": err.Error(),
-		})
-		return
-	}
-	user := getUser(data.Name, db)
-	if user.Name == "" {
-		c.JSON(200, gin.H{
-			"success":      false,
-			"errorMessage": "用户名不存在",
-		})
-		return
-	}
-	if user.Password != data.Password {
-		c.JSON(200, gin.H{
-			"success":      false,
-			"errorMessage": "密码错误",
-		})
-		return
-	}
-	// 生成 token
-	token, err := SignJWT(user)
-	checkErr(err)
-
-	c.JSON(200, gin.H{
-		"success": true,
-		"message": "登录成功",
-		"data": gin.H{
-			"user":  user,
-			"token": token,
-		},
-	})
-
-}
-
-// 退出登录
-func LogoutHandler(c *gin.Context) {
-	// fmt.Println("TODO： 销毁 JWT")
-	c.JSON(200, gin.H{
-		"success": true,
-		"message": "登出成功",
-	})
-}
-
-func AddToolHandler(c *gin.Context) {
-	// 添加工具
-	var data addToolDto
-	if err := c.ShouldBindJSON(&data); err != nil {
-		checkErr(err)
-		c.JSON(http.StatusBadRequest, gin.H{
-			"success":      false,
-			"errorMessage": err.Error(),
-		})
-		return
-	}
-	addTool(data, db)
-	c.JSON(200, gin.H{
-		"success": true,
-		"message": "添加成功",
-	})
-}
-
-func DeleteToolHandler(c *gin.Context) {
-	// 删除工具
-	id := c.Param("id")
-	sql_delete_tool := `
-		DELETE FROM nav_table WHERE id = ?;
-		`
-	stmt, err := db.Prepare(sql_delete_tool)
-	checkErr(err)
-	res, err := stmt.Exec(id)
-	checkErr(err)
-	_, err = res.RowsAffected()
-	checkErr(err)
-	// fmt.Println(affect)
-	c.JSON(200, gin.H{
-		"success": true,
-		"message": "删除成功",
-	})
-}
-
-func UpdateToolHandler(c *gin.Context) {
-	// 更新工具
-	var data updateToolDto
-	if err := c.ShouldBindJSON(&data); err != nil {
-		checkErr(err)
-		c.JSON(http.StatusBadRequest, gin.H{
-			"success":      false,
-			"errorMessage": err.Error(),
-		})
-		return
-	}
-	updateTool(data, db)
-	c.JSON(200, gin.H{
-		"success": true,
-		"message": "更新成功",
-	})
-}
-
-func AddCatelogHandler(c *gin.Context) {
-	// 添加分类
-	var data addCatelogDto
-	if err := c.ShouldBindJSON(&data); err != nil {
-		checkErr(err)
-		c.JSON(http.StatusBadRequest, gin.H{
-			"success":      false,
-			"errorMessage": err.Error(),
-		})
-		return
-	}
-	addCatelog(data, db)
-
-	c.JSON(200, gin.H{
-		"success": true,
-		"message": "增加分类成功",
-	})
-}
-
-func DeleteCatelogHandler(c *gin.Context) {
-	// 删除分类
-	id := c.Param("id")
-	sql_delete_catelog := `
-		DELETE FROM nav_catelog WHERE id = ?;
-		`
-	stmt, err := db.Prepare(sql_delete_catelog)
-	checkErr(err)
-	res, err := stmt.Exec(id)
-	checkErr(err)
-	_, err = res.RowsAffected()
-	checkErr(err)
-	// fmt.Println(affect)
-	c.JSON(200, gin.H{
-		"success": true,
-		"message": "删除分类成功",
-	})
-}
-
-func UpdateCatelogHandler(c *gin.Context) {
-	// 更新分类
-	var data updateCatelogDto
-	if err := c.ShouldBindJSON(&data); err != nil {
-		checkErr(err)
-		c.JSON(http.StatusBadRequest, gin.H{
-			"success":      false,
-			"errorMessage": err.Error(),
-		})
-		return
-	}
-	updateCatelog(data, db)
-
-	c.JSON(200, gin.H{
-		"success": true,
-		"message": "更新分类成功",
-	})
-}
-
-// JTW 密钥
-var jwtSecret = []byte("boy_next_door")
-
-// 签名一个 JTW
-func SignJWT(user User) (string, error) {
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"name": user.Name,
-		"id":   user.Id,
-		"exp":  time.Now().Add(time.Hour * 24).Unix(),
-	})
-	tokenString, err := token.SignedString([]byte(jwtSecret))
-	return tokenString, err
-}
-
-// 解密一个 JTW
-func ParseJWT(tokenString string) (*jwt.Token, error) {
-	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (i interface{}, e error) {
-		return jwtSecret, nil
-	})
-	return token, err
-}
-
-// 定义一个 JWT 的中间件
-func JWTMiddleware() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		rawToken := c.Request.Header.Get("Authorization")
-		if rawToken == "" {
-			c.JSON(http.StatusUnauthorized, gin.H{
-				"success":      false,
-				"errorMessage": "未登录",
-			})
-			c.Abort()
-			return
-		}
-		// 解析 token
-		token, err := ParseJWT(rawToken)
-		if err != nil {
-			c.JSON(http.StatusUnauthorized, gin.H{
-				"success":      false,
-				"errorMessage": "未登录",
-			})
-			c.Abort()
-			return
-		}
-		// 把名称加到上下文
-		if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
-			c.Set("username", claims["name"])
-			c.Set("uid", claims["id"])
-			c.Next()
-		} else {
-			c.JSON(http.StatusUnauthorized, gin.H{
-				"success":      false,
-				"errorMessage": "未登录",
-			})
-			c.Abort()
-			return
-		}
-	}
 }
