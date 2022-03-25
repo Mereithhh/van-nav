@@ -7,6 +7,8 @@ rsync -r -P ui/website/build/* public/
 echo '构建管理页面'
 cd ui/admin && pnpm build && cd ../../
 rsync -r -P ui/admin/dist/* public/admin/
+echo "构建后端"
+go build .
 echo "完成"
 
 
