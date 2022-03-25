@@ -1,3 +1,4 @@
+import "./index.scss"
 const Card = ({ title, url, des, logo, catelog }) => {
   return (
     <a href={url} target="_blank" rel="noreferrer" className="card-box">

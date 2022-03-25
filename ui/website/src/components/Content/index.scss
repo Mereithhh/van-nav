@@ -3,6 +3,14 @@
   .main {
     padding-top: 30px;
   }
+  .theme-switch-box {
+    right: 10px;
+    bottom: 10px;
+    svg {
+      width: 24px;
+      height: 24px;
+    }
+  }
   .select-tag {
     font-size: 13px;
     padding: 2px 6px;
@@ -118,6 +126,14 @@
 @media (max-width: $width-medium) and (min-width: $width-small) {
   .main {
     padding-top: 40px;
+  }
+  .theme-switch-box {
+    right: 14px;
+    bottom: 14px;
+    svg {
+      width: 30px;
+      height: 30px;
+    }
   }
   .select-tag {
     font-size: 13px;
@@ -235,6 +251,14 @@
   .main {
     padding-top: 60px;
   }
+  .theme-switch-box {
+    right: 10px;
+    bottom: 14px;
+    svg {
+      width: 30px;
+      height: 30px;
+    }
+  }
   .select-tag {
     font-size: 13px;
     padding: 2px 10px;
@@ -299,7 +323,7 @@
     &:hover {
       // background-color: #fff;
       transform: translateY(-6px);
-      box-shadow: 0px 6px 12px 0px #eceef4;
+      box-shadow: 6px 6px 12px 0px #eceef4;
     }
   }
   .card-content {
@@ -361,6 +385,14 @@
 @media (min-width: $width-large) {
   .main {
     padding-top: 80px;
+  }
+  .theme-switch-box {
+    right: 10px;
+    bottom: 20px;
+    svg {
+      width: 40px;
+      height: 40px;
+    }
   }
   .select-tag {
     font-size: 14px;
@@ -426,7 +458,7 @@
     &:hover {
       // background-color: #fff;
       transform: translateY(-6px);
-      box-shadow: 0px 6px 12px 0px #eceef4;
+      box-shadow: 6px 6px 12px 0px #eceef4;
     }
   }
   .card-content {
