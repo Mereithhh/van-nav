@@ -1,8 +1,7 @@
 // 媒体查询用的
-$width-small: 623px; //1
-$width-medium: 935px; //2
-$width-large: 1247px; //3
-
+$width-small: 500px; // 100 一个尽量摞起来
+$width-medium: 700px; // 暂时没用到
+$width-large: 1060px; //最大 3 行大的
 
 // 版心
 $center-width: 1248px;
@@ -13,9 +12,9 @@ $header-bg:#8c8c8c;
 $header-height: 50px;
 
 // card 相关的
-// 大小
-$card-width: 250px;
-$card-height: 115px;
+// 大小 
+$card-width: 300px;
+$card-height: 111px;
 
 // card 颜色
 $card-title-color: #262626;

@@ -2,8 +2,12 @@
 // 一个card 是 312
 // 所以最大的宽度就是 80vw
 .main {
-  padding-top: $header-height + 30;
-  margin: 0 auto;
-  // max-width: 90vw;
+    margin: 0 auto;
+    height: 96vh;
+    overflow: hidden;
+    box-sizing: border-box;
 }
 
+.span-3 {
+  grid-column-start: span 3;
+}

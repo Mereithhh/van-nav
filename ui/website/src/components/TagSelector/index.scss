@@ -1,0 +1,25 @@
+.select-tag {
+    cursor: pointer;
+    color: #8A92A6;
+    border: 1px solid #979797;
+    transition: all .3s;
+    box-sizing: border-box;
+    &:hover {
+        border: 1px solid #969696;
+        background-color: #969696;
+        color: #FFFFFF;
+    }
+}
+.select-tag-active {
+    color: #FFFFFF;
+    background-color: #7C7C7C;
+    border: 1px solid #7C7C7C;
+}
+.tag-selector {
+    width: 100%;
+}
+.tag-selector-wrapper {
+    // display: flex;
+    // justify-content: space-between;
+    // flex-wrap: wrap;
+}
