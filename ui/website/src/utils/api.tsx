@@ -19,7 +19,7 @@ export const FetchList =async () => {
         name: "本站管理后台",
         desc: "本导航站的管理后台哦",
         url: "admin",
-        logo: "https://pic.mereith.com/img/admin-fill.png-slim",
+        logo: "https://pic.mereith.com/img/admin-fill.png",
     })
     data.catelogs = catelogs;
     return data;

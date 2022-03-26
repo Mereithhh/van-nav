@@ -55,7 +55,7 @@ body.dark-mode {
   }
   // 卡片
   .card-box {
-    background-color: #1a1a1a;
+    background-color: #222222;
     &:hover {
       box-shadow: 2px 2px 12px 0px #292929;
     }
@@ -71,7 +71,7 @@ body.dark-mode {
     color: rgba($color: #ffffff, $alpha: 0.6);
   }
   img {
-    filter: grayscale(0.3);
+    // filter: grayscale(0.3);
   }
 }
 @media (max-width: $width-large) and (min-width: $width-medium) {
