@@ -7,6 +7,15 @@ import { useCallback, useEffect, useState } from "react";
 import FetchList from "../../utils/api";
 import TagSelector from "../TagSelector";
 import { useDebounce } from "../../utils/tools";
+import pinyin from "pinyin-match";
+
+const mutiSearch = (s, t) => {
+  const source = (s as string).toLowerCase();
+  const target = t.toLowerCase();
+  const rawInclude = source.includes(target);
+  const pinYinInlcude = Boolean(pinyin.match(source, target));
+  return rawInclude || pinYinInlcude;
+};
 
 const Content = (props: any) => {
   const [data, setData] = useState<any>({});
@@ -58,9 +67,7 @@ const Content = (props: any) => {
           if (searchString === "") {
             return true;
           }
-          return (item.name as string)
-            .toLowerCase()
-            .includes(searchString.toLowerCase());
+          return mutiSearch(item.name,searchString) || mutiSearch(item.desc,searchString);
         })
         .map((item) => {
           return (

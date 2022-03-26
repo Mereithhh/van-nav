@@ -12,6 +12,15 @@ export const FetchList =async () => {
             catelogs.push(item.catelog);
         }
     });
+    catelogs.push("管理后台");
+    data.tools.push({
+        id: 999999999999,
+        catelog: "管理后台",
+        name: "本站管理后台",
+        desc: "本导航站的管理后台哦",
+        url: "admin",
+        logo: "https://pic.mereith.com/img/admin-fill.png-slim",
+    })
     data.catelogs = catelogs;
     return data;
 };
