@@ -30,7 +30,7 @@ function App() {
   return (
     <ConfigProvider locale={zhCN}>
       <GlobalContext.Provider value={{ store, setStore, reload, loading }}>
-        <Router>
+        <Router basename="/admin">
           <Routes>
             <Route
               path="/"

@@ -11,6 +11,7 @@ export default defineConfig({
         changeOrigin: true
       },
     },
-    port: 6411
+    port: 6411,
+    base: '/admin/'
   }
 })
