@@ -1,0 +1,15 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+}
+.logout {
+  color: white;
+  cursor: pointer;
+}
+.logout:hover {
+  color: #e8e8e8;
+}
+
+.main {
+    min-height: 100vh;
+}

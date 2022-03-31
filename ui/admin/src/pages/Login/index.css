@@ -1,0 +1,11 @@
+
+.login-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+.login-box {
+    border: 1px solid #434343;
+    padding: 32px;
+}

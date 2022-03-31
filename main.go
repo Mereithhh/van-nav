@@ -327,8 +327,8 @@ func main() {
 			admin.PUT("/catelog/:id", UpdateCatelogHandler)
 		}
 	}
-	fmt.Println("应用启动成功，网址:   http://localhost:8233")
-	router.Run(":8233")
+	fmt.Println("应用启动成功，网址:   http://localhost:6412")
+	router.Run(":6412")
 }
 
 func importTools(data []Tool) {
