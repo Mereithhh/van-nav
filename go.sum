@@ -1,5 +1,3 @@
-github.com/badoux/goscraper v0.0.0-20190827161153-36995ce6b19f h1:K7yQFgSzse/bjP0DaNlmgdlg8u0HiIQax0HdTGnaMaY=
-github.com/badoux/goscraper v0.0.0-20190827161153-36995ce6b19f/go.mod h1:5iU5AiceCVP7wmrAIn/9YhJzvmErX/GihV/T2o5QUpM=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=

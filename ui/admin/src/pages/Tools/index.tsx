@@ -100,6 +100,20 @@ export const Tools: React.FC<ToolsProps> = (props) => {
       reload();
     }
   }, [reload, selectedRows]);
+  const handleBulkResetLogo = useCallback(async () => {
+    try {
+      for (const each of selectedRows) {
+        try {
+          await fetchUpdateTool({...each,logo: ""});
+        } catch (err) {}
+      }
+      notification.success({ message: "重置成功!" });
+    } catch (err) {
+      notification.success({ message: "重置失败!" });
+    } finally {
+      reload();
+    }
+  }, [reload, selectedRows]);
   const handleExport = useCallback(async () => {
     const data = await fetchExportTools();
     const jsr = JSON.stringify(data);
@@ -128,6 +142,16 @@ export const Tools: React.FC<ToolsProps> = (props) => {
               }}
             >
               <Button type="link">删除</Button>
+            </Popconfirm>
+          )}
+          {selectedRows.length > 0 && (
+            <Popconfirm
+              title="确定重置这些的图标吗？（会自动获取网站默认的）"
+              onConfirm={() => {
+                handleBulkResetLogo();
+              }}
+            >
+              <Button type="link">重置默认图标</Button>
             </Popconfirm>
           )}
         </Space>

@@ -10,7 +10,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/badoux/goscraper"
+	"github.com/mereith/nav/goscraper"
+
 	"github.com/gin-gonic/contrib/static"
 	"github.com/gin-gonic/gin"
 	_ "modernc.org/sqlite"
