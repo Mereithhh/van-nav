@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -170,6 +171,10 @@ func AddToolHandler(c *gin.Context) {
 		})
 		return
 	}
+	fmt.Println(data.Name, " 获取 logo: ", data.Logo)
+	if data.Logo == "" {
+		data.Logo = getIcon(data.Url)
+	}
 	addTool(data, db)
 	c.JSON(200, gin.H{
 		"success": true,
@@ -206,6 +211,10 @@ func UpdateToolHandler(c *gin.Context) {
 			"errorMessage": err.Error(),
 		})
 		return
+	}
+	fmt.Println(data.Name, " 获取 logo: ", data.Logo)
+	if data.Logo == "" {
+		data.Logo = getIcon(data.Url)
 	}
 	updateTool(data, db)
 	c.JSON(200, gin.H{

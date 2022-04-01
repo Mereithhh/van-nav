@@ -10,6 +10,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/badoux/goscraper"
 	"github.com/gin-gonic/contrib/static"
 	"github.com/gin-gonic/gin"
 	_ "modernc.org/sqlite"
@@ -17,6 +18,32 @@ import (
 )
 
 const INDEX = "index.html"
+
+func getIcon(url string) string {
+	s, err := goscraper.Scrape(url, 5)
+	if err != nil {
+		fmt.Println(err)
+		return ""
+	}
+	var result string = ""
+	if strings.Contains(s.Preview.Icon, "http:") || strings.Contains(s.Preview.Icon, "https:") {
+		result = s.Preview.Icon
+	} else {
+		//  如果 link 最后一个是 /
+		var first string = s.Preview.Link
+		var second string = s.Preview.Icon
+		if !strings.Contains(s.Preview.Link[len(s.Preview.Link)-1:len(s.Preview.Link)], "/") {
+			first = s.Preview.Link + "/"
+		}
+		// 如果 icon 第一个是 /
+		if strings.Contains(s.Preview.Icon[0:1], "/") {
+			second = s.Preview.Icon[1:len(s.Preview.Icon)]
+		}
+		result = first + second
+	}
+	fmt.Println(result)
+	return result
+}
 
 func updateCatelog(data updateCatelogDto, db *sql.DB) {
 	sql_update_catelog := `
