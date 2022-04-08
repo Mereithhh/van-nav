@@ -27,12 +27,18 @@ const Content = (props: any) => {
       setLoading(true);
       const r = await FetchList();
       setData(r);
+      const tagInLocalStorage = window.localStorage.getItem("tag");
+      if (tagInLocalStorage && tagInLocalStorage !== "") {
+        if (r?.catelogs && r?.catelogs.includes(tagInLocalStorage)) {
+          setCurrTag(tagInLocalStorage);
+        }
+      }
     } catch (e) {
       console.log(e);
     } finally {
       setLoading(false);
     }
-  }, [setData, setLoading]);
+  }, [setData, setLoading, setCurrTag]);
   useEffect(() => {
     loadData();
   }, [loadData]);
@@ -67,7 +73,10 @@ const Content = (props: any) => {
           if (searchString === "") {
             return true;
           }
-          return mutiSearch(item.name,searchString) || mutiSearch(item.desc,searchString);
+          return (
+            mutiSearch(item.name, searchString) ||
+            mutiSearch(item.desc, searchString)
+          );
         })
         .map((item) => {
           return (

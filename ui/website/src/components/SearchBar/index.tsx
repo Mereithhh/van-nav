@@ -7,7 +7,8 @@ interface SearchBarProps {
 }
 const SearchBar = (props: SearchBarProps) => {
   const onKeyDown = (ev) => {
-    if(ev.code === "Enter") {
+    const reg = /[a-zA-Z0-9]|[\u4e00-\u9fa5]/g;
+    if(ev.code === "Enter" || reg.test(ev.key)) {
       const el = document.getElementById("search-bar");
       if (el) {
         el.focus();
