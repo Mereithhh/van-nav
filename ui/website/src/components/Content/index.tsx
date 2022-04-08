@@ -62,13 +62,10 @@ const Content = (props: any) => {
   const handleSetSearch = useDebounce((val: string) => {
     if (val !== "" && val) {
       setCurrTag("全部工具");
+      setSearchString(val);
     } else {
-      const tagInLocalStorage = window.localStorage.getItem("tag");
-      if (tagInLocalStorage && tagInLocalStorage !== "") {
-        setCurrTag(tagInLocalStorage);
-      }
+      resetSearch();
     }
-    setSearchString(val);
   }, 500);
 
   const filteredData = useMemo(() => {
@@ -112,6 +109,26 @@ const Content = (props: any) => {
     });
   }, [filteredData]);
 
+  const onKeyEnter = (ev) => {
+    const searchEl: any = document.getElementById("search-bar");
+    const cards = data?.tools?.filter((item: any) => {
+      if (searchEl?.value === "") {
+        return true;
+      }
+      return (
+        mutiSearch(item.name, searchEl?.value) ||
+        mutiSearch(item.desc, searchEl?.value)
+      );
+    });
+    if (ev.code === "Enter") {
+      if (cards && cards.length) {
+        window.open(cards[0]?.url, "_blank");
+        resetSearch();
+      }
+    }
+    document.removeEventListener("keydown", onKeyEnter);
+  };
+
   return (
     <>
       <Helmet>
@@ -131,6 +148,7 @@ const Content = (props: any) => {
             setSearchText={(t) => {
               setVal(t);
               handleSetSearch(t);
+              document.addEventListener("keydown", onKeyEnter);
             }}
           />
           <TagSelector
