@@ -4,6 +4,7 @@ import "./index.scss";
 
 interface SearchBarProps {
   setSearchText: (t: string) => void;
+  searchString: string;
 }
 const SearchBar = (props: SearchBarProps) => {
   const onKeyDown = (ev) => {
@@ -29,6 +30,7 @@ const SearchBar = (props: SearchBarProps) => {
           id="search-bar"
           type="search"
           placeholder="按回车键聚焦并搜索应用"
+          value={props.searchString}
           onChange={(ev) => {
             const v = ev.target.value.trim();
             props.setSearchText(v);

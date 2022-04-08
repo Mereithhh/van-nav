@@ -1,7 +1,9 @@
 import "./index.scss"
-const Card = ({ title, url, des, logo, catelog }) => {
+const Card = ({ title, url, des, logo, catelog, onClick }) => {
   return (
-    <a href={url} target="_blank" rel="noreferrer" className="card-box">
+    <a href={url} onClick={()=>{
+      onClick()
+    }} target="_blank" rel="noreferrer" className="card-box">
       <div className="card-content">
         <div className="card-left">
           <img src={logo} alt={title} />

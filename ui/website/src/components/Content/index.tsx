@@ -3,7 +3,7 @@ import CardV2 from "../CardV2";
 import SearchBar from "../SearchBar";
 import { Loading } from "../Loading";
 import { Helmet } from "react-helmet";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import FetchList from "../../utils/api";
 import TagSelector from "../TagSelector";
 import { useDebounce } from "../../utils/tools";
@@ -22,6 +22,7 @@ const Content = (props: any) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [currTag, setCurrTag] = useState("全部工具");
   const [searchString, setSearchString] = useState("");
+  const [val, setVal] = useState("");
   const loadData = useCallback(async () => {
     try {
       setLoading(true);
@@ -46,6 +47,16 @@ const Content = (props: any) => {
   const handleSetCurrTag = (tag: string) => {
     setCurrTag(tag);
     window.localStorage.setItem("tag", tag);
+    resetSearch();
+  };
+
+  const resetSearch = () => {
+    setVal("");
+    setSearchString("");
+    const tagInLocalStorage = window.localStorage.getItem("tag");
+    if (tagInLocalStorage && tagInLocalStorage !== "") {
+      setCurrTag(tagInLocalStorage);
+    }
   };
 
   const handleSetSearch = useDebounce((val: string) => {
@@ -60,7 +71,7 @@ const Content = (props: any) => {
     setSearchString(val);
   }, 500);
 
-  const renderCardsV2 = useCallback(() => {
+  const filteredData = useMemo(() => {
     if (data.tools) {
       return data.tools
         .filter((item: any) => {
@@ -77,22 +88,29 @@ const Content = (props: any) => {
             mutiSearch(item.name, searchString) ||
             mutiSearch(item.desc, searchString)
           );
-        })
-        .map((item) => {
-          return (
-            <CardV2
-              title={item.name}
-              url={item.url}
-              des={item.desc}
-              logo={item.logo}
-              key={item.id}
-              catelog={item.catelog}
-            />
-          );
         });
+    } else {
+      return [];
     }
-    return null;
   }, [data, currTag, searchString]);
+
+  const renderCardsV2 = useCallback(() => {
+    return filteredData.map((item) => {
+      return (
+        <CardV2
+          title={item.name}
+          url={item.url}
+          des={item.desc}
+          logo={item.logo}
+          key={item.id}
+          catelog={item.catelog}
+          onClick={() => {
+            resetSearch();
+          }}
+        />
+      );
+    });
+  }, [filteredData]);
 
   return (
     <>
@@ -108,7 +126,13 @@ const Content = (props: any) => {
       </Helmet>
       <div className="topbar">
         <div className="content">
-          <SearchBar setSearchText={handleSetSearch} />
+          <SearchBar
+            searchString={val}
+            setSearchText={(t) => {
+              setVal(t);
+              handleSetSearch(t);
+            }}
+          />
           <TagSelector
             tags={data?.catelogs ?? ["全部工具"]}
             currTag={currTag}
