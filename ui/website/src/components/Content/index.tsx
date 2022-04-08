@@ -83,7 +83,8 @@ const Content = (props: any) => {
           }
           return (
             mutiSearch(item.name, searchString) ||
-            mutiSearch(item.desc, searchString)
+            mutiSearch(item.desc, searchString) || 
+            mutiSearch(item.url, searchString)
           );
         });
     } else {
@@ -117,7 +118,8 @@ const Content = (props: any) => {
       }
       return (
         mutiSearch(item.name, searchEl?.value) ||
-        mutiSearch(item.desc, searchEl?.value)
+        mutiSearch(item.desc, searchEl?.value) || 
+        mutiSearch(item.url,  searchEl?.value)
       );
     });
     if (ev.code === "Enter") {
