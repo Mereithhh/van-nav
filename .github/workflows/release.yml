@@ -37,6 +37,7 @@ jobs:
           cp -r ui/admin/dist/* public/admin/
           sed -i 's/\/assets/\/admin\/assets/g' public/admin/index.html
           echo '构建前端数据完成'
+          git stash
       -
         name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v2
