@@ -37,8 +37,8 @@ jobs:
         name: get image name
         run: |
           VERSION=$(cat ./version.txt)
-          DOCKER_IMAGE_NAME=$(echo "docker.io/mereith/van-nav:v${VERSION}"')
-          ALI_IMAGE_NAME=$(echo "registry.cn-shanghai.aliyuncs.com/mereith/van-nav:v${VERSION}"')
+          DOCKER_IMAGE_NAME=$(echo "docker.io/mereith/van-nav:v${VERSION}")
+          ALI_IMAGE_NAME=$(echo "registry.cn-shanghai.aliyuncs.com/mereith/van-nav:v${VERSION}")
           echo ${VERSION}
           echo "::set-output name=DOCKER_IMAGE_NAME::$DOCKER_IMAGE_NAME"
           echo "::set-output name=ALI_IMAGE_NAME::$ALI_IMAGE_NAME"

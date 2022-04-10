@@ -31,7 +31,7 @@ jobs:
           rm -rf ./public
           mkdir -p public/admin
           echo '构建用户页面'
-          cd ui/website && && pnpm install && pnpm build && cd ../../
+          cd ui/website && pnpm install && pnpm build && cd ../../
           cp -r ui/website/build/* public/
           echo '构建管理页面'
           cd ui/admin && pnpm install && pnpm build && cd ../../
