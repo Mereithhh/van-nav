@@ -30,10 +30,10 @@ jobs:
           rm -rf ./public
           mkdir -p public/admin
           echo '构建用户页面'
-          cd ui/website && npm install && npm build && cd ../../
+          cd ui/website && npm install && npm run build && cd ../../
           cp -r ui/website/build/* public/
           echo '构建管理页面'
-          cd ui/admin && npm install && npm build && cd ../../
+          cd ui/admin && npm install && npm run build && cd ../../
           cp -r ui/admin/dist/* public/admin/
           sed -i 's/\/assets/\/admin\/assets/g' public/admin/index.html
           echo '构建前端数据完成'
