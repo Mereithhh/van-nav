@@ -2,11 +2,7 @@
 一个轻量的私人导航站 / 工具站。
 
 ![预览](images/website.png)
-![后台登录](images/login.png)
 ![后台设置](images/admin-overview.png)
-![增加工具](images/add-tool.png)
-![修改配置](images/setting.png)
-
 
 ## 故事
 作为一个喜欢折腾的人，总会时不时的发现什么好项目，尤其是每当 web 项目，第一个想法就是把他拔下来，放到自己的服务器上。23333。
