@@ -3,7 +3,7 @@ name: GoReleaser
 on:
   push:
     tags:
-      - '*'
+      - 'v*'
 
 jobs:
 
@@ -13,11 +13,28 @@ jobs:
       -
         name: Checkout
         uses: actions/checkout@v2
+      - 
+        uses: pnpm/action-setup@v2.1.0
+        with:
+          version: 6.0.2
       -
         name: Set up Go
         uses: actions/setup-go@v2
         with:
           go-version: 1.17
+      - name: build public files
+        run: |
+          echo "清空原有数据"
+          rm -rf ./public
+          mkdir public/admin
+          echo '构建用户页面'
+          cd ui/website && && pnpm install && pnpm build && cd ../../
+          cp -r ui/website/build/* public/
+          echo '构建管理页面'
+          cd ui/admin && pnpm install && pnpm build && cd ../../
+          cp -r ui/admin/dist/* public/admin/
+          sed -i 's/\/assets/\/admin\/assets/g' public/admin/index.html
+          echo '构建前端数据完成'
       -
         name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v2
