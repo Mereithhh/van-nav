@@ -24,7 +24,7 @@ jobs:
           go-version: 1.17
       - name: install node-gpy
         run: |
-          apt install -y python3 make gcc g++
+          sudo apt install -y python3 make gcc g++
       - name: build public files
         run: |
           echo "清空原有数据"
