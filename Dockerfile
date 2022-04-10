@@ -1,6 +1,6 @@
-FROM mereith/node-gyp:14 AS feBuilder
+FROM node:14-alpine AS feBuilder
 WORKDIR /app
-# RUN apk add --no-cache --virtual .build-deps alpine-sdk python
+RUN apk add --no-cache g++ gcc make python3
 COPY . .
 RUN yarn config set registry https://registry.npm.taobao.org && yarn global add typescript
 RUN cd /app && cd ui/admin && yarn && yarn build && cd ../..

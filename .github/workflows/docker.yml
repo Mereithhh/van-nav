@@ -43,7 +43,7 @@ jobs:
           echo "::set-output name=DOCKER_IMAGE_NAME::$DOCKER_IMAGE_NAME"
           echo "::set-output name=ALI_IMAGE_NAME::$ALI_IMAGE_NAME"
         id: image-name
-      - name: Build dasbboard image And Push
+      - name: Build image And Push
         uses: docker/build-push-action@v2
         with:
           context: .
