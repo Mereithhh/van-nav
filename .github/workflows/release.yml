@@ -22,11 +22,14 @@ jobs:
         uses: actions/setup-go@v2
         with:
           go-version: 1.17
+      - name: install node-gpy
+        run: |
+          apt install -y python3 make gcc g++
       - name: build public files
         run: |
           echo "清空原有数据"
           rm -rf ./public
-          mkdir public/admin
+          mkdir -p public/admin
           echo '构建用户页面'
           cd ui/website && && pnpm install && pnpm build && cd ../../
           cp -r ui/website/build/* public/
