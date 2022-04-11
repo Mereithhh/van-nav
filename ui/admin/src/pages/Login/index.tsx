@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useCallback, useContext, useEffect } from "react";
 import { GlobalContext } from "../../components/GlobalContext";
 import { login as fetchLogin } from "../../utils/api";
-import { Button, Form, Input, notification } from "antd";
+import { Button, Form, Input, message } from "antd";
 import { getLoginState } from "../../utils";
 import axios from "axios";
 import { config } from "../../config";
@@ -22,10 +22,10 @@ export const Login: React.FC<LoginProps> = (props) => {
         axios.defaults.headers.common = {
           Authorization: token,
         };
-        notification.success({ message: "登录成功!" });
+        message.success({ message: "登录成功!" });
         navigate("/");
       } else {
-        notification.error({ message: data.errorMessage ?? "登录失败!" });
+        message.error({ message: data.errorMessage ?? "登录失败!" });
       }
     },
     [setStore, store]

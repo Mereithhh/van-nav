@@ -1,5 +1,5 @@
 
-import { Button, Card, Form, Input, Modal, notification, Popconfirm, Space, Spin, Table } from 'antd';
+import { Button, Card, Form, Input, Modal, message, Popconfirm, Space, Spin, Table } from 'antd';
 import { useCallback, useContext, useState } from 'react';
 import { GlobalContext } from '../../components/GlobalContext';
 import { fetchAddCateLog, fetchDeleteCatelog } from '../../utils/api';
@@ -15,9 +15,9 @@ export const Catelog: React.FC<CatelogProps> = (props) => {
     async (id: number) => {
       try {
         await fetchDeleteCatelog(id);
-        notification.success({ message: "删除成功!" });
+        message.success({ message: "删除成功!" });
       } catch (err) {
-        notification.warning({ message: "删除失败!" });
+        message.warning({ message: "删除失败!" });
       } finally {
         reload();
       }
@@ -28,9 +28,9 @@ export const Catelog: React.FC<CatelogProps> = (props) => {
     async (record: any) => {
       try {
         await fetchAddCateLog(record);
-        notification.success({ message: "添加成功!" });
+        message.success({ message: "添加成功!" });
       } catch (err) {
-        notification.warning({ message: "添加失败!" });
+        message.warning({ message: "添加失败!" });
       } finally {
         setShowAddModel(false);
         reload();

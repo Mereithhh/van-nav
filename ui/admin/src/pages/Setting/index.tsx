@@ -1,4 +1,4 @@
-import { Button, Card, Form, Input, notification, Spin } from "antd";
+import { Button, Card, Form, Input, message, Spin } from "antd";
 import { useCallback, useContext } from "react";
 import { GlobalContext } from "../../components/GlobalContext";
 import { fetchUpdateSetting, fetchUpdateUser } from "../../utils/api";
@@ -10,9 +10,9 @@ export const Setting: React.FC<SettingProps> = (props) => {
     async (values: any) => {
       try {
         await fetchUpdateUser({ ...values, id: store?.user?.id });
-        notification.success({ message: "修改成功!" });
+        message.success({ message: "修改成功!" });
       } catch (err) {
-        notification.warning({ message: "修改失败!" });
+        message.warning({ message: "修改失败!" });
       } finally {
         reload();
       }
@@ -23,9 +23,9 @@ export const Setting: React.FC<SettingProps> = (props) => {
     async (values: any) => {
       try {
         await fetchUpdateSetting(values);
-        notification.success({ message: "修改成功!" });
+        message.success({ message: "修改成功!" });
       } catch (err) {
-        notification.warning({ message: "修改失败!" });
+        message.warning({ message: "修改失败!" });
       } finally {
         reload();
       }

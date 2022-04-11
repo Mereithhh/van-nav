@@ -1,6 +1,6 @@
 import jwt_decode from "jwt-decode";
 import dayjs from "dayjs";
-import { notification } from "antd";
+import { message } from "antd";
 import pinyin from "pinyin-match";
 export const getLoginState = () => {
     const user = window.localStorage.getItem("_user");
@@ -18,7 +18,7 @@ export const getLoginState = () => {
 export const logout = () => {
     window.localStorage.removeItem("_user");
     window.localStorage.removeItem("_token");
-    notification.success({ message: "登出成功!" });
+    message.success({ message: "登出成功!" });
 }
 
 export const getOptions = (rawList : any) => {
