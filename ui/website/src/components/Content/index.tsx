@@ -46,7 +46,10 @@ const Content = (props: any) => {
 
   const handleSetCurrTag = (tag: string) => {
     setCurrTag(tag);
-    window.localStorage.setItem("tag", tag);
+    // 管理后台不记录了
+    if (tag !== "管理后台") {
+      window.localStorage.setItem("tag", tag);
+    }
     resetSearch();
   };
 
