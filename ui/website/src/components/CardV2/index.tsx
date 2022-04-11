@@ -1,4 +1,4 @@
-import "./index.scss"
+import "./index.css"
 const Card = ({ title, url, des, logo, catelog, onClick }) => {
   return (
     <a href={url} onClick={()=>{

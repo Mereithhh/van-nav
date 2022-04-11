@@ -1,0 +1,20 @@
+.select-tag {
+  cursor: pointer;
+  color: #8a92a6;
+  border: 1px solid #979797;
+  transition: all 0.3s;
+  box-sizing: border-box;
+}
+.select-tag:hover {
+  border: 1px solid #969696;
+  background-color: #969696;
+  color: #ffffff;
+}
+.select-tag-active {
+  color: #ffffff;
+  background-color: #7c7c7c;
+  border: 1px solid #7c7c7c;
+}
+.tag-selector {
+  width: 100%;
+}

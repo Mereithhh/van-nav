@@ -1,4 +1,4 @@
-import "./App.scss";
+import "./App.css";
 import Content from "./components/Content";
 import DarkSwitch from "./components/DarkSwitch";
 function App() {

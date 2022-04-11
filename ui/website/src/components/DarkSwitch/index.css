@@ -1,0 +1,12 @@
+.theme-switch-box {
+  position: fixed;
+  cursor: pointer;
+}
+.theme-switch-box svg {
+  fill: #3d3d3d;
+  transition: all 0.3s;
+}
+
+.theme-switch-box svg:hover {
+  fill: #121212;
+}

@@ -1,4 +1,4 @@
-import "./index.scss";
+import "./index.css";
 import CardV2 from "../CardV2";
 import SearchBar from "../SearchBar";
 import { Loading } from "../Loading";

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import "./index.scss";
+import "./index.css";
 const getInitMode = () => {
   const mode = window.localStorage.getItem("theme");
   if (mode) {

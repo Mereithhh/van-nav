@@ -1,4 +1,4 @@
-import "./index.scss";
+import "./index.css";
 export const Loading = (props: any) => {
   return (
     <div className="loading span-3">

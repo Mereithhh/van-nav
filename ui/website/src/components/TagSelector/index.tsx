@@ -1,4 +1,4 @@
-import "./index.scss";
+import "./index.css";
 import { useCallback } from "react";
 interface TagSelectorProps {
   tags: any;

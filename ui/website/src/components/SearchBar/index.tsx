@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import "./index.scss";
+import "./index.css";
 // import { useState } from 'react';
 
 interface SearchBarProps {
