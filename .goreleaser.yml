@@ -33,3 +33,4 @@ changelog:
     exclude:
       - '^docs:'
       - '^test:'
+      - 'version'

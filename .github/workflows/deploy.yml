@@ -1,0 +1,25 @@
+
+on:
+  push:
+    tags:
+      - 'v*'
+name: deploy
+jobs:
+  deploy:
+    name: deploy to cluster
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    steps:
+    - uses: actions/checkout@master
+    -
+      name: get image name
+      run: |
+        VERSION=$(cat ./version.txt)
+        DOCKER_IMAGE_NAME=$(echo "mereith/van-nav:v${VERSION}")
+        echo "::set-output name=DOCKER_IMAGE_NAME::$DOCKER_IMAGE_NAME"
+      id: image-name
+    - name: deploy to cluster
+      uses: steebchen/kubectl@v2.0.0
+      with: # defaults to latest kubectl binary version
+        config: ${{ secrets.KUBE_CONFIG_DATA }}
+        command: set image deployment/tools -n tools van-nav=${{ steps.image-name.outputs.DOCKER_IMAGE_NAME }}
