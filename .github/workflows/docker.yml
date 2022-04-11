@@ -53,3 +53,8 @@ jobs:
           tags: |
             ${{ steps.image-name.outputs.DOCKER_IMAGE_NAME }}
             ${{ steps.image-name.outputs.ALI_IMAGE_NAME }}
+      - name: deploy to cluster
+        uses: steebchen/kubectl@v2.0.0
+        with: # defaults to latest kubectl binary version
+          config: ${{ secrets.KUBE_CONFIG_DATA }}
+          command: set image deployment/tools -n tools van-nav=${{ steps.image-name.outputs.DOCKER_IMAGE_NAME }}
