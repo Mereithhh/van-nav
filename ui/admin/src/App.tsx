@@ -4,6 +4,7 @@ import { GlobalContext } from "./components/GlobalContext";
 import { AuthLayout } from "./layout/Auth";
 import { Login } from "./pages/Login";
 import { Catelog } from "./pages/Catelog";
+import {ApiToken} from "./pages/ApiToken";
 import { Setting } from "./pages/Setting";
 import { config } from "./config";
 import { Tools } from "./pages/Tools";
@@ -48,6 +49,16 @@ function App() {
                 <AuthLayout>
                   <MainLayout>
                     <Tools />
+                  </MainLayout>
+                </AuthLayout>
+              }
+            />
+            <Route
+              path="/tokens"
+              element={
+                <AuthLayout>
+                  <MainLayout>
+                    <ApiToken />
                   </MainLayout>
                 </AuthLayout>
               }

@@ -91,6 +91,21 @@ func updateSetting(data Setting, db *sql.DB) {
 	// fmt.Println(affect)
 }
 
+func addApiTokenInDB(data Token, db *sql.DB) {
+	sql_add_api_token := `
+		INSERT INTO nav_api_token (id,name,value,disabled)
+		VALUES (?,?,?,?);
+		`
+	// fmt.Println("增加分类：",data)
+	stmt, err := db.Prepare(sql_add_api_token)
+	checkErr(err)
+
+	res, err := stmt.Exec(data.Id, data.Name, data.Value, data.Disabled)
+	checkErr(err)
+	_, err = res.LastInsertId()
+	checkErr(err)
+}
+
 func updateUser(data updateUserDto, db *sql.DB) {
 	sql_update_user := `
 		UPDATE nav_user
@@ -239,6 +254,17 @@ func initDB() {
 		`
 	_, err = db.Exec(sql_create_table)
 	checkErr(err)
+	// api token 表
+	sql_create_table = `
+		CREATE TABLE IF NOT EXISTS nav_api_token (
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
+			name TEXT,
+			value TEXT,
+			disabled INTEGER
+		);
+		`
+	_, err = db.Exec(sql_create_table)
+	checkErr(err)
 	// 如果不存在，就初始化用户
 	sql_get_user := `
 		SELECT * FROM nav_user;
@@ -345,6 +371,8 @@ func main() {
 		admin := api.Group("/admin")
 		admin.Use(JWTMiddleware())
 		{
+			admin.POST("/apiToken", AddApiTokenHandler)
+			admin.DELETE("/apiToken/:id", DeleteApiTokenHandler)
 			admin.GET("/all", GetAdminAllDataHandler)
 
 			admin.GET("/exportTools", ExportToolsHandler)
@@ -402,6 +430,23 @@ func getSetting(db *sql.DB) Setting {
 	err := row.Scan(&setting.Id, &setting.Favicon, &setting.Title)
 	checkErr(err)
 	return setting
+}
+
+func getApiTokens(db *sql.DB) []Token {
+	sql_get_api_tokens := `
+		SELECT * FROM nav_api_token WHERE disabled = 0;
+		`
+	results := make([]Token, 0)
+	rows, err := db.Query(sql_get_api_tokens)
+	checkErr(err)
+	for rows.Next() {
+		var token Token
+		err = rows.Scan(&token.Id, &token.Name, &token.Value, &token.Disabled)
+		checkErr(err)
+		results = append(results, token)
+	}
+	defer rows.Close()
+	return results
 }
 
 func getUser(name string, db *sql.DB) User {

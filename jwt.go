@@ -22,6 +22,17 @@ func SignJWT(user User) (string, error) {
 	return tokenString, err
 }
 
+// 签名一个 JTW
+func SignJWTForAPI(tokenName string, tokenId int) (string, error) {
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+		"name": tokenName,
+		"id":   tokenId,
+		"exp":  time.Now().Add(time.Hour * 24 * 365 * 100).Unix(),
+	})
+	tokenString, err := token.SignedString([]byte(jwtSecret))
+	return tokenString, err
+}
+
 // 解密一个 JTW
 func ParseJWT(tokenString string) (*jwt.Token, error) {
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (i interface{}, e error) {

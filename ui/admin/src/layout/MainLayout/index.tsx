@@ -157,6 +157,7 @@ export const MainLayout: React.FC<MainLayoutProps> = (props) => {
           >
             <Menu.Item key="/tools">工具管理</Menu.Item>
             <Menu.Item key="/catelogs">分类管理</Menu.Item>
+            <Menu.Item key="/tokens">API Token</Menu.Item>
             <Menu.Item key="/settings">系统设置</Menu.Item>
           </Menu>
         </Sider>

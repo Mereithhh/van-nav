@@ -53,3 +53,11 @@ export const fetchUpdateUser = async (payload: any) => {
   return data?.data || {};
 };
 
+export const fetchAddApiToken = async (payload: any) => {
+  const { data } = await axios.post(`/api/admin/apiToken`,payload);
+  return data?.data || {};
+};
+export const fetchDeleteApiToken = async (id: number) => {
+  const { data } = await axios.delete(`/api/admin/apiToken/${id}`);
+  return data?.data || {};
+};

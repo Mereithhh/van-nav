@@ -50,14 +50,14 @@ const Content = (props: any) => {
     if (tag !== "管理后台") {
       window.localStorage.setItem("tag", tag);
     }
-    resetSearch();
+    resetSearch(true);
   };
 
-  const resetSearch = () => {
+  const resetSearch = (notSetTag?: boolean) => {
     setVal("");
     setSearchString("");
     const tagInLocalStorage = window.localStorage.getItem("tag");
-    if (tagInLocalStorage && tagInLocalStorage !== "") {
+    if (!notSetTag &&tagInLocalStorage && tagInLocalStorage !== "" && tagInLocalStorage !== "管理后台") {
       setCurrTag(tagInLocalStorage);
     }
   };

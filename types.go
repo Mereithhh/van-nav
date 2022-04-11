@@ -12,6 +12,15 @@ type Setting struct {
 	Title   string `json:"title"`
 }
 
+type Token struct {
+	Id       int    `json:"id"`
+	Name     string `json:"name"`
+	Value    string `json:"value"`
+	Disabled int    `json:"disabled"`
+}
+type AddTokenDto struct {
+	Name string `json:"name"`
+}
 type User struct {
 	Id       int    `json:"id"`
 	Name     string `json:"name"`

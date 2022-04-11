@@ -35,6 +35,67 @@ func ImportToolsHandler(c *gin.Context) {
 	})
 }
 
+func DeleteApiTokenHandler(c *gin.Context) {
+	// 删除 Token
+	id := c.Param("id")
+	sql_delete_api_token := `
+		UPDATE nav_api_token
+		SET disabled = 1
+		WHERE id = ?;
+		`
+	stmt, err := db.Prepare(sql_delete_api_token)
+	checkErr(err)
+	res, err := stmt.Exec(id)
+	checkErr(err)
+	_, err = res.RowsAffected()
+	checkErr(err)
+	// fmt.Println(affect)
+	c.JSON(200, gin.H{
+		"success": true,
+		"message": "删除 API Token 成功",
+	})
+}
+
+func AddApiTokenHandler(c *gin.Context) {
+	var token AddTokenDto
+	err := c.ShouldBindJSON(&token)
+	if err != nil {
+		checkErr(err)
+		c.JSON(http.StatusBadRequest, gin.H{
+			"success":      false,
+			"errorMessage": err.Error(),
+		})
+		return
+	}
+	newId := generateId()
+	var signedJwt string
+	signedJwt, err = SignJWTForAPI(token.Name, newId)
+	if err != nil {
+		checkErr(err)
+		c.JSON(http.StatusBadRequest, gin.H{
+			"success":      false,
+			"errorMessage": err.Error(),
+		})
+		return
+	}
+	addApiTokenInDB(Token{
+		Name:     token.Name,
+		Value:    signedJwt,
+		Id:       newId,
+		Disabled: 0,
+	}, db)
+	// 签名 jwt
+	c.JSON(200, gin.H{
+		"success": true,
+		"data": gin.H{
+			"id":    newId,
+			"Value": signedJwt,
+			"Name":  token.Name,
+		},
+		"message": "添加 Token 成功",
+	})
+}
+
 func UpdateSettingHandler(c *gin.Context) {
 	var data Setting
 	if err := c.ShouldBindJSON(&data); err != nil {
@@ -89,6 +150,7 @@ func GetAdminAllDataHandler(c *gin.Context) {
 	tools := getAllTool(db)
 	catelogs := getAllCatelog(db)
 	setting := getSetting(db)
+	tokens := getApiTokens(db)
 	userId, ok := c.Get("uid")
 	if !ok {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -107,6 +169,7 @@ func GetAdminAllDataHandler(c *gin.Context) {
 				"name": c.GetString("username"),
 				"id":   userId,
 			},
+			"tokens": tokens,
 		},
 	})
 }
