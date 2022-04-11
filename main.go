@@ -107,6 +107,15 @@ func updateUser(data updateUserDto, db *sql.DB) {
 }
 
 func addCatelog(data addCatelogDto, db *sql.DB) {
+	// 先检查重复不重复
+	existCatelogs := getAllCatelog(db)
+	var existCatelogsArr []string
+	for _, catelogDto := range existCatelogs {
+		existCatelogsArr = append(existCatelogsArr, catelogDto.Name)
+	}
+	if in(data.Name, existCatelogsArr) {
+		return
+	}
 	sql_add_catelog := `
 		INSERT INTO nav_catelog (id,name)
 		VALUES (?,?);
@@ -360,7 +369,12 @@ func main() {
 }
 
 func importTools(data []Tool) {
+	var catelogs []string
 	for _, v := range data {
+		// if ()
+		if !in(v.Catelog, catelogs) {
+			catelogs = append(catelogs, v.Catelog)
+		}
 		sql_add_tool := `
 			INSERT INTO nav_table (id, name, catelog, url, logo, desc)
 			VALUES (?, ?, ?, ?, ?, ?);
@@ -371,6 +385,11 @@ func importTools(data []Tool) {
 		checkErr(err)
 		_, err = res.LastInsertId()
 		checkErr(err)
+	}
+	for _, catelog := range catelogs {
+		var addCatelogDto addCatelogDto
+		addCatelogDto.Name = catelog
+		addCatelog(addCatelogDto, db)
 	}
 }
 

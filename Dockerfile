@@ -2,7 +2,6 @@ FROM node:14-alpine AS feBuilder
 WORKDIR /app
 # RUN apk add --no-cache g++ gcc make python3
 COPY . .
-RUN yarn config set registry https://registry.npm.taobao.org && yarn global add typescript
 RUN cd /app && cd ui/admin && yarn && yarn build && cd ../..
 RUN cd ui/website && yarn && yarn build && cd ../..
 RUN cd /app && mkdir -p public/admin
