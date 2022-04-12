@@ -16,12 +16,16 @@ builds:
       - arm64
       - arm
       - "386"
+    ignore:
+    - goos: windows
+      goarch: arm64
 archives:
   - replacements:
       darwin: MacOs
       linux: Linux
       windows: Windows
       amd64: x86_64
+      "386": x86
 checksum:
   name_template: 'checksums.txt'
 snapshot:
