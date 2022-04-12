@@ -17,15 +17,9 @@ builds:
       - arm
       - "386"
       - mips
-      - mips64
-      - riscv64
-      - s390x
-    ignore:
-      - goos: windows
-        goarch: arm64
 archives:
   - replacements:
-      darwin: Darwin
+      darwin: MacOs
       linux: Linux
       windows: Windows
       amd64: x86_64
