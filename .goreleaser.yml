@@ -14,6 +14,12 @@ builds:
     goarch:
       - amd64
       - arm64
+      - arm
+      - "386"
+      - mips
+      - mips64
+      - riscv64
+      - s390x
     ignore:
       - goos: windows
         goarch: arm64
