@@ -35,7 +35,7 @@ docker run -d --name tools --restart always -p 6412:6412 -v /path/to/your/data:/
 - 默认账号密码 admin admin ，第一次运行后请进入后台修改
 - 数据库会自动创建在当前文件夹中： `nav.db`
 
-## nginx 反向代理
+### nginx 反向代理
 
 参考配置
 
@@ -66,6 +66,38 @@ server {
         proxy_set_header Upgrade $http_upgrade;
     }
 }
+```
+
+### systemd 服务
+可以注册成系统服务，开机启动。
+
+1. 复制二进制文件到 `/usr/local/bin` 目录下，并加上执行权限
+
+2. 新建 `VanNav.serivce` 文件于 `/usr/lib/systemd/system` 目录下:
+```
+[Unit]
+Description=VanNav
+Documentation=https://github.com/mereithhh/van-nav
+After=network.target
+Wants=network.target
+
+[Service]
+WorkingDirectory=/usr/local/bin
+ExecStart=/usr/local/bin/nav
+Restart=on-abnormal
+RestartSec=5s
+KillMode=mixed
+
+StandardOutput=null
+StandardError=syslog
+
+[Install]
+WantedBy=multi-user.target
+```
+
+3. 执行:
+```
+sudo systemctl daemon-reload && sudo systemctl enable --now VanNav.service
 ```
 ## API
 本导航站支持 API，可以用自己的方法添加工具。
