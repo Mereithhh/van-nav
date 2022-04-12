@@ -65,5 +65,5 @@ jobs:
           command: set image deployment/demo-tools demo=${{ steps.image-name.outputs.DOCKER_IMAGE_NAME }}
       - name: send Message To me
         run: |
-          VERSION=$(cat ./version.txt)
+          set VERSION=$(cat ./version.txt)
           curl -X POST -H "Content-Type: application/json" -d '{"source":"github-ci:van-nav","message":"流水线运行完毕，k8s, k3s 已部署。\n版本: v${VERSION}"}' ${{ secrets.WEBHOOK_URL }}
