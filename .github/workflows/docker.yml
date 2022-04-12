@@ -30,7 +30,7 @@ jobs:
         name: Login to AliyunCS
         uses: docker/login-action@v1
         with:
-          registry: registry.cn-shanghai.aliyuncs.com
+          registry: registry.cn-beijing.aliyuncs.com
           username: ${{ secrets.ALI_USER  }}
           password: ${{ secrets.ALI_PASSWORD  }}
       -
@@ -38,7 +38,7 @@ jobs:
         run: |
           VERSION=$(cat ./version.txt)
           DOCKER_IMAGE_NAME=$(echo "docker.io/mereith/van-nav:v${VERSION}")
-          ALI_IMAGE_NAME=$(echo "registry.cn-shanghai.aliyuncs.com/mereith/van-nav:v${VERSION}")
+          ALI_IMAGE_NAME=$(echo "registry.cn-beijing.aliyuncs.com/mereith/van-nav:v${VERSION}")
           echo ${VERSION}
           echo "::set-output name=DOCKER_IMAGE_NAME::$DOCKER_IMAGE_NAME"
           echo "::set-output name=ALI_IMAGE_NAME::$ALI_IMAGE_NAME"
@@ -65,5 +65,4 @@ jobs:
           command: set image deployment/demo-tools demo=${{ steps.image-name.outputs.DOCKER_IMAGE_NAME }}
       - name: send Message To me
         run: |
-          set VERSION=$(cat ./version.txt)
-          curl -X POST -H "Content-Type: application/json" -d '{"source":"github-ci:van-nav","message":"流水线运行完毕，k8s, k3s 已部署。\n版本: v${VERSION}"}' ${{ secrets.WEBHOOK_URL }}
+          curl -X POST -H "Content-Type: application/json" -d '{"source":"github-ci:van-nav","message":"流水线运行完毕，k8s, k3s 已部署。\n版本: v${{ github.ref_name}" }}' ${{ secrets.WEBHOOK_URL }}

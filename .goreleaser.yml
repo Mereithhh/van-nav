@@ -16,7 +16,6 @@ builds:
       - arm64
       - arm
       - "386"
-      - mips
 archives:
   - replacements:
       darwin: MacOs
