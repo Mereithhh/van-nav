@@ -1,15 +1,14 @@
 # Van Nav
 
-一个轻量的导航站。
+一个轻量的导航站。 [在线体验](https://demo-tools.mereith.com) (账号密码均为: demo)
 
-<div style="display:flex; justify-content: center;" ><img  src="images/pc-light.png" alt="预览 PC "/></div>
-<div style="display:flex; justify-content: center;" ><img  src="images/pc-dark.png" alt="预览 PC "/></div>
-<div style="display:flex; justify-content: center;" ><img  src="images/pad-light.png" alt="预览 PAD "/></div>
-<div style="display:flex; justify-content: center;" ><img  src="images/pad-dark.png" alt="预览 PAD "/></div>
-<div style="display: flex; justify-content: center;"><img width=450 src="images/phone-light.png"/></div>
-<div style="display: flex; justify-content: center;"><img width=450 src="images/phone-dark.png"/></div>
-
-![后台设置](images/admin-overview.png)
+<div align=center ><img  src="images/pc-light.png" alt="预览 PC "/></div>
+<div align=center ><img  src="images/pc-dark.png" alt="预览 PC "/></div>
+<div align=center ><img  src="images/pad-light.png" alt="预览 PAD "/></div>
+<div align=center ><img  src="images/pad-dark.png" alt="预览 PAD "/></div>
+<div align=center><img  alt="预览 phone" width=450 src="images/phone-light.png"/></div>
+<div align=center><img alt="预览 phone"  width=450 src="images/phone-dark.png"/></div>
+<div align=center><img alt="后台设置" src="images/overview-admin.png"/></div>
 
 ## 使用方法
 ### Docker
@@ -115,6 +114,9 @@ sudo systemctl daemon-reload && sudo systemctl enable --now VanNav.service
 - [x] 自动获取网站 logo
 - [x] 拼音匹配的模糊搜索功能
 - [x] 按键直接搜索，搜索后回车直接打开第一项
+- [ ] 图片存库，避免跨域和加载慢的问题
+- [ ] 增加 ServiceWork ,离线可用
+- [ ] 自动获取网站题目和描述等信息
 - [ ] 国际化
 - [ ] 浏览器插件
 - [ ] 网站状态检测
