@@ -8,7 +8,7 @@
 <div align=center ><img  src="images/pad-dark.png" alt="预览 PAD "/></div>
 <div align=center><img  alt="预览 phone" width=450 src="images/phone-light.png"/></div>
 <div align=center><img alt="预览 phone"  width=450 src="images/phone-dark.png"/></div>
-<div align=center><img alt="后台设置" src="images/overview-admin.png"/></div>
+<div align=center><img alt="后台设置" src="images/admin.png"/></div>
 
 ## 使用方法
 ### Docker
