@@ -28,7 +28,7 @@ const SearchBar = (props: SearchBarProps) => {
         <input
           id="search-bar"
           type="search"
-          placeholder="按回车键聚焦并搜索应用"
+          placeholder="按任意键开始搜索应用"
           value={props.searchString}
           onChange={(ev) => {
             const v = ev.target.value.trim();
