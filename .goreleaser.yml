@@ -19,6 +19,8 @@ builds:
     ignore:
     - goos: windows
       goarch: arm64
+    - goos: windows
+      goarch: arm
 archives:
   - replacements:
       darwin: MacOs
