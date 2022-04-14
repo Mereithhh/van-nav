@@ -4,6 +4,7 @@ import (
 	"encoding/base64"
 	"fmt"
 	"net/http"
+	"net/url"
 	"strconv"
 	"strings"
 
@@ -286,13 +287,13 @@ func DeleteToolHandler(c *gin.Context) {
 	numberId, err := strconv.Atoi(id)
 	checkErr(err)
 	url1 := getToolLogoUrlById(numberId, db)
-	// urlEncoded := url.QueryEscape(url1)
+	urlEncoded := url.QueryEscape(url1)
 	sql_delete_tool_img := `
 		DELETE FROM nav_img WHERE url = ?;
 		`
 	stmt, err = db.Prepare(sql_delete_tool_img)
 	checkErr(err)
-	res, err = stmt.Exec(url1)
+	res, err = stmt.Exec(urlEncoded)
 	checkErr(err)
 	_, err = res.RowsAffected()
 	checkErr(err)

@@ -5,6 +5,7 @@ import (
 	"embed"
 	"fmt"
 	"net/http"
+	"net/url"
 	"os"
 	"path"
 	"strings"
@@ -63,12 +64,12 @@ func updateCatelog(data updateCatelogDto, db *sql.DB) {
 }
 
 func getImgFromDB(url1 string, db *sql.DB) Img {
-	// urlEncoded := url.QueryEscape(url1)
+	urlEncoded := url.QueryEscape(url1)
 	sql_get_img := `
 		SELECT * FROM nav_img
 		WHERE url=?;
 		`
-	rows, err := db.Query(sql_get_img, url1)
+	rows, err := db.Query(sql_get_img, urlEncoded)
 	checkErr(err)
 	var result Img
 	var has bool = false
@@ -97,7 +98,7 @@ func getImgFromDB(url1 string, db *sql.DB) Img {
 func updateImg(url1 string, db *sql.DB) {
 	// 除了更新工具本身之外，也要更新 img 表
 	// 先看有没有，有的话就不管了，没有的话就创建
-	// urlEncoded := url.QueryEscape(url1)
+	urlEncoded := url.QueryEscape(url1)
 	// fmt.Println("创建时编码:", urlEncoded)\
 	base64ImgValue := getImgBase64FromUrl(url1)
 	if base64ImgValue == "" {
@@ -107,7 +108,8 @@ func updateImg(url1 string, db *sql.DB) {
 		SELECT * FROM nav_img
 		WHERE url = ?;
 		`
-	rows, err := db.Query(sql_get_img, url1)
+
+	rows, err := db.Query(sql_get_img, urlEncoded)
 	checkErr(err)
 	defer rows.Close()
 	if !rows.Next() {
@@ -117,7 +119,7 @@ func updateImg(url1 string, db *sql.DB) {
 		`
 		stmt, err := db.Prepare(sql_add_img)
 		checkErr(err)
-		_, err = stmt.Exec(url1, getImgBase64FromUrl(url1))
+		_, err = stmt.Exec(urlEncoded, base64ImgValue)
 		checkErr(err)
 	}
 }
