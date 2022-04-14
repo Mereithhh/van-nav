@@ -1,6 +1,7 @@
 package main
 
 import (
+	"crypto/tls"
 	"encoding/base64"
 	"fmt"
 	"io/ioutil"
@@ -24,7 +25,18 @@ func in(target string, str_array []string) bool {
 func getImgBase64FromUrl(url string) string {
 	imgUrl := url
 	//获取远端图片
-	res, err := http.Get(imgUrl)
+	req, err := http.NewRequest("GET", imgUrl, nil)
+	if err != nil {
+		checkErr(err)
+		return ""
+	}
+	req.Header.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.88 Safari/537.36")
+	client := &http.Client{
+		Transport: &http.Transport{
+			TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+		},
+	}
+	res, err := client.Do(req)
 	if err != nil {
 		checkErr(err)
 		return ""

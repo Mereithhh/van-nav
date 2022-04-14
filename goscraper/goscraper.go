@@ -123,6 +123,7 @@ func (scraper *Scraper) getDocument() (*Document, error) {
 		return nil, err
 	}
 	req.Header.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.88 Safari/537.36")
+	req.Header.Add("Host", scraper.Url.Host)
 
 	client := &http.Client{
 		Transport: &http.Transport{
