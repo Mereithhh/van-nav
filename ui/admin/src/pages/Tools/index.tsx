@@ -104,7 +104,7 @@ export const Tools: React.FC<ToolsProps> = (props) => {
     try {
       for (const each of selectedRows) {
         try {
-          await fetchUpdateTool({...each,logo: ""});
+          await fetchUpdateTool({ ...each, logo: "" });
         } catch (err) {}
       }
       message.success({ message: "重置成功!" });
@@ -264,7 +264,11 @@ export const Tools: React.FC<ToolsProps> = (props) => {
               return (
                 <div>
                   {" "}
-                  <img src={`/api/img?url=${record.logo}`} width={32}></img>
+                  {record.logo.split(".").pop().includes("svg") ? (
+                    <embed src={`/api/img?url=${record.logo}`} width={32} height={32} type="image/svg+xml" />
+                  ) : (
+                    <img src={`/api/img?url=${record.logo}`} width={32} height={32} ></img>
+                  )}
                   <span style={{ marginLeft: 8 }}>{record.name}</span>
                 </div>
               );

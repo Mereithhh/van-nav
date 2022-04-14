@@ -5,7 +5,7 @@ const Card = ({ title, url, des, logo, catelog, onClick }) => {
     if (url === "admin") {
       return <img src={logo} alt={title} />
     } else {
-      if (logo.split(".").pop() === "svg") {
+      if (logo.split(".").pop().includes("svg") ) {
         return <embed src={`/api/img?url=${logo}`} type="image/svg+xml" />
       } else {
         return <img src={`/api/img?url=${logo}`} alt={title} />
