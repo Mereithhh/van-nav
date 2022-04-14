@@ -117,7 +117,7 @@ sudo systemctl daemon-reload && sudo systemctl enable --now VanNav.service
 - [x] 图片存库，避免跨域和加载慢的问题
 - [x] gzip 全局压缩
 - [ ] 中文 url 图片修复
-- [ ] svg 图片修复
+- [x] svg 图片修复
 - [ ] 增加 ServiceWork ,离线可用
 - [ ] 自动获取网站题目和描述等信息
 - [ ] 国际化

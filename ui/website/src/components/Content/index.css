@@ -121,6 +121,10 @@
     width: 32px;
     height: 32px;
   }
+  .card-left embed {
+    width: 32px;
+    height: 32px;
+  }
   .card-right {
     margin-right: 0px;
   }
@@ -242,6 +246,10 @@
     text-align: center;
   }
   .card-left > img {
+    width: 36px;
+    height: 36px;
+  }
+  .card-left embed {
     width: 36px;
     height: 36px;
   }
@@ -376,6 +384,10 @@
     text-overflow: ellipsis;
   }
   .card-left > img {
+    width: 40px;
+    height: 40px;
+  }
+  .card-left embed {
     width: 40px;
     height: 40px;
   }
@@ -519,6 +531,10 @@
     overflow: hidden;
   }
   .card-left > img {
+    width: 48px;
+    height: 48px;
+  }
+  .card-left embed {
     width: 48px;
     height: 48px;
   }
