@@ -64,10 +64,9 @@ func updateCatelog(data updateCatelogDto, db *sql.DB) {
 
 func getImgFromDB(url1 string, db *sql.DB) Img {
 	// urlEncoded := url.QueryEscape(url1)
-	// fmt.Println("url获取时编码", urlEncoded)
 	sql_get_img := `
 		SELECT * FROM nav_img
-		WHERE url = ?;
+		WHERE url=?;
 		`
 	rows, err := db.Query(sql_get_img, url1)
 	checkErr(err)
@@ -91,7 +90,11 @@ func updateImg(url1 string, db *sql.DB) {
 	// 除了更新工具本身之外，也要更新 img 表
 	// 先看有没有，有的话就不管了，没有的话就创建
 	// urlEncoded := url.QueryEscape(url1)
-	// fmt.Println("创建时编码:", urlEncoded)
+	// fmt.Println("创建时编码:", urlEncoded)\
+	base64ImgValue := getImgBase64FromUrl(url1)
+	if base64ImgValue == "" {
+		return
+	}
 	sql_get_img := `
 		SELECT * FROM nav_img
 		WHERE url = ?;
