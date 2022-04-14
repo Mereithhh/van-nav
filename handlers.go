@@ -4,7 +4,6 @@ import (
 	"encoding/base64"
 	"fmt"
 	"net/http"
-	"net/url"
 	"strconv"
 	"strings"
 
@@ -159,7 +158,7 @@ func getLogoImgHandler(c *gin.Context) {
 	l := strings.Split(url, ".")
 	suffix := l[len(l)-1]
 	var t string = "image/x-icon"
-	if suffix == "svg" {
+	if suffix == "svg" || strings.Contains(url, ".svg") {
 		t = "image/svg+xml"
 	}
 	if suffix == "png" {
@@ -287,13 +286,13 @@ func DeleteToolHandler(c *gin.Context) {
 	numberId, err := strconv.Atoi(id)
 	checkErr(err)
 	url1 := getToolLogoUrlById(numberId, db)
-	urlEncoded := url.QueryEscape(url1)
+	// urlEncoded := url.QueryEscape(url1)
 	sql_delete_tool_img := `
 		DELETE FROM nav_img WHERE url = ?;
 		`
 	stmt, err = db.Prepare(sql_delete_tool_img)
 	checkErr(err)
-	res, err = stmt.Exec(urlEncoded)
+	res, err = stmt.Exec(url1)
 	checkErr(err)
 	_, err = res.RowsAffected()
 	checkErr(err)
