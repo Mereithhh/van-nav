@@ -27,6 +27,7 @@ export const fetchDeleteTool = async (id: number) => {
   return data?.data || {};
 };
 export const fetchUpdateTool = async (payload: any) => {
+ 
   const { data } = await axios.put(`/api/admin/tool/${payload.id}`,payload);
   return data?.data || {};
 };
@@ -61,3 +62,8 @@ export const fetchDeleteApiToken = async (id: number) => {
   const { data } = await axios.delete(`/api/admin/apiToken/${id}`);
   return data?.data || {};
 };
+// export const getImg = async (url: string) => {
+//   const { data } = await axios.get(`/api/img?url=${url}`);
+//   console.log(data)
+//   return data;
+// }

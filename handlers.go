@@ -1,8 +1,12 @@
 package main
 
 import (
+	"encoding/base64"
 	"fmt"
 	"net/http"
+	"net/url"
+	"strconv"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 )
@@ -145,6 +149,28 @@ func GetAllHandler(c *gin.Context) {
 	})
 }
 
+func getLogoImgHandler(c *gin.Context) {
+	url := c.Query("url")
+
+	img := getImgFromDB(url, db)
+	// fmt.Println(img.Value)
+	imgBuffer, _ := base64.StdEncoding.DecodeString(img.Value)
+	// 检测不同的格式发送不同的响应头
+	l := strings.Split(url, ".")
+	suffix := l[len(l)-1]
+	var t string = "image/x-icon"
+	if suffix == "svg" {
+		t = "image/svg+xml"
+	}
+	if suffix == "png" {
+		t = "image/png"
+	}
+	c.Writer.Header().Set("content-type", t)
+	c.Writer.WriteString(string(imgBuffer))
+	// resStr := "data:image/x-icon;base64," + img.Value
+	// c.Writer.WriteString(resStr)
+}
+
 func GetAdminAllDataHandler(c *gin.Context) {
 	// 管理员获取全部数据，还有个用户名。
 	tools := getAllTool(db)
@@ -257,6 +283,20 @@ func DeleteToolHandler(c *gin.Context) {
 	checkErr(err)
 	_, err = res.RowsAffected()
 	checkErr(err)
+	// 删除工具的 logo，如果有
+	numberId, err := strconv.Atoi(id)
+	checkErr(err)
+	url1 := getToolLogoUrlById(numberId, db)
+	urlEncoded := url.QueryEscape(url1)
+	sql_delete_tool_img := `
+		DELETE FROM nav_img WHERE url = ?;
+		`
+	stmt, err = db.Prepare(sql_delete_tool_img)
+	checkErr(err)
+	res, err = stmt.Exec(urlEncoded)
+	checkErr(err)
+	_, err = res.RowsAffected()
+	checkErr(err)
 	// fmt.Println(affect)
 	c.JSON(200, gin.H{
 		"success": true,
@@ -275,8 +315,8 @@ func UpdateToolHandler(c *gin.Context) {
 		})
 		return
 	}
-	fmt.Println(data.Name, " 获取 logo: ", data.Logo)
 	if data.Logo == "" {
+		fmt.Println(data.Name, " 获取 logo: ", data.Logo)
 		data.Logo = getIcon(data.Url)
 	}
 	updateTool(data, db)

@@ -114,6 +114,20 @@ export const Tools: React.FC<ToolsProps> = (props) => {
       reload();
     }
   }, [reload, selectedRows]);
+  const handleBulkCacheLogo = useCallback(async () => {
+    try {
+      for (const each of selectedRows) {
+        try {
+          await fetchUpdateTool(each);
+        } catch (err) {}
+      }
+      message.success({ message: "重置成功!" });
+    } catch (err) {
+      message.success({ message: "重置失败!" });
+    } finally {
+      reload();
+    }
+  }, [reload, selectedRows]);
   const handleExport = useCallback(async () => {
     const data = await fetchExportTools();
     const jsr = JSON.stringify(data);
@@ -152,6 +166,16 @@ export const Tools: React.FC<ToolsProps> = (props) => {
               }}
             >
               <Button type="link">重置默认图标</Button>
+            </Popconfirm>
+          )}
+          {selectedRows.length > 0 && (
+            <Popconfirm
+              title="确定重新缓存这些的图标吗？（会自动获取图标缓存到数据库）"
+              onConfirm={() => {
+                handleBulkCacheLogo();
+              }}
+            >
+              <Button type="link">重新缓存图标</Button>
             </Popconfirm>
           )}
         </Space>
@@ -240,7 +264,7 @@ export const Tools: React.FC<ToolsProps> = (props) => {
               return (
                 <div>
                   {" "}
-                  <img src={record.logo} width={32}></img>
+                  <img src={`/api/img?url=${record.logo}`} width={32}></img>
                   <span style={{ marginLeft: 8 }}>{record.name}</span>
                 </div>
               );

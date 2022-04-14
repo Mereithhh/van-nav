@@ -26,6 +26,11 @@ type User struct {
 	Name     string `json:"name"`
 	Password string `json:"password"`
 }
+type Img struct {
+	Id    int    `json:"id"`
+	Url   string `json:"url"`
+	Value string `json:"value"`
+}
 
 type resUserDto struct {
 	Name string `json:"name"`
