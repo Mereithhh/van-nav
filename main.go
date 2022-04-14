@@ -16,6 +16,7 @@ import (
 	"github.com/gin-gonic/contrib/static"
 	"github.com/gin-gonic/gin"
 	_ "modernc.org/sqlite"
+	"github.com/gin-contrib/gzip"
 	// _ "github.com/mattn/go-sqlite3"
 )
 
@@ -306,6 +307,7 @@ func main() {
 	initDB()
 	gin.SetMode(gin.ReleaseMode)
 	router := gin.Default()
+	router.Use(gzip.Gzip(gzip.DefaultCompression))
 	// 嵌入文件夹
 
 	// public,_ := fs.ReadDir("./public")
