@@ -27,6 +27,7 @@ export interface ToolsProps {}
 export const Tools: React.FC<ToolsProps> = (props) => {
   const { store, setStore, reload, loading } = useContext(GlobalContext);
   const [showEdit, setShowEdit] = useState(false);
+  const [requestLoading,setRequestLoading] = useState(false);
   const [showAddModel, setShowAddModel] = useState(false);
   const [addForm] = Form.useForm();
   const [searchString, setSearchString] = useState("");
@@ -47,31 +48,35 @@ export const Tools: React.FC<ToolsProps> = (props) => {
   );
   const handleUpdate = useCallback(
     async (record: any) => {
+      setRequestLoading(true)
       try {
         await fetchUpdateTool(record);
         message.success({ message: "更新成功!" });
       } catch (err) {
         message.warning({ message: "更新失败!" });
       } finally {
+        setRequestLoading(false)
         setShowEdit(false);
         reload();
       }
     },
-    [reload, setShowEdit]
+    [reload, setShowEdit, setRequestLoading]
   );
   const handleCreate = useCallback(
     async (record: any) => {
+      setRequestLoading(true)
       try {
         await fetchAddTool(record);
         message.success({ message: "添加成功!" });
       } catch (err) {
         message.warning({ message: "添加失败!" });
       } finally {
+        setRequestLoading(false)
         setShowAddModel(false);
         reload();
       }
     },
-    [reload, setShowAddModel]
+    [reload, setShowAddModel, setRequestLoading]
   );
   const handleImport = useCallback(
     async (data: any) => {
@@ -326,31 +331,33 @@ export const Tools: React.FC<ToolsProps> = (props) => {
           handleCreate(values);
         }}
       >
-        <Form form={addForm}>
-          <Form.Item name="name" required label="名称" labelCol={{ span: 4 }}>
-            <Input placeholder="请输入工具名称" />
-          </Form.Item>
-          <Form.Item name="url" required label="网址" labelCol={{ span: 4 }}>
-            <Input placeholder="请输入 url" />
-          </Form.Item>
-          <Form.Item name="logo" label="logo 网址" labelCol={{ span: 4 }}>
-            <Input placeholder="请输入 logo url, 为空则自动获取" />
-          </Form.Item>
-          <Form.Item
-            name="catelog"
-            required
-            label="分类"
-            labelCol={{ span: 4 }}
-          >
-            <Select
-              options={getOptions(store?.catelogs || [])}
-              placeholder="请选择分类"
-            />
-          </Form.Item>
-          <Form.Item name="desc" required label="描述" labelCol={{ span: 4 }}>
-            <Input placeholder="请输入描述" />
-          </Form.Item>
-        </Form>
+        <Spin spinning={requestLoading}>
+          <Form form={addForm}>
+            <Form.Item name="name" required label="名称" labelCol={{ span: 4 }}>
+              <Input placeholder="请输入工具名称" />
+            </Form.Item>
+            <Form.Item name="url" required label="网址" labelCol={{ span: 4 }}>
+              <Input placeholder="请输入 url" />
+            </Form.Item>
+            <Form.Item name="logo" label="logo 网址" labelCol={{ span: 4 }}>
+              <Input placeholder="请输入 logo url, 为空则自动获取" />
+            </Form.Item>
+            <Form.Item
+              name="catelog"
+              required
+              label="分类"
+              labelCol={{ span: 4 }}
+            >
+              <Select
+                options={getOptions(store?.catelogs || [])}
+                placeholder="请选择分类"
+              />
+            </Form.Item>
+            <Form.Item name="desc" required label="描述" labelCol={{ span: 4 }}>
+              <Input placeholder="请输入描述" />
+            </Form.Item>
+          </Form>
+        </Spin>
       </Modal>
       <Modal
         visible={showEdit}
@@ -363,34 +370,36 @@ export const Tools: React.FC<ToolsProps> = (props) => {
           handleUpdate(values);
         }}
       >
-        <Form form={updateForm}>
-          <Form.Item name="id" label="序号" labelCol={{ span: 4 }}>
-            <Input disabled />
-          </Form.Item>
-          <Form.Item name="name" required label="名称" labelCol={{ span: 4 }}>
-            <Input placeholder="请输入工具名称" />
-          </Form.Item>
-          <Form.Item name="url" required label="网址" labelCol={{ span: 4 }}>
-            <Input placeholder="请输入 url" />
-          </Form.Item>
-          <Form.Item name="logo" label="logo 网址" labelCol={{ span: 4 }}>
-            <Input placeholder="请输入 logo url, 为空则自动获取" />
-          </Form.Item>
-          <Form.Item
-            name="catelog"
-            required
-            label="分类"
-            labelCol={{ span: 4 }}
-          >
-            <Select
-              options={getOptions(store?.catelogs || [])}
-              placeholder="请选择分类"
-            />
-          </Form.Item>
-          <Form.Item name="desc" required label="描述" labelCol={{ span: 4 }}>
-            <Input placeholder="请输入描述" />
-          </Form.Item>
-        </Form>
+        <Spin spinning={requestLoading}>
+          <Form form={updateForm}>
+            <Form.Item name="id" label="序号" labelCol={{ span: 4 }}>
+              <Input disabled />
+            </Form.Item>
+            <Form.Item name="name" required label="名称" labelCol={{ span: 4 }}>
+              <Input placeholder="请输入工具名称" />
+            </Form.Item>
+            <Form.Item name="url" required label="网址" labelCol={{ span: 4 }}>
+              <Input placeholder="请输入 url" />
+            </Form.Item>
+            <Form.Item name="logo" label="logo 网址" labelCol={{ span: 4 }}>
+              <Input placeholder="请输入 logo url, 为空则自动获取" />
+            </Form.Item>
+            <Form.Item
+              name="catelog"
+              required
+              label="分类"
+              labelCol={{ span: 4 }}
+            >
+              <Select
+                options={getOptions(store?.catelogs || [])}
+                placeholder="请选择分类"
+              />
+            </Form.Item>
+            <Form.Item name="desc" required label="描述" labelCol={{ span: 4 }}>
+              <Input placeholder="请输入描述" />
+            </Form.Item>
+          </Form>
+        </Spin>
       </Modal>
     </Card>
   );
