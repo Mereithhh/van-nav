@@ -1,6 +1,6 @@
 # Van Nav
 
-一个轻量的导航站。 [在线体验](https://demo-tools.mereith.com) (账号密码均为: demo)
+一个轻量的导航站。有配套的[浏览器插件](https://github.com/Mereithhh/van-nav-extension)和 API。 [在线体验](https://demo-tools.mereith.com) (账号密码均为: demo)
 
 <div align=center ><img  src="images/pc-light.png" alt="预览 PC "/></div>
 <div align=center ><img  src="images/pc-dark.png" alt="预览 PC "/></div>
@@ -98,6 +98,11 @@ WantedBy=multi-user.target
 ```
 sudo systemctl daemon-reload && sudo systemctl enable --now VanNav.service
 ```
+
+## 浏览器插件
+具体请看： [浏览器插件仓库](https://github.com/Mereithhh/van-nav-extension)
+
+具有一键增加工具，快速打开管理后台和主站等功能。具体自行探索哦。
 ## API
 本导航站支持 API，可以用自己的方法添加工具。
 
@@ -119,7 +124,7 @@ sudo systemctl daemon-reload && sudo systemctl enable --now VanNav.service
 - [x] 中文 url 图片修复
 - [x] svg 图片修复
 - [ ] 增加 ServiceWork ,离线可用
-- [ ] 自动获取网站题目和描述等信息
+- [x] 自动获取网站题目和描述等信息
 - [ ] 国际化
-- [ ] 浏览器插件
+- [x] 浏览器插件
 - [ ] 网站状态检测
