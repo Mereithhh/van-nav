@@ -382,3 +382,52 @@ func UpdateCatelogHandler(c *gin.Context) {
 		"message": "更新分类成功",
 	})
 }
+
+func ManifastHanlder(c *gin.Context) {
+
+	setting := getSetting(db)
+	title := setting.Title
+
+	icon := setting.Favicon
+	if icon == "" {
+		icon = "favicon.ico"
+	}
+
+	var icons = []gin.H{}
+	icons = append(icons, gin.H{
+		"src":  icon,
+		"size": "64x64 32x32 24x24 16x16",
+		"type": "image/x-icon",
+	})
+
+	if icon == "" {
+		icon = "logo192.png"
+	}
+	icons = append(icons, gin.H{
+		"src":  icon,
+		"type": "image/png",
+		"size": "192x192",
+	})
+
+	if icon == "" {
+		icon = "logo512.png"
+	}
+	icons = append(icons, gin.H{
+		"src":  icon,
+		"type": "image/png",
+		"size": "512x512",
+	})
+
+	if title == "" {
+		title = "Van nav"
+	}
+	c.JSON(200, gin.H{
+		"short_name":       title,
+		"name":             "Self-hosted application dashbard",
+		"icons":            icons,
+		"start_url":        "/",
+		"display":          "standalone",
+		"theme_color":      "#000000",
+		"background_color": "#ffffff",
+	})
+}
