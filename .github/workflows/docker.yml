@@ -62,8 +62,8 @@ jobs:
       - name: deploy to cluster
         uses: steebchen/kubectl@v2.0.0
         with: # defaults to latest kubectl binary version
-          config: ${{ secrets.KUBE_CONFIG_DATA }}
-          command: set image deployment/tools -n tools van-nav=${{ steps.image-name.outputs.DOCKER_IMAGE_NAME }}
+          config: ${{ secrets.K3S_CONFIG_DATA }}
+          command: set image deployment/tools van-nav=${{ steps.image-name.outputs.DOCKER_IMAGE_NAME }}
       - name: deploy to cluster for demo
         uses: steebchen/kubectl@v2.0.0
         with: # defaults to latest kubectl binary version
