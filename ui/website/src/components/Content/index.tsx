@@ -166,10 +166,6 @@ const Content = (props: any) => {
       <div className="content-wraper">
         <div className="content cards">
           {loading ? <Loading></Loading> : renderCardsV2()}
-          {/* <div className="card-box"></div>
-          <div className="card-box"></div>
-          <div className="card-box"></div>
-          <div className="card-box"></div> */}
         </div>
       </div>
     </>

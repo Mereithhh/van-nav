@@ -27,7 +27,7 @@ export interface ToolsProps {}
 export const Tools: React.FC<ToolsProps> = (props) => {
   const { store, setStore, reload, loading } = useContext(GlobalContext);
   const [showEdit, setShowEdit] = useState(false);
-  const [requestLoading,setRequestLoading] = useState(false);
+  const [requestLoading, setRequestLoading] = useState(false);
   const [showAddModel, setShowAddModel] = useState(false);
   const [addForm] = Form.useForm();
   const [searchString, setSearchString] = useState("");
@@ -48,14 +48,14 @@ export const Tools: React.FC<ToolsProps> = (props) => {
   );
   const handleUpdate = useCallback(
     async (record: any) => {
-      setRequestLoading(true)
+      setRequestLoading(true);
       try {
         await fetchUpdateTool(record);
         message.success({ message: "更新成功!" });
       } catch (err) {
         message.warning({ message: "更新失败!" });
       } finally {
-        setRequestLoading(false)
+        setRequestLoading(false);
         setShowEdit(false);
         reload();
       }
@@ -64,14 +64,20 @@ export const Tools: React.FC<ToolsProps> = (props) => {
   );
   const handleCreate = useCallback(
     async (record: any) => {
-      setRequestLoading(true)
+      setRequestLoading(true);
       try {
         await fetchAddTool(record);
-        message.success({ message: "添加成功!" });
+        message.success({
+          message: "添加成功! Logo 将在 3 秒后刷新并加载！",
+          duration: 3000,
+        });
+        setTimeout(() => {
+          reload();
+        }, 3000);
       } catch (err) {
         message.warning({ message: "添加失败!" });
       } finally {
-        setRequestLoading(false)
+        setRequestLoading(false);
         setShowAddModel(false);
         reload();
       }
@@ -270,9 +276,18 @@ export const Tools: React.FC<ToolsProps> = (props) => {
                 <div>
                   {" "}
                   {record.logo.split(".").pop().includes("svg") ? (
-                    <embed src={`/api/img?url=${record.logo}`} width={32} height={32} type="image/svg+xml" />
+                    <embed
+                      src={`/api/img?url=${record.logo}`}
+                      width={32}
+                      height={32}
+                      type="image/svg+xml"
+                    />
                   ) : (
-                    <img src={`/api/img?url=${record.logo}`} width={32} height={32} ></img>
+                    <img
+                      src={`/api/img?url=${record.logo}`}
+                      width={32}
+                      height={32}
+                    ></img>
                   )}
                   <span style={{ marginLeft: 8 }}>{record.name}</span>
                 </div>
@@ -333,10 +348,22 @@ export const Tools: React.FC<ToolsProps> = (props) => {
       >
         <Spin spinning={requestLoading}>
           <Form form={addForm}>
-            <Form.Item name="name" required label="名称" labelCol={{ span: 4 }}>
+            <Form.Item
+              name="name"
+              required
+              label="名称"
+              rules={[{ required: true, message: "请填写名称" }]}
+              labelCol={{ span: 4 }}
+            >
               <Input placeholder="请输入工具名称" />
             </Form.Item>
-            <Form.Item name="url" required label="网址" labelCol={{ span: 4 }}>
+            <Form.Item
+              name="url"
+              rules={[{ required: true, message: "请填写网址" }]}
+              required
+              label="网址"
+              labelCol={{ span: 4 }}
+            >
               <Input placeholder="请输入 url" />
             </Form.Item>
             <Form.Item name="logo" label="logo 网址" labelCol={{ span: 4 }}>
@@ -347,13 +374,20 @@ export const Tools: React.FC<ToolsProps> = (props) => {
               required
               label="分类"
               labelCol={{ span: 4 }}
+              rules={[{ required: true, message: "请选择分类" }]}
             >
               <Select
                 options={getOptions(store?.catelogs || [])}
                 placeholder="请选择分类"
               />
             </Form.Item>
-            <Form.Item name="desc" required label="描述" labelCol={{ span: 4 }}>
+            <Form.Item
+              rules={[{ required: true, message: "请填写描述" }]}
+              name="desc"
+              required
+              label="描述"
+              labelCol={{ span: 4 }}
+            >
               <Input placeholder="请输入描述" />
             </Form.Item>
           </Form>

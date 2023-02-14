@@ -23,6 +23,7 @@ import (
 const INDEX = "index.html"
 
 func getIcon(url string) string {
+	fmt.Println("getIcon: " + url)
 	s, err := goscraper.Scrape(url, 5)
 	if err != nil {
 		fmt.Println(err)
@@ -211,19 +212,20 @@ func addCatelog(data addCatelogDto, db *sql.DB) {
 	// fmt.Println(id)
 }
 
-func addTool(data addToolDto, db *sql.DB) {
+func addTool(data addToolDto, db *sql.DB) int64 {
 	sql_add_tool := `
-		INSERT INTO nav_table (id,name, url, logo, catelog, desc)
-		VALUES (?, ?, ?, ?, ?, ?);
+		INSERT INTO nav_table (name, url, logo, catelog, desc)
+		VALUES (?, ?, ?, ?, ?);
 		`
 	stmt, err := db.Prepare(sql_add_tool)
 	checkErr(err)
-	res, err := stmt.Exec(generateId(), data.Name, data.Url, data.Logo, data.Catelog, data.Desc)
+	res, err := stmt.Exec(data.Name, data.Url, data.Logo, data.Catelog, data.Desc)
 	checkErr(err)
-	_, err = res.LastInsertId()
+	id, err := res.LastInsertId()
 	checkErr(err)
 	// fmt.Println(id)
 	updateImg(data.Logo, db)
+	return id
 }
 
 func getAllTool(db *sql.DB) []Tool {

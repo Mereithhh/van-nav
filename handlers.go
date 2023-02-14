@@ -261,10 +261,10 @@ func AddToolHandler(c *gin.Context) {
 		return
 	}
 	fmt.Println(data.Name, " 获取 logo: ", data.Logo)
+	id := addTool(data, db)
 	if data.Logo == "" {
-		data.Logo = getIcon(data.Url)
+		go LazyFetchLogo(data.Url, id, db)
 	}
-	addTool(data, db)
 	c.JSON(200, gin.H{
 		"success": true,
 		"message": "添加成功",

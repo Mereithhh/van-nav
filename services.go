@@ -17,3 +17,18 @@ func getToolLogoUrlById(id int, db *sql.DB) string {
 	defer rows.Close()
 	return tool.Logo
 }
+
+func updateToolIcon(id int64, logo string, db *sql.DB) {
+	sql_update_tool := `
+		UPDATE nav_table SET logo=? WHERE id=?;
+		`
+	_, err := db.Exec(sql_update_tool, logo, id)
+	checkErr(err)
+	updateImg(logo, db)
+}
+
+func LazyFetchLogo(url string, id int64, db *sql.DB) {
+	// 如果 logo 为空，就去获取 logo
+	logo := getIcon(url)
+	updateToolIcon(id, logo, db)
+}
