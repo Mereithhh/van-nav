@@ -7,6 +7,9 @@ export const FetchList =async () => {
     // 获取分类
     const catelogs = [];
     catelogs.push("全部工具")
+    data.catelogs.forEach(item => {
+        catelogs.push(item.name)
+    })
     data.tools.forEach(item => {
         if (!catelogs.includes(item.catelog)) {
             catelogs.push(item.catelog);

@@ -7,9 +7,9 @@ interface TagSelectorProps {
 }
 const TagSelector = (props: TagSelectorProps) => {
   const { tags = ["all"], onTagChange, currTag } = props;
-
+  console.log(tags)
   const renderTags = useCallback(() => {
-    return tags.map((each) => {
+    const originTags =  tags.map((each) => {
       return (
         <span
           className={`select-tag ${
@@ -24,6 +24,7 @@ const TagSelector = (props: TagSelectorProps) => {
         </span>
       );
     });
+    return originTags;
   }, [tags, onTagChange, currTag]);
   return (
     <div className="tag-selector span-3">
