@@ -315,11 +315,12 @@ func UpdateToolHandler(c *gin.Context) {
 		})
 		return
 	}
+	updateTool(data, db)
 	if data.Logo == "" {
 		fmt.Println(data.Name, " 获取 logo: ", data.Logo)
-		data.Logo = getIcon(data.Url)
+		go LazyFetchLogo(data.Url, int64(data.Id), db)
 	}
-	updateTool(data, db)
+
 	c.JSON(200, gin.H{
 		"success": true,
 		"message": "更新成功",
