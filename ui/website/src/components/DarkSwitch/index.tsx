@@ -1,75 +1,83 @@
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { applyTheme, decodeTheme, initTheme } from "../../utils/theme";
 import "./index.css";
-const getInitMode = () => {
-  const mode = window.localStorage.getItem("theme");
-  if (mode) {
-    return mode;
-  } else {
-    return "day";
-  }
-};
+
 const DarkSwitch = () => {
-  const [mode, setMode] = useState(getInitMode());
+  const [theme, setTheme] = useState(initTheme());
+  const { current } = useRef<any>({ hasInit: false });
+  const { current: currentTimer } = useRef<any>({ timer: null });
+
   useEffect(() => {
-    if (mode !== "day") {
-      const bodyEl = document.querySelector("body");
-      if (bodyEl) {
-        bodyEl.classList.toggle("dark-mode", true);
+    if (current.timer) {
+      clearInterval(currentTimer.timer);
+      currentTimer.timer = null;
+    }
+    localStorage.setItem("theme",theme)
+    const realTheme = decodeTheme(theme as any);
+    applyTheme(realTheme,'setTheme',true);
+    if (realTheme.includes("auto")) {
+      currentTimer.timer = setInterval(() => {
+        const realTheme = decodeTheme("auto");
+        applyTheme(realTheme, "autoThemeTimer", true);
+      }, 10000);
+    }
+  },[theme])
+
+
+  useLayoutEffect(() => {
+    if (!current.hasInit) {
+      current.hasInit = true;
+      if (!!!localStorage.getItem("theme")) {
+        // 第一次用默认的
+        setTheme("auto");
+      } else {
+        const iTheme = initTheme();
+        setTheme(iTheme);
       }
-      window.localStorage.setItem("theme", 'dark');
     }
   });
-  const sunIcon = (
-    <svg
-      viewBox="0 0 1024 1024"
-      version="1.1"
-      xmlns="http://www.w3.org/2000/svg"
-      p-id="14883"
-      width="200"
-      height="200"
-    >
-      <path
-        d="M107 512c0.2 82 25.2 164.9 73.1 231.8 12.5 17.5 26 34.4 41 49.9 15.2 15.7 31.8 29.6 49.1 42.8 32.1 24.5 68 43 105.8 56.9 78.2 28.7 167.1 31 247.1 8.1 76.9-22 148.2-67.5 199-129.4 13.7-16.7 26.6-34.1 37.7-52.6 11.2-18.7 20.3-38.4 28.6-58.6 15.9-38.5 24.4-79.6 27.5-121 6.3-82.1-14.4-166.9-57.1-237.3-41.3-68-103.3-125-176-157.8-20.2-9.1-40.9-17.3-62.2-23.2-21.9-6.1-44.2-9.7-66.7-12.3-41.7-4.8-84.2-2-125.3 6.3-78.7 15.9-152.9 57.6-208.3 115.5-55.7 58.1-94.9 133.6-107.3 213.4-3.6 22.4-6 44.8-6 67.5 0 11.5 5 23.7 13.2 31.9 7.8 7.8 20.6 13.7 31.9 13.2 24.4-1.1 45-19.8 45.1-45.1 0-16.3 1.1-32.5 3.3-48.6-0.5 4-1.1 8-1.6 12 4.3-31.2 12.6-61.8 24.8-90.9l-4.5 10.8c12.2-28.8 28-55.9 47.1-80.6-2.3 3-4.7 6.1-7 9.1 18.8-24.2 40.5-45.9 64.7-64.7-3 2.3-6.1 4.7-9.1 7 24.8-19.1 51.8-34.9 80.6-47.1l-10.8 4.5c29.1-12.2 59.6-20.5 90.9-24.8-4 0.5-8 1.1-12 1.6 32.3-4.3 65-4.3 97.2 0-4-0.5-8-1.1-12-1.6 31.2 4.3 61.8 12.6 90.9 24.8l-10.8-4.5c28.8 12.2 55.9 28 80.6 47.1-3-2.3-6.1-4.7-9.1-7 24.2 18.8 45.9 40.5 64.7 64.7-2.3-3-4.7-6.1-7-9.1 19.1 24.8 34.9 51.8 47.1 80.6l-4.5-10.8c12.2 29.1 20.5 59.6 24.8 90.9-0.5-4-1.1-8-1.6-12 4.3 32.3 4.3 65 0 97.2 0.5-4 1.1-8 1.6-12-4.3 31.2-12.6 61.8-24.8 90.9l4.5-10.8c-12.2 28.8-28 55.9-47.1 80.6 2.3-3 4.7-6.1 7-9.1-18.8 24.2-40.5 45.9-64.7 64.7 3-2.3 6.1-4.7 9.1-7-24.8 19.1-51.8 34.9-80.6 47.1l10.8-4.5c-29.1 12.2-59.6 20.5-90.9 24.8 4-0.5 8-1.1 12-1.6-32.3 4.3-65 4.3-97.2 0 4 0.5 8 1.1 12 1.6-31.2-4.3-61.8-12.6-90.9-24.8l10.8 4.5c-28.8-12.2-55.9-28-80.6-47.1 3 2.3 6.1 4.7 9.1 7-24.2-18.8-45.9-40.5-64.7-64.7 2.3 3 4.7 6.1 7 9.1-19.1-24.8-34.9-51.8-47.1-80.6l4.5 10.8c-12.2-29.1-20.5-59.6-24.8-90.9 0.5 4 1.1 8 1.6 12-2.1-16.1-3.2-32.3-3.3-48.6 0-11.6-5-23.7-13.2-31.9-7.8-7.8-20.6-13.7-31.9-13.2-11.7 0.5-23.7 4.3-31.9 13.2-8.1 8.8-13.2 19.7-13.2 31.9z"
-        p-id="14884"
-      ></path>
-      <path
-        d="M512 512m-69.9 0a69.9 69.9 0 1 0 139.8 0 69.9 69.9 0 1 0-139.8 0Z"
-        p-id="14885"
-      ></path>
-    </svg>
-  );
-  const moonIcon = (
-    <svg
-      viewBox="0 0 1024 1024"
-      version="1.1"
-      xmlns="http://www.w3.org/2000/svg"
-      p-id="15995"
-      width="200"
-      height="200"
-    >
-      <path
-        d="M505.4 878.6c-196.7 0-358-150.9-374.9-343.1 1-18.6 16.1-33.4 34.9-33.4 10.8 0 20.5 4.8 26.9 12.4 0.2 0.3 0.5 0.1 0.5-0.7 41.6 44.2 100.5 71.9 166.1 71.9 127.1 0 230.1-103 230.1-230.1 0-66.1-28-125.1-72.6-166.8 0.1-0.1 0.5-0.1 0.3-0.3-7-6.5-11.4-15.7-11.4-26.1 0-19 14.9-34.1 33.7-35.3 192.1 17.1 342.9 178.3 342.9 375 0 208-168.5 376.5-376.5 376.5z"
-        p-id="15996"
-      ></path>
-    </svg>
-  );
+
+  const lightIcon = (<svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 1024 1024"
+    fill="currentColor"
+    aria-label="light icon"
+    width={20}
+    height={20}
+  >
+    <path d="M952 552h-80a40 40 0 0 1 0-80h80a40 40 0 0 1 0 80zM801.88 280.08a41 41 0 0 1-57.96-57.96l57.96-58a41.04 41.04 0 0 1 58 58l-58 57.96zM512 752a240 240 0 1 1 0-480 240 240 0 0 1 0 480zm0-560a40 40 0 0 1-40-40V72a40 40 0 0 1 80 0v80a40 40 0 0 1-40 40zm-289.88 88.08-58-57.96a41.04 41.04 0 0 1 58-58l57.96 58a41 41 0 0 1-57.96 57.96zM192 512a40 40 0 0 1-40 40H72a40 40 0 0 1 0-80h80a40 40 0 0 1 40 40zm30.12 231.92a41 41 0 0 1 57.96 57.96l-57.96 58a41.04 41.04 0 0 1-58-58l58-57.96zM512 832a40 40 0 0 1 40 40v80a40 40 0 0 1-80 0v-80a40 40 0 0 1 40-40zm289.88-88.08 58 57.96a41.04 41.04 0 0 1-58 58l-57.96-58a41 41 0 0 1 57.96-57.96z"></path>
+  </svg>);
+  const darkIcon = (<svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 1024 1024"
+    fill="currentColor"
+    aria-label="dark icon"
+    width={20}
+    height={20}
+  >
+    <path d="M524.8 938.667h-4.267a439.893 439.893 0 0 1-313.173-134.4 446.293 446.293 0 0 1-11.093-597.334A432.213 432.213 0 0 1 366.933 90.027a42.667 42.667 0 0 1 45.227 9.386 42.667 42.667 0 0 1 10.24 42.667 358.4 358.4 0 0 0 82.773 375.893 361.387 361.387 0 0 0 376.747 82.774 42.667 42.667 0 0 1 54.187 55.04 433.493 433.493 0 0 1-99.84 154.88 438.613 438.613 0 0 1-311.467 128z"></path>
+  </svg>)
+  const autoIcon = (<svg
+    xmlns="http://www.w3.org/2000/svg"
+    width={20}
+    height={20}
+    viewBox="0 0 1024 1024"
+    aria-label="auto icon"
+  >
+    <path d="M512 992C246.92 992 32 777.08 32 512S246.92 32 512 32s480 214.92 480 480-214.92 480-480 480zm0-840c-198.78 0-360 161.22-360 360 0 198.84 161.22 360 360 360s360-161.16 360-360c0-198.78-161.22-360-360-360zm0 660V212c165.72 0 300 134.34 300 300 0 165.72-134.28 300-300 300z"></path>
+  </svg>)
   const handleSwitch = () => {
-    // 先找现在的颜色主题
-    const toSet = mode === "day" ? "dark" : "day";
-    window.localStorage.setItem("theme", toSet);
-    const bodyEl = document.querySelector("body");
-    if (bodyEl) {
-      if (toSet === "day") {
-        bodyEl.classList.toggle("dark-mode", false);
-      } else {
-        bodyEl.classList.toggle("dark-mode", true);
-      }
+    if (theme == "light") {
+      setTheme("dark");
+    } else if (theme == "dark") {
+      setTheme("auto");
+    } else {
+      setTheme("light");
     }
-    setMode(toSet);
   };
   return (
     <div className="theme-switch-box" onClick={handleSwitch}>
-      {mode === "day" ? moonIcon : sunIcon}
+      {theme === "light" ? lightIcon : theme === "dark" ? darkIcon : autoIcon}
     </div>
   );
 };
