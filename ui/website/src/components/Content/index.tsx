@@ -141,10 +141,10 @@ const Content = (props: any) => {
         <link
           rel="icon"
           href={
-            data?.setting?.favicon ?? "https://pic.mereith.com/img/male.svg"
+            data?.setting?.favicon ?? "favicon.ico"
           }
         />
-        <title>{data?.setting?.title ?? "Mereith's Nav Site"}</title>
+        <title>{data?.setting?.title ?? "Van Nav"}</title>
       </Helmet>
       <div className="topbar">
         <div className="content">

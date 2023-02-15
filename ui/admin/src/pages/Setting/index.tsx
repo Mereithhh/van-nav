@@ -70,7 +70,9 @@ export const Setting: React.FC<SettingProps> = (props) => {
             <Form.Item
               label="网站 logo"
               name="favicon"
+              tooltip="输入 logo 的 url，仅支持 png 或 svg 格式"
               required
+              rules={[{ required: true, message: "请输入网站 logo 链接" }]}
               labelCol={{ span: 4 }}
             >
               <Input placeholder="请输入网站 logo"></Input>
@@ -79,9 +81,31 @@ export const Setting: React.FC<SettingProps> = (props) => {
               label="网站标题"
               name="title"
               required
+              rules={[{ required: true, message: "请输入网站 title" }]}
+
               labelCol={{ span: 4 }}
             >
               <Input placeholder="请输入网站标题"></Input>
+            </Form.Item>
+            <Form.Item
+              label="logo 192x192"
+              name="logo192"
+              rules={[{ required: true, message: "请输入 192x192 大小的 logo 链接" }]}
+
+              tooltip="192x192 大小的 logo，用于实现可安装的 web 应用"
+              labelCol={{ span: 4 }}
+            >
+              <Input placeholder="192x192 大小的 logo 链接"></Input>
+            </Form.Item>
+            <Form.Item
+              label="logo 512x512"
+              name="logo512"
+              rules={[{ required: true, message: "请输入 512x512 大小的 logo 链接" }]}
+
+              tooltip="512x512 大小的 logo，用于实现可安装的 web 应用"
+              labelCol={{ span: 4 }}
+            >
+              <Input placeholder="512x512 大小的 logo 链接"></Input>
             </Form.Item>
             <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
               <Button type="primary" htmlType="submit">

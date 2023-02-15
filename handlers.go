@@ -388,34 +388,27 @@ func ManifastHanlder(c *gin.Context) {
 	setting := getSetting(db)
 	title := setting.Title
 
-	icon := setting.Favicon
-	if icon == "" {
-		icon = "favicon.ico"
-	}
-
 	var icons = []gin.H{}
-	icons = append(icons, gin.H{
-		"src":  icon,
-		"size": "64x64 32x32 24x24 16x16",
-		"type": "image/x-icon",
-	})
 
-	if icon == "" {
-		icon = "logo192.png"
+	logo192 := setting.Logo192
+	if logo192 == "" {
+		logo192 = "logo192.png"
 	}
-	icons = append(icons, gin.H{
-		"src":  icon,
-		"type": "image/png",
-		"size": "192x192",
-	})
 
-	if icon == "" {
-		icon = "logo512.png"
+	logo512 := setting.Logo512
+	if logo512 == "" {
+		logo512 = "logo512.png"
 	}
+
 	icons = append(icons, gin.H{
-		"src":  icon,
-		"type": "image/png",
-		"size": "512x512",
+		"src":   logo192,
+		"type":  "image/png",
+		"sizes": "192x192",
+	})
+	icons = append(icons, gin.H{
+		"src":   logo512,
+		"type":  "image/png",
+		"sizes": "512x512",
 	})
 
 	if title == "" {
@@ -423,10 +416,11 @@ func ManifastHanlder(c *gin.Context) {
 	}
 	c.JSON(200, gin.H{
 		"short_name":       title,
-		"name":             "Self-hosted application dashbard",
+		"name":             title,
 		"icons":            icons,
 		"start_url":        "/",
 		"display":          "standalone",
+		"scope":            "/",
 		"theme_color":      "#000000",
 		"background_color": "#ffffff",
 	})

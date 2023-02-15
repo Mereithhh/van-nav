@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"strings"
 )
 
 func checkErr(err error) {
@@ -48,4 +49,19 @@ func getImgBase64FromUrl(url string) string {
 
 	imageBase64 := base64.StdEncoding.EncodeToString(data)
 	return imageBase64
+}
+
+func getSuffixFromUrl(url string) string {
+	suffix := url[strings.LastIndex(url, "."):]
+	return suffix
+}
+func getMIME(suffix string) string {
+	var t string = "image/x-icon"
+	if suffix == ".svg" {
+		t = "image/svg+xml"
+	}
+	if suffix == ".png" {
+		t = "image/png"
+	}
+	return t
 }

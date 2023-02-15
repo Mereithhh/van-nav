@@ -146,12 +146,12 @@ func updateTool(data updateToolDto, db *sql.DB) {
 func updateSetting(data Setting, db *sql.DB) {
 	sql_update_setting := `
 		UPDATE nav_setting
-		SET favicon = ?, title = ?
+		SET favicon = ?, title = ?, logo192 = ?, logo512 = ?
 		WHERE id = ?;
 		`
 	stmt, err := db.Prepare(sql_update_setting)
 	checkErr(err)
-	res, err := stmt.Exec(data.Favicon, data.Title, 0)
+	res, err := stmt.Exec(data.Favicon, data.Title, data.Logo192, data.Logo512, 0)
 	checkErr(err)
 	_, err = res.RowsAffected()
 	checkErr(err)
@@ -319,6 +319,7 @@ func BinaryFileSystem(data embed.FS, root string) *binaryFileSystem {
 }
 func main() {
 	initDB()
+
 	gin.SetMode(gin.ReleaseMode)
 	router := gin.Default()
 	router.Use(gzip.Gzip(gzip.DefaultCompression))
@@ -406,7 +407,7 @@ func getSetting(db *sql.DB) Setting {
 		`
 	var setting Setting
 	row := db.QueryRow(sql_get_user, 0)
-	err := row.Scan(&setting.Id, &setting.Favicon, &setting.Title)
+	err := row.Scan(&setting.Id, &setting.Favicon, &setting.Title, &setting.Logo192, &setting.Logo512)
 	checkErr(err)
 	return setting
 }

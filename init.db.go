@@ -24,10 +24,24 @@ func initDB() {
 	CREATE TABLE IF NOT EXISTS nav_setting (
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
 		favicon TEXT,
-		title TEXT
+		title TEXT,
+		logo192 TEXT,
+		logo512 TEXT
 	);
 	`
 	_, err = db.Exec(sql_create_table)
+	checkErr(err)
+	// 增加 logo192 字段
+	sql_add_logo192 := `
+		ALTER TABLE nav_setting ADD COLUMN logo192 TEXT;
+		`
+	_, err = db.Exec(sql_add_logo192)
+	checkErr(err)
+	// 增加 logo512 字段
+	sql_add_logo512 := `
+		ALTER TABLE nav_setting ADD COLUMN logo512 TEXT;
+		`
+	_, err = db.Exec(sql_add_logo512)
 	checkErr(err)
 	// 默认 tools 用的 表
 	sql_create_table = `
@@ -100,12 +114,12 @@ func initDB() {
 	checkErr(err)
 	if !rows.Next() {
 		sql_add_setting := `
-			INSERT INTO nav_setting (id, favicon, title)
+			INSERT INTO nav_setting (id, favicon, title, logo192, logo512)
 			VALUES (?, ?, ?);
 			`
 		stmt, err := db.Prepare(sql_add_setting)
 		checkErr(err)
-		res, err := stmt.Exec(0, "https://pic.mereith.com/img/male.svg", "Van Nav")
+		res, err := stmt.Exec(0, "favicon.ico", "Van Nav", "logo192.png", "logo512.png")
 		checkErr(err)
 		_, err = res.LastInsertId()
 		checkErr(err)
