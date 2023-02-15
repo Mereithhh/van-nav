@@ -21,7 +21,8 @@ const DarkSwitch = () => {
         applyTheme(realTheme, "autoThemeTimer", true);
       }, 10000);
     }
-  },[theme])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[ theme])
 
 
   useLayoutEffect(() => {
@@ -35,7 +36,8 @@ const DarkSwitch = () => {
         setTheme(iTheme);
       }
     }
-  });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[]);
 
   const lightIcon = (<svg
     xmlns="http://www.w3.org/2000/svg"
@@ -67,9 +69,9 @@ const DarkSwitch = () => {
     <path d="M512 992C246.92 992 32 777.08 32 512S246.92 32 512 32s480 214.92 480 480-214.92 480-480 480zm0-840c-198.78 0-360 161.22-360 360 0 198.84 161.22 360 360 360s360-161.16 360-360c0-198.78-161.22-360-360-360zm0 660V212c165.72 0 300 134.34 300 300 0 165.72-134.28 300-300 300z"></path>
   </svg>)
   const handleSwitch = () => {
-    if (theme == "light") {
+    if (theme === "light") {
       setTheme("dark");
-    } else if (theme == "dark") {
+    } else if (theme === "dark") {
       setTheme("auto");
     } else {
       setTheme("light");

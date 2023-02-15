@@ -15,7 +15,7 @@ export function decodeAuto() {
   }
 }
 export const decodeTheme = (t: "auto" | "light" | "dark") => {
-  if (t == "auto") {
+  if (t === "auto") {
     return decodeAuto();
   } else {
     return t;
@@ -41,7 +41,7 @@ export const initTheme = () => {
     return "auto";
   }
   // 2种情况： 1. 自动。 2.手动
-  if (!("theme" in localStorage) || localStorage.theme == "auto") {
+  if (!("theme" in localStorage) || localStorage.theme === "auto") {
     return "auto";
   } else {
     if (localStorage.theme === "dark") {
