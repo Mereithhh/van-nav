@@ -18,7 +18,7 @@ export const getLoginState = () => {
 export const logout = () => {
     window.localStorage.removeItem("_user");
     window.localStorage.removeItem("_token");
-    message.success({ message: "登出成功!" });
+    message.success({ content: "登出成功!" });
 }
 
 export const getOptions = (rawList : any) => {

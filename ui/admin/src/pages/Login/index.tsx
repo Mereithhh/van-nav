@@ -22,10 +22,10 @@ export const Login: React.FC<LoginProps> = (props) => {
         axios.defaults.headers.common = {
           Authorization: token,
         };
-        message.success({ message: "登录成功!" });
+        message.success({ content: "登录成功!" });
         navigate("/");
       } else {
-        message.error({ message: data.errorMessage ?? "登录失败!" });
+        message.error({ content: data.errorMessage ?? "登录失败!" });
       }
     },
     [setStore, store]

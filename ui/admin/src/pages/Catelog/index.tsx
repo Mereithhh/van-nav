@@ -15,9 +15,9 @@ export const Catelog: React.FC<CatelogProps> = (props) => {
     async (id: number) => {
       try {
         await fetchDeleteCatelog(id);
-        message.success({ message: "删除成分类功!" });
+        message.success({ content: "删除成分类功!" });
       } catch (err) {
-        message.warning({ message: "删除分类失败!" });
+        message.warning({ content: "删除分类失败!" });
       } finally {
         reload();
       }
@@ -28,9 +28,9 @@ export const Catelog: React.FC<CatelogProps> = (props) => {
     async (record: any) => {
       try {
         await fetchAddCateLog(record);
-        message.success({ message: "添加成功!" });
+        message.success({ content: "添加成功!" });
       } catch (err) {
-        message.warning({ message: "添加失败!" });
+        message.warning({ content: "添加失败!" });
       } finally {
         setShowAddModel(false);
         reload();
