@@ -7,9 +7,17 @@
   .main {
     padding-top: 30px;
   }
+  .github-link-box {
+    right: 11px;
+    bottom: 10px;
+  }
+  .github-link-box svg {
+    width: 22px;
+    height: 22px;
+  }
   .theme-switch-box {
     right: 10px;
-    bottom: 10px;
+    bottom: 40px;
   }
   .theme-switch-box svg {
     width: 24px;
@@ -134,9 +142,17 @@
   .main {
     padding-top: 40px;
   }
+  .github-link-box {
+    right: 15px;
+    bottom: 14px;
+  }
+  .github-link-box svg {
+    width: 27px;
+    height: 27px;
+  }
   .theme-switch-box {
     right: 14px;
-    bottom: 14px;
+    bottom: 46px;
   }
   .theme-switch-box svg {
     width: 30px;
@@ -261,9 +277,18 @@
   .main {
     padding-top: 60px;
   }
+  .github-link-box {
+    right: 11px;
+    bottom: 14px;
+    
+  }
+  .github-link-box svg {
+    width: 27px;
+    height: 27px;
+  }
   .theme-switch-box {
     right: 10px;
-    bottom: 14px;
+    bottom: 50px;
     
   }
   .theme-switch-box svg {
@@ -397,9 +422,18 @@
   .main {
     padding-top: 80px;
   }
+  .github-link-box {
+    right: 12px;
+    bottom: 20px;
+    
+  }
+  .github-link-box svg {
+    width: 35px;
+    height: 35px;
+  }
   .theme-switch-box {
     right: 10px;
-    bottom: 20px;
+    bottom: 70px;
     
   }
   .theme-switch-box svg {

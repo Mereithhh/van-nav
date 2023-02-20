@@ -1,0 +1,12 @@
+.github-link-box {
+  position: fixed;
+  cursor: pointer;
+}
+.github-link-box svg {
+  fill: #3d3d3d;
+  transition: all 0.3s;
+}
+
+.github-link-box svg:hover {
+  fill: #121212;
+}

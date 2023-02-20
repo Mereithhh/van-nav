@@ -1,4 +1,4 @@
-import { useCallback,  useState } from "react";
+import { useCallback,  useEffect,  useState } from "react";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import { GlobalContext } from "./components/GlobalContext";
 import { AuthLayout } from "./layout/Auth";
@@ -15,6 +15,12 @@ import { ConfigProvider } from "antd";
 function App() {
   const [store, setStore] = useState<any>({});
   const [loading, setLoading] = useState(true);
+
+
+  useEffect(()=>{
+    console.log("欢迎使用 Van Nav 项目")
+    console.log("项目地址: https://github.com/mereithhh/van-nav")
+  },[])
 
   const reload = useCallback(async () => {
     setLoading(true);
