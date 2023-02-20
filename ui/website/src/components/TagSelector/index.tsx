@@ -7,7 +7,6 @@ interface TagSelectorProps {
 }
 const TagSelector = (props: TagSelectorProps) => {
   const { tags = ["all"], onTagChange, currTag } = props;
-  console.log(tags)
   const renderTags = useCallback(() => {
     const originTags =  tags.map((each) => {
       return (
