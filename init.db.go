@@ -35,14 +35,14 @@ func initDB() {
 	sql_add_logo192 := `
 		ALTER TABLE nav_setting ADD COLUMN logo192 TEXT;
 		`
-	_, err = db.Exec(sql_add_logo192)
-	checkErr(err)
+	db.Exec(sql_add_logo192)
+
 	// 增加 logo512 字段
 	sql_add_logo512 := `
 		ALTER TABLE nav_setting ADD COLUMN logo512 TEXT;
 		`
-	_, err = db.Exec(sql_add_logo512)
-	checkErr(err)
+	db.Exec(sql_add_logo512)
+
 	// 默认 tools 用的 表
 	sql_create_table = `
 		CREATE TABLE IF NOT EXISTS nav_table (
@@ -115,7 +115,7 @@ func initDB() {
 	if !rows.Next() {
 		sql_add_setting := `
 			INSERT INTO nav_setting (id, favicon, title, logo192, logo512)
-			VALUES (?, ?, ?);
+			VALUES (?, ?, ?, ?, ?);
 			`
 		stmt, err := db.Prepare(sql_add_setting)
 		checkErr(err)
