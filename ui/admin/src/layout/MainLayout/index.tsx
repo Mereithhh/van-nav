@@ -3,14 +3,13 @@ import { Layout, Menu } from "antd";
 import { useNavigate, useLocation } from "react-router-dom";
 import { config } from "../../config";
 import { logout } from "../../utils";
-import { useCallback, useContext, useEffect } from "react";
-import { fetchTools } from "../../utils/api";
+import {  useContext, useEffect } from "react";
 import { GlobalContext } from "../../components/GlobalContext";
 const { Header, Content, Sider } = Layout;
-export interface MainLayoutProps {}
+export interface MainLayoutProps {children: React.ReactNode | React.ReactNode[]}
 export const MainLayout: React.FC<MainLayoutProps> = (props) => {
   const nav = useNavigate();
-  const { store, setStore, reload } = useContext(GlobalContext);
+  const { store,  reload } = useContext(GlobalContext);
   const location = useLocation();
 
   useEffect(() => {
