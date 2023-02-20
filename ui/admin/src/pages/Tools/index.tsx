@@ -37,9 +37,9 @@ export const Tools: React.FC<ToolsProps> = (props) => {
     async (id: number) => {
       try {
         await fetchDeleteTool(id);
-        message.success({content: "删除成功!"});
+        message.success("删除成功!");
       } catch (err) {
-        message.warning({ content: "删除失败!" });
+        message.warning("删除失败!");
       } finally {
         reload();
       }
@@ -51,15 +51,12 @@ export const Tools: React.FC<ToolsProps> = (props) => {
       setRequestLoading(true);
       try {
         await fetchUpdateTool(record);
-        message.success({
-          content: "更新成功! Logo 将在 3 秒后刷新并加载！",
-          duration: 3000,
-        });
+        message.success("更新成功! Logo 将在 3 秒后刷新并加载！",3);
         setTimeout(() => {
           reload();
         }, 3000);
       } catch (err) {
-        message.warning({ content: "更新失败!" });
+        message.warning("更新失败!");
       } finally {
         setRequestLoading(false);
         setShowEdit(false);
@@ -73,15 +70,12 @@ export const Tools: React.FC<ToolsProps> = (props) => {
       setRequestLoading(true);
       try {
         await fetchAddTool(record);
-        message.success({
-          content: "添加成功! Logo 将在 3 秒后刷新并加载！",
-          duration: 3000,
-        });
+        message.success("添加成功! Logo 将在 3 秒后刷新并加载！",3);
         setTimeout(() => {
           reload();
         }, 3000);
       } catch (err) {
-        message.warning({ content: "添加失败!" });
+        message.warning("添加失败!");
       } finally {
         setRequestLoading(false);
         setShowAddModel(false);
@@ -94,9 +88,9 @@ export const Tools: React.FC<ToolsProps> = (props) => {
     async (data: any) => {
       try {
         await fetchImportTools(data);
-        message.success({ content: "导入成功!" });
+        message.success("导入成功!");
       } catch (err) {
-        message.warning({ content: "导入失败!" });
+        message.warning("导入失败!");
       } finally {
         reload();
       }
@@ -110,9 +104,9 @@ export const Tools: React.FC<ToolsProps> = (props) => {
           await fetchDeleteTool(each.id);
         } catch (err) {}
       }
-      message.success({ content: "删除成功!" });
+      message.success("删除成功!");
     } catch (err) {
-      message.success({ content: "删除失败!" });
+      message.success( "删除失败!" );
     } finally {
       reload();
     }
@@ -124,9 +118,9 @@ export const Tools: React.FC<ToolsProps> = (props) => {
           await fetchUpdateTool({ ...each, logo: "" });
         } catch (err) {}
       }
-      message.success({ content: "重置成功!" });
+      message.success("重置成功!");
     } catch (err) {
-      message.success({ content: "重置失败!" });
+      message.success("重置失败!" );
     } finally {
       reload();
     }
@@ -138,9 +132,9 @@ export const Tools: React.FC<ToolsProps> = (props) => {
           await fetchUpdateTool(each);
         } catch (err) {}
       }
-      message.success({ content: "重置成功!" });
+      message.success("重置成功!");
     } catch (err) {
-      message.success({ content: "重置失败!" });
+      message.success("重置失败!");
     } finally {
       reload();
     }
@@ -156,7 +150,7 @@ export const Tools: React.FC<ToolsProps> = (props) => {
     document.documentElement.appendChild(a);
     a.click();
     document.documentElement.removeChild(a);
-    message.success({ content: "导出成功！" });
+    message.success("导出成功！");
     reload();
   }, [reload]);
   const numberText = `当前共 ${store?.tools?.length ?? 0} 条`;

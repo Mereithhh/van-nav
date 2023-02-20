@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback,  useState } from "react";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import { GlobalContext } from "./components/GlobalContext";
 import { AuthLayout } from "./layout/Auth";
@@ -6,9 +6,7 @@ import { Login } from "./pages/Login";
 import { Catelog } from "./pages/Catelog";
 import {ApiToken} from "./pages/ApiToken";
 import { Setting } from "./pages/Setting";
-import { config } from "./config";
 import { Tools } from "./pages/Tools";
-import "antd/dist/antd.css";
 import zhCN from "antd/lib/locale/zh_CN";
 import { MainLayout } from "./layout/MainLayout";
 import { fetchTools } from "./utils/api";

@@ -15,9 +15,9 @@ export const ApiToken: React.FC<ApiTokenProps> = (props) => {
     async (id: number) => {
       try {
         await fetchDeleteApiToken(id);
-        message.success({ content: "删除成功!" });
+        message.success("删除成功!");
       } catch (err) {
-        message.warning({ content: "删除失败!" });
+        message.warning( "删除失败!");
       } finally {
         reload();
       }
@@ -28,9 +28,9 @@ export const ApiToken: React.FC<ApiTokenProps> = (props) => {
     async (record: any) => {
       try {
         await fetchAddApiToken(record);
-        message.success({ content: "添加成功!" });
+        message.success("添加成功!");
       } catch (err) {
-        message.warning({ content: "添加失败!" });
+        message.warning("添加失败!");
       } finally {
         setShowAddModel(false);
         reload();

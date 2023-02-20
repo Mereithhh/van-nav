@@ -10,9 +10,9 @@ export const Setting: React.FC<SettingProps> = (props) => {
     async (values: any) => {
       try {
         await fetchUpdateUser({ ...values, id: store?.user?.id });
-        message.success({ content: "修改成功!" });
+        message.success("修改成功!");
       } catch (err) {
-        message.warning({ content: "修改失败!" });
+        message.warning("修改失败!");
       } finally {
         reload();
       }
@@ -23,9 +23,9 @@ export const Setting: React.FC<SettingProps> = (props) => {
     async (values: any) => {
       try {
         await fetchUpdateSetting(values);
-        message.success({ content: "修改成功!" });
+        message.success("修改成功!");
       } catch (err) {
-        message.warning({ content: "修改失败!" });
+        message.warning("修改失败!");
       } finally {
         reload();
       }
