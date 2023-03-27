@@ -56,6 +56,14 @@ func initDB() {
 		`
 	_, err = db.Exec(sql_create_table)
 	checkErr(err)
+
+	// tools数据表结构升级-20230327
+	sql_create_table = `
+		ALTER TABLE nav_table ADD COLUMN sort INTEGER;
+		`
+	_, err = db.Exec(sql_create_table)
+	checkErr(err)
+
 	// 分类表
 	sql_create_table = `
 		CREATE TABLE IF NOT EXISTS nav_catelog (
@@ -65,6 +73,14 @@ func initDB() {
 		`
 	_, err = db.Exec(sql_create_table)
 	checkErr(err)
+
+	// 分类表表结构升级-20230327
+	sql_create_table = `
+		ALTER TABLE nav_catelog ADD COLUMN sort INTEGER;
+		`
+	_, err = db.Exec(sql_create_table)
+	checkErr(err)
+
 	// api token 表
 	sql_create_table = `
 		CREATE TABLE IF NOT EXISTS nav_api_token (
