@@ -50,18 +50,47 @@ func getIcon(url string) string {
 }
 
 func updateCatelog(data updateCatelogDto, db *sql.DB) {
+
+	// 查询分类原名称
+	sql_select_old_catelog_name := `select name from nav_catelog where id = ?;`
+	var oldName string
+	err := db.QueryRow(sql_select_old_catelog_name, data.Id).Scan(&oldName)
+	checkErr(err)
+	fmt.Println(oldName)
+
+	// 开启事务
+	tx, err := db.Begin()
+	checkErr(err)
+
+	// 更新分类新名称
 	sql_update_catelog := `
 		UPDATE nav_catelog
 		SET name = ?, sort = ?
 		WHERE id = ?;
 		`
-	stmt, err := db.Prepare(sql_update_catelog)
-	checkErr(err)
+	stmt, err := tx.Prepare(sql_update_catelog)
+	checkTxErr(err, tx)
 	res, err := stmt.Exec(data.Name, data.Sort, data.Id)
-	checkErr(err)
+	checkTxErr(err, tx)
 	_, err = res.RowsAffected()
-	checkErr(err)
+	checkTxErr(err, tx)
 	// fmt.Println(affect)
+
+	// 更新工具分类新名称
+	sql_update_tools := `
+		UPDATE nav_table
+		SET catelog = ?
+		WHERE catelog = ?;
+		`
+	stmt2, err := tx.Prepare(sql_update_tools)
+	checkTxErr(err, tx)
+	res2, err := stmt2.Exec(data.Name, oldName)
+	checkTxErr(err, tx)
+	_, err = res2.RowsAffected()
+	checkTxErr(err, tx)
+	// 提交事务
+	err = tx.Commit()
+	checkErr(err)
 }
 
 func getImgFromDB(url1 string, db *sql.DB) Img {

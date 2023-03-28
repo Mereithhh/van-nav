@@ -2,6 +2,7 @@ package main
 
 import (
 	"crypto/tls"
+	"database/sql"
 	"encoding/base64"
 	"fmt"
 	"io/ioutil"
@@ -14,6 +15,15 @@ func checkErr(err error) {
 		fmt.Println("捕获到错误：", err)
 	}
 }
+
+func checkTxErr(err error, tx *sql.Tx) {
+	if err != nil {
+		fmt.Println("出现事务异常，回滚事务:", err)
+		err2 := tx.Rollback()
+		checkErr(err2)
+	}
+}
+
 func in(target string, str_array []string) bool {
 	for _, element := range str_array {
 		if target == element {
