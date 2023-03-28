@@ -12,7 +12,9 @@ import {
   Select,
   Upload,
   message,
+  Tooltip
 } from "antd";
+import { QuestionCircleOutlined } from '@ant-design/icons';
 import { useCallback, useContext, useState } from "react";
 import { GlobalContext } from "../../components/GlobalContext";
 import { getFilter, getOptions, mutiSearch } from "../../utils";
@@ -324,7 +326,17 @@ export const Tools: React.FC<ToolsProps> = (props) => {
             }}
           />
           <Table.Column title="网址" dataIndex="url" width={150} />
-          <Table.Column title="排序" dataIndex="sort" width={30} />
+          <Table.Column 
+            title={
+              <span>排序 
+                <Tooltip title="升序，按数字从小到大排序">
+                  <QuestionCircleOutlined style={{ marginLeft: '5px' }} />
+                </Tooltip>
+              </span>
+            }
+            dataIndex="sort" 
+            width={30} 
+          />
           <Table.Column
             title="操作"
             width={40}
@@ -364,6 +376,7 @@ export const Tools: React.FC<ToolsProps> = (props) => {
         }}
         onOk={() => {
           const values = addForm?.getFieldsValue();
+          console.log(values);
           handleCreate(values);
         }}
       >
@@ -411,8 +424,21 @@ export const Tools: React.FC<ToolsProps> = (props) => {
             >
               <Input placeholder="请输入描述" />
             </Form.Item>
-            <Form.Item name="sort" required label="排序" labelCol={{ span: 4 }}>
-              <InputNumber placeholder="请输入排序" defaultValue={1}/>
+            <Form.Item 
+              rules={[{ required: true, message: "请排序" }]}
+              name="sort"
+              initialValue={1}
+              required
+              label={
+                <span>
+                  <Tooltip title="升序，按数字从小到大排序">
+                    <QuestionCircleOutlined style={{ marginLeft: '5px' }} />
+                  </Tooltip>
+                  &nbsp;排序 
+                </span>
+              } 
+              labelCol={{ span: 4 }}>
+              <InputNumber placeholder="请输入排序"/>
             </Form.Item>
           </Form>
         </Spin>
@@ -457,7 +483,18 @@ export const Tools: React.FC<ToolsProps> = (props) => {
               <Input placeholder="请输入描述" />
             </Form.Item>
             
-            <Form.Item name="sort" required label="排序" labelCol={{ span: 4 }}>
+            <Form.Item
+              name="sort"
+              required
+              label={
+                <span>
+                  <Tooltip title="升序，按数字从小到大排序">
+                    <QuestionCircleOutlined style={{ marginLeft: '5px' }} />
+                  </Tooltip>
+                  &nbsp;排序 
+                </span>
+              } 
+              labelCol={{ span: 4 }}>
               <InputNumber placeholder="请输入排序" defaultValue={1}/>
             </Form.Item>
           </Form>

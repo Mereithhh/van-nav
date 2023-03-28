@@ -1,5 +1,6 @@
 
-import { Button, Card, Form, Input, InputNumber, Modal, message, Popconfirm, Space, Spin, Table } from 'antd';
+import { Button, Card, Form, Input, InputNumber, Modal, message, Popconfirm, Space, Spin, Table, Tooltip } from 'antd';
+import { QuestionCircleOutlined } from '@ant-design/icons';
 import { useCallback, useContext, useState } from 'react';
 import { GlobalContext } from '../../components/GlobalContext';
 import { fetchAddCateLog, fetchDeleteCatelog, fetchUpdateCateLog } from '../../utils/api';
@@ -102,7 +103,17 @@ export const Catelog: React.FC<CatelogProps> = (props) => {
               );
             }}
           />
-          <Table.Column title="排序" dataIndex="sort" width={150} />
+          <Table.Column 
+            title={
+              <span>排序 
+                <Tooltip title="升序，按数字从小到大排序">
+                  <QuestionCircleOutlined style={{ marginLeft: '5px' }} />
+                </Tooltip>
+              </span>
+            }
+            dataIndex="sort" 
+            width={150} 
+          />
           <Table.Column
             title="操作"
             width={40}
@@ -149,7 +160,19 @@ export const Catelog: React.FC<CatelogProps> = (props) => {
           <Form.Item name="name" required label="名称" labelCol={{ span: 4 }}>
             <Input placeholder="请输入分类名称" />
           </Form.Item>
-          <Form.Item name="sort" required label="排序" labelCol={{ span: 4 }}>
+          <Form.Item 
+            name="sort" 
+            required
+            initialValue={1}
+            label={
+                <span>
+                  <Tooltip title="升序，按数字从小到大排序">
+                    <QuestionCircleOutlined style={{ marginLeft: '5px' }} />
+                  </Tooltip>
+                  &nbsp;排序 
+                </span>
+              } 
+            labelCol={{ span: 4 }}>
             <InputNumber placeholder="请输入分类排序" type="number" defaultValue={1}/>
           </Form.Item>
         </Form>
@@ -174,7 +197,18 @@ export const Catelog: React.FC<CatelogProps> = (props) => {
             <Form.Item name="name" required label="名称" labelCol={{ span: 4 }}>
               <Input placeholder="请输入分类名称" />
             </Form.Item>
-            <Form.Item name="sort" required label="排序" labelCol={{ span: 4 }}>
+            <Form.Item
+              name="sort" 
+              required 
+              label={
+                <span>
+                  <Tooltip title="升序，按数字从小到大排序">
+                    <QuestionCircleOutlined style={{ marginLeft: '5px' }} />
+                  </Tooltip>
+                  &nbsp;排序 
+                </span>
+              } 
+              labelCol={{ span: 4 }}>
               <InputNumber placeholder="请输入分类排序" defaultValue={1}/>
             </Form.Item>
           </Form>
