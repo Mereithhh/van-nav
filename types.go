@@ -51,6 +51,7 @@ type Tool struct {
 	Logo    string `json:"logo"`
 	Catelog string `json:"catelog"`
 	Desc    string `json:"desc"`
+	Sort    int    `json:"sort"`
 }
 
 type addToolDto struct {
@@ -59,6 +60,7 @@ type addToolDto struct {
 	Logo    string `json:"logo"`
 	Catelog string `json:"catelog"`
 	Desc    string `json:"desc"`
+	Sort    int    `json:"sort"`
 }
 
 type updateToolDto struct {
@@ -68,17 +70,21 @@ type updateToolDto struct {
 	Logo    string `json:"logo"`
 	Catelog string `json:"catelog"`
 	Desc    string `json:"desc"`
+	Sort    int    `json:"sort"`
 }
 type updateCatelogDto struct {
 	Id   int    `json:"id"`
 	Name string `json:"name"`
+	Sort int    `json:"sort"`
 }
 
 type addCatelogDto struct {
 	Name string `json:"name"`
+	Sort int    `json:"sort"`
 }
 
 type Catelog struct {
 	Id   int    `json:"id"`
 	Name string `json:"name"`
+	Sort int    `json:"sort"`
 }

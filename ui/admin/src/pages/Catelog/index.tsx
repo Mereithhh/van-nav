@@ -1,16 +1,20 @@
 
-import { Button, Card, Form, Input, Modal, message, Popconfirm, Space, Spin, Table } from 'antd';
+import { Button, Card, Form, Input, InputNumber, Modal, message, Popconfirm, Space, Spin, Table, Tooltip } from 'antd';
+import { QuestionCircleOutlined } from '@ant-design/icons';
 import { useCallback, useContext, useState } from 'react';
 import { GlobalContext } from '../../components/GlobalContext';
-import { fetchAddCateLog, fetchDeleteCatelog } from '../../utils/api';
+import { fetchAddCateLog, fetchDeleteCatelog, fetchUpdateCateLog } from '../../utils/api';
 import './index.css'
 export interface CatelogProps  {
 
 }
 export const Catelog: React.FC<CatelogProps> = (props) => {
   const {reload,store,loading} = useContext(GlobalContext); 
+  const [requestLoading, setRequestLoading] = useState(false);
   const [addForm] = Form.useForm();
+  const [updateForm] = Form.useForm();
   const [showAddModel, setShowAddModel] = useState(false);
+  const [showEdit, setShowEdit] = useState(false);
   const handleDelete = useCallback(
     async (id: number) => {
       try {
@@ -37,6 +41,26 @@ export const Catelog: React.FC<CatelogProps> = (props) => {
       }
     },
     [reload, setShowAddModel]
+  );
+  
+  const handleUpdate = useCallback(
+    async (record: any) => {
+      setRequestLoading(true);
+      try {
+        await fetchUpdateCateLog(record);
+        message.success("更新成功! ");
+        setTimeout(() => {
+          reload();
+        }, 3000);
+      } catch (err) {
+        message.warning("更新失败!");
+      } finally {
+        setRequestLoading(false);
+        setShowEdit(false);
+        reload();
+      }
+    },
+    [reload, setShowEdit, setRequestLoading]
   );
   return (
     <Card
@@ -79,6 +103,17 @@ export const Catelog: React.FC<CatelogProps> = (props) => {
               );
             }}
           />
+          <Table.Column 
+            title={
+              <span>排序 
+                <Tooltip title="升序，按数字从小到大排序">
+                  <QuestionCircleOutlined style={{ marginLeft: '5px' }} />
+                </Tooltip>
+              </span>
+            }
+            dataIndex="sort" 
+            width={150} 
+          />
           <Table.Column
             title="操作"
             width={40}
@@ -87,6 +122,15 @@ export const Catelog: React.FC<CatelogProps> = (props) => {
             render={(_, record: any) => {
               return (
                 <Space>
+                  <Button
+                    type="link"
+                    onClick={() => {
+                      updateForm.setFieldsValue(record);
+                      setShowEdit(true);
+                    }}
+                  >
+                    修改
+                  </Button>
                   <Popconfirm
                     onConfirm={() => {
                       handleDelete(record.id);
@@ -103,7 +147,7 @@ export const Catelog: React.FC<CatelogProps> = (props) => {
       </Spin>
       <Modal
         visible={showAddModel}
-        title={"新建工具"}
+        title={"新建分类"}
         onCancel={() => {
           setShowAddModel(false);
         }}
@@ -116,7 +160,59 @@ export const Catelog: React.FC<CatelogProps> = (props) => {
           <Form.Item name="name" required label="名称" labelCol={{ span: 4 }}>
             <Input placeholder="请输入分类名称" />
           </Form.Item>
+          <Form.Item 
+            name="sort" 
+            required
+            initialValue={1}
+            label={
+                <span>
+                  <Tooltip title="升序，按数字从小到大排序">
+                    <QuestionCircleOutlined style={{ marginLeft: '5px' }} />
+                  </Tooltip>
+                  &nbsp;排序 
+                </span>
+              } 
+            labelCol={{ span: 4 }}>
+            <InputNumber placeholder="请输入分类排序" type="number" defaultValue={1}/>
+          </Form.Item>
         </Form>
+      </Modal>
+
+      <Modal
+        visible={showEdit}
+        title={"修改分类"}
+        onCancel={() => {
+          setShowEdit(false);
+        }}
+        onOk={() => {
+          const values = updateForm?.getFieldsValue();
+          handleUpdate(values);
+        }}
+      >
+        <Spin spinning={requestLoading}>
+          <Form form={updateForm}>
+            <Form.Item name="id" label="序号" labelCol={{ span: 4 }}>
+              <Input disabled />
+            </Form.Item>
+            <Form.Item name="name" required label="名称" labelCol={{ span: 4 }}>
+              <Input placeholder="请输入分类名称" />
+            </Form.Item>
+            <Form.Item
+              name="sort" 
+              required 
+              label={
+                <span>
+                  <Tooltip title="升序，按数字从小到大排序">
+                    <QuestionCircleOutlined style={{ marginLeft: '5px' }} />
+                  </Tooltip>
+                  &nbsp;排序 
+                </span>
+              } 
+              labelCol={{ span: 4 }}>
+              <InputNumber placeholder="请输入分类排序" defaultValue={1}/>
+            </Form.Item>
+          </Form>
+        </Spin>
       </Modal>
     </Card>
   );

@@ -50,18 +50,47 @@ func getIcon(url string) string {
 }
 
 func updateCatelog(data updateCatelogDto, db *sql.DB) {
+
+	// 查询分类原名称
+	sql_select_old_catelog_name := `select name from nav_catelog where id = ?;`
+	var oldName string
+	err := db.QueryRow(sql_select_old_catelog_name, data.Id).Scan(&oldName)
+	checkErr(err)
+	fmt.Println(oldName)
+
+	// 开启事务
+	tx, err := db.Begin()
+	checkErr(err)
+
+	// 更新分类新名称
 	sql_update_catelog := `
 		UPDATE nav_catelog
-		SET name = ?
+		SET name = ?, sort = ?
 		WHERE id = ?;
 		`
-	stmt, err := db.Prepare(sql_update_catelog)
-	checkErr(err)
-	res, err := stmt.Exec(data.Name, data.Id)
-	checkErr(err)
+	stmt, err := tx.Prepare(sql_update_catelog)
+	checkTxErr(err, tx)
+	res, err := stmt.Exec(data.Name, data.Sort, data.Id)
+	checkTxErr(err, tx)
 	_, err = res.RowsAffected()
-	checkErr(err)
+	checkTxErr(err, tx)
 	// fmt.Println(affect)
+
+	// 更新工具分类新名称
+	sql_update_tools := `
+		UPDATE nav_table
+		SET catelog = ?
+		WHERE catelog = ?;
+		`
+	stmt2, err := tx.Prepare(sql_update_tools)
+	checkTxErr(err, tx)
+	res2, err := stmt2.Exec(data.Name, oldName)
+	checkTxErr(err, tx)
+	_, err = res2.RowsAffected()
+	checkTxErr(err, tx)
+	// 提交事务
+	err = tx.Commit()
+	checkErr(err)
 }
 
 func getImgFromDB(url1 string, db *sql.DB) Img {
@@ -129,12 +158,12 @@ func updateTool(data updateToolDto, db *sql.DB) {
 	// 除了更新工具本身之外，也要更新 img 表
 	sql_update_tool := `
 		UPDATE nav_table
-		SET name = ?, url = ?, logo = ?, catelog = ?, desc = ?
+		SET name = ?, url = ?, logo = ?, catelog = ?, desc = ?, sort = ?
 		WHERE id = ?;
 		`
 	stmt, err := db.Prepare(sql_update_tool)
 	checkErr(err)
-	res, err := stmt.Exec(data.Name, data.Url, data.Logo, data.Catelog, data.Desc, data.Id)
+	res, err := stmt.Exec(data.Name, data.Url, data.Logo, data.Catelog, data.Desc, data.Sort, data.Id)
 	checkErr(err)
 	_, err = res.RowsAffected()
 	checkErr(err)
@@ -199,13 +228,13 @@ func addCatelog(data addCatelogDto, db *sql.DB) {
 		return
 	}
 	sql_add_catelog := `
-		INSERT INTO nav_catelog (name)
-		VALUES (?);
+		INSERT INTO nav_catelog (name,sort)
+		VALUES (?,?);
 		`
 	// fmt.Println("增加分类：",data)
 	stmt, err := db.Prepare(sql_add_catelog)
 	checkErr(err)
-	res, err := stmt.Exec(data.Name)
+	res, err := stmt.Exec(data.Name, data.Sort)
 	checkErr(err)
 	_, err = res.LastInsertId()
 	checkErr(err)
@@ -214,12 +243,12 @@ func addCatelog(data addCatelogDto, db *sql.DB) {
 
 func addTool(data addToolDto, db *sql.DB) int64 {
 	sql_add_tool := `
-		INSERT INTO nav_table (name, url, logo, catelog, desc)
-		VALUES (?, ?, ?, ?, ?);
+		INSERT INTO nav_table (name, url, logo, catelog, desc, sort)
+		VALUES (?, ?, ?, ?, ?, ?);
 		`
 	stmt, err := db.Prepare(sql_add_tool)
 	checkErr(err)
-	res, err := stmt.Exec(data.Name, data.Url, data.Logo, data.Catelog, data.Desc)
+	res, err := stmt.Exec(data.Name, data.Url, data.Logo, data.Catelog, data.Desc, data.Sort)
 	checkErr(err)
 	id, err := res.LastInsertId()
 	checkErr(err)
@@ -230,14 +259,14 @@ func addTool(data addToolDto, db *sql.DB) int64 {
 
 func getAllTool(db *sql.DB) []Tool {
 	sql_get_all := `
-		SELECT * FROM nav_table;
+		SELECT * FROM nav_table order by sort;
 		`
 	results := make([]Tool, 0)
 	rows, err := db.Query(sql_get_all)
 	checkErr(err)
 	for rows.Next() {
 		var tool Tool
-		err = rows.Scan(&tool.Id, &tool.Name, &tool.Url, &tool.Logo, &tool.Catelog, &tool.Desc)
+		err = rows.Scan(&tool.Id, &tool.Name, &tool.Url, &tool.Logo, &tool.Catelog, &tool.Desc, &tool.Sort)
 		checkErr(err)
 		results = append(results, tool)
 	}
@@ -247,14 +276,14 @@ func getAllTool(db *sql.DB) []Tool {
 
 func getAllCatelog(db *sql.DB) []Catelog {
 	sql_get_all := `
-		SELECT * FROM nav_catelog;
+		SELECT * FROM nav_catelog order by sort;
 		`
 	results := make([]Catelog, 0)
 	rows, err := db.Query(sql_get_all)
 	checkErr(err)
 	for rows.Next() {
 		var catelog Catelog
-		err = rows.Scan(&catelog.Id, &catelog.Name)
+		err = rows.Scan(&catelog.Id, &catelog.Name, &catelog.Sort)
 		checkErr(err)
 		results = append(results, catelog)
 	}

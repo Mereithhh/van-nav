@@ -8,10 +8,13 @@ import {
   Table,
   Form,
   Input,
+  InputNumber,
   Select,
   Upload,
   message,
+  Tooltip
 } from "antd";
+import { QuestionCircleOutlined } from '@ant-design/icons';
 import { useCallback, useContext, useState } from "react";
 import { GlobalContext } from "../../components/GlobalContext";
 import { getFilter, getOptions, mutiSearch } from "../../utils";
@@ -31,6 +34,7 @@ export const Tools: React.FC<ToolsProps> = (props) => {
   const [showAddModel, setShowAddModel] = useState(false);
   const [addForm] = Form.useForm();
   const [searchString, setSearchString] = useState("");
+  const [catelogName, setCatelogName] = useState("");
   const [updateForm] = Form.useForm();
   const [selectedRows, setSelectRows] = useState<any>([]);
   const handleDelete = useCallback(
@@ -193,6 +197,17 @@ export const Tools: React.FC<ToolsProps> = (props) => {
       }
       extra={
         <Space>
+          <Select
+            options={getOptions(store?.catelogs || [])}
+            placeholder="分类筛选"
+            allowClear
+            onClear={() => {
+              setCatelogName("");
+            }}
+            onChange={(name: string) => {
+              setCatelogName(name);
+            }}
+          />
           <Input.Search
             allowClear
             onSearch={(s: string) => {
@@ -249,13 +264,20 @@ export const Tools: React.FC<ToolsProps> = (props) => {
         <Table
           dataSource={
             store?.tools?.filter((item: any) => {
+              let show = false;
+              // 过滤名称或描述
               if (searchString === "") {
-                return true;
+                show = true;
+              } else {
+                show = mutiSearch(item.name, searchString) || mutiSearch(item.desc, searchString);
               }
-              return (
-                mutiSearch(item.name, searchString) ||
-                mutiSearch(item.desc, searchString)
-              );
+              // 过滤分类
+              if (!catelogName || catelogName === ""){
+                show = show && true;
+              } else {
+                show = show && mutiSearch(item.catelog, catelogName);
+              }
+              return show;
             }) || []
           }
           rowKey="id"
@@ -270,7 +292,7 @@ export const Tools: React.FC<ToolsProps> = (props) => {
           <Table.Column
             title="名称"
             dataIndex="name"
-            width={150}
+            width={120}
             render={(_, record: any) => {
               return (
                 <div>
@@ -297,13 +319,24 @@ export const Tools: React.FC<ToolsProps> = (props) => {
           <Table.Column
             title="分类"
             dataIndex="catelog"
-            width={100}
+            width={60}
             filters={getFilter(store?.catelogs || [])}
             onFilter={(value: any, record: any) => {
               return value === record["catelog"];
             }}
           />
-          <Table.Column title="网址" dataIndex="url" width={100} />
+          <Table.Column title="网址" dataIndex="url" width={150} />
+          <Table.Column 
+            title={
+              <span>排序 
+                <Tooltip title="升序，按数字从小到大排序">
+                  <QuestionCircleOutlined style={{ marginLeft: '5px' }} />
+                </Tooltip>
+              </span>
+            }
+            dataIndex="sort" 
+            width={30} 
+          />
           <Table.Column
             title="操作"
             width={40}
@@ -343,6 +376,7 @@ export const Tools: React.FC<ToolsProps> = (props) => {
         }}
         onOk={() => {
           const values = addForm?.getFieldsValue();
+          console.log(values);
           handleCreate(values);
         }}
       >
@@ -390,6 +424,22 @@ export const Tools: React.FC<ToolsProps> = (props) => {
             >
               <Input placeholder="请输入描述" />
             </Form.Item>
+            <Form.Item 
+              rules={[{ required: true, message: "请排序" }]}
+              name="sort"
+              initialValue={1}
+              required
+              label={
+                <span>
+                  <Tooltip title="升序，按数字从小到大排序">
+                    <QuestionCircleOutlined style={{ marginLeft: '5px' }} />
+                  </Tooltip>
+                  &nbsp;排序 
+                </span>
+              } 
+              labelCol={{ span: 4 }}>
+              <InputNumber placeholder="请输入排序"/>
+            </Form.Item>
           </Form>
         </Spin>
       </Modal>
@@ -431,6 +481,21 @@ export const Tools: React.FC<ToolsProps> = (props) => {
             </Form.Item>
             <Form.Item name="desc" required label="描述" labelCol={{ span: 4 }}>
               <Input placeholder="请输入描述" />
+            </Form.Item>
+            
+            <Form.Item
+              name="sort"
+              required
+              label={
+                <span>
+                  <Tooltip title="升序，按数字从小到大排序">
+                    <QuestionCircleOutlined style={{ marginLeft: '5px' }} />
+                  </Tooltip>
+                  &nbsp;排序 
+                </span>
+              } 
+              labelCol={{ span: 4 }}>
+              <InputNumber placeholder="请输入排序" defaultValue={1}/>
             </Form.Item>
           </Form>
         </Spin>
