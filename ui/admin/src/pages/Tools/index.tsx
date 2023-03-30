@@ -295,7 +295,11 @@ export const Tools: React.FC<ToolsProps> = (props) => {
             width={120}
             render={(_, record: any) => {
               return (
-                <div>
+                <div style={{
+                  display:"flex",
+                  flexDirection:"row",
+                  alignItems: "center"
+                }}>
                   {" "}
                   {record.logo.split(".").pop().includes("svg") ? (
                     <embed
