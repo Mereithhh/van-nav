@@ -125,6 +125,7 @@ sudo systemctl daemon-reload && sudo systemctl enable --now VanNav.service
 - [x] svg 图片修复
 - [x] 浏览器插件
 - [x] 自动获取网站题目和描述等信息
+- [x] 后台按钮可自定义隐藏
 - [ ] 自动主题切换
 - [ ] 国际化
 - [ ] 增加 ServiceWork ,离线可用,可安装
