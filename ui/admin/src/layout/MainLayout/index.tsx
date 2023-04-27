@@ -3,13 +3,13 @@ import { Layout, Menu } from "antd";
 import { useNavigate, useLocation } from "react-router-dom";
 import { config } from "../../config";
 import { logout } from "../../utils";
-import {  useContext, useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { GlobalContext } from "../../components/GlobalContext";
 const { Header, Content, Sider } = Layout;
-export interface MainLayoutProps {children: React.ReactNode | React.ReactNode[]}
+export interface MainLayoutProps { children: React.ReactNode | React.ReactNode[] }
 export const MainLayout: React.FC<MainLayoutProps> = (props) => {
   const nav = useNavigate();
-  const { store,  reload } = useContext(GlobalContext);
+  const { store, reload } = useContext(GlobalContext);
   const location = useLocation();
 
   useEffect(() => {
@@ -19,8 +19,8 @@ export const MainLayout: React.FC<MainLayoutProps> = (props) => {
   }, [store]);
   return (
     <Layout className="main" >
-      <Header className="header" >
-        <div className="logo" style={{ color: "white",display:"flex",alignItems:"center" }}>
+      <Header className="header" style={{ position: 'sticky', top: 0, zIndex: 1, width: '100%' }}>
+        <div className="logo" style={{ color: "white", display: "flex", alignItems: "center" }}>
           <svg
             viewBox="0 0 1707 1024"
             version="1.1"
@@ -145,6 +145,7 @@ export const MainLayout: React.FC<MainLayoutProps> = (props) => {
       <Layout>
         <Sider width={200} className="site-layout-background">
           <Menu
+
             mode="inline"
             selectedKeys={[
               location.pathname === "/" ? "/tools" : location.pathname,
@@ -152,7 +153,16 @@ export const MainLayout: React.FC<MainLayoutProps> = (props) => {
             onClick={(info) => {
               nav(info.key);
             }}
-            style={{ height: "100%", borderRight: 0 }}
+            style={{
+              overflow: 'auto',
+              marginTop: 64,
+              height: '100%',
+              position: 'fixed',
+              left: 0,
+              top: 0,
+              bottom: 0,
+              width: 200
+            }}
           >
             <Menu.Item key="/tools">工具管理</Menu.Item>
             <Menu.Item key="/catelogs">分类管理</Menu.Item>
@@ -164,7 +174,8 @@ export const MainLayout: React.FC<MainLayoutProps> = (props) => {
           <Content
             className="site-layout-background"
             style={{
-              padding: 24,
+              padding: 0,
+              paddingTop: 24,
               margin: 0,
               minHeight: 280,
             }}
