@@ -26,7 +26,8 @@ func initDB() {
 		favicon TEXT,
 		title TEXT,
 		logo192 TEXT,
-		logo512 TEXT
+		logo512 TEXT,
+		hideAdmin BOOLEAN
 	);
 	`
 	_, err = db.Exec(sql_create_table)
@@ -130,12 +131,12 @@ func initDB() {
 	checkErr(err)
 	if !rows.Next() {
 		sql_add_setting := `
-			INSERT INTO nav_setting (id, favicon, title, logo192, logo512)
-			VALUES (?, ?, ?, ?, ?);
+			INSERT INTO nav_setting (id, favicon, title, logo192, logo512, hideAdmin)
+			VALUES (?, ?, ?, ?, ?, ?);
 			`
 		stmt, err := db.Prepare(sql_add_setting)
 		checkErr(err)
-		res, err := stmt.Exec(0, "favicon.ico", "Van Nav", "logo192.png", "logo512.png")
+		res, err := stmt.Exec(0, "favicon.ico", "Van Nav", "logo192.png", "logo512.png", false)
 		checkErr(err)
 		_, err = res.LastInsertId()
 		checkErr(err)

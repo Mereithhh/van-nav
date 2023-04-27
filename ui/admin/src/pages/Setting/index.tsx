@@ -1,9 +1,9 @@
-import { Button, Card, Form, Input, message, Spin } from "antd";
-import { useCallback, useContext } from "react";
+import { Button, Card, Form, Input, message, Spin, Switch } from "antd";
+import { useCallback, useContext, useEffect } from "react";
 import { GlobalContext } from "../../components/GlobalContext";
 import { fetchUpdateSetting, fetchUpdateUser } from "../../utils/api";
 import "./index.css";
-export interface SettingProps {}
+export interface SettingProps { }
 export const Setting: React.FC<SettingProps> = (props) => {
   const { store, reload, loading } = useContext(GlobalContext);
   const handleUpdateUser = useCallback(
@@ -66,6 +66,7 @@ export const Setting: React.FC<SettingProps> = (props) => {
           <Form
             onFinish={handleUpdateWebSite}
             initialValues={store?.setting ?? {}}
+            labelCol={{ span: 6 }}
           >
             <Form.Item
               label="网站 logo"
@@ -73,7 +74,7 @@ export const Setting: React.FC<SettingProps> = (props) => {
               tooltip="输入 logo 的 url，仅支持 png 或 svg 格式"
               required
               rules={[{ required: true, message: "请输入网站 logo 链接" }]}
-              labelCol={{ span: 4 }}
+
             >
               <Input placeholder="请输入网站 logo"></Input>
             </Form.Item>
@@ -83,7 +84,7 @@ export const Setting: React.FC<SettingProps> = (props) => {
               required
               rules={[{ required: true, message: "请输入网站 title" }]}
 
-              labelCol={{ span: 4 }}
+
             >
               <Input placeholder="请输入网站标题"></Input>
             </Form.Item>
@@ -93,7 +94,7 @@ export const Setting: React.FC<SettingProps> = (props) => {
               rules={[{ required: true, message: "请输入 192x192 大小的 logo 链接" }]}
 
               tooltip="192x192 大小的 logo，用于实现可安装的 web 应用"
-              labelCol={{ span: 4 }}
+
             >
               <Input placeholder="192x192 大小的 logo 链接"></Input>
             </Form.Item>
@@ -103,9 +104,12 @@ export const Setting: React.FC<SettingProps> = (props) => {
               rules={[{ required: true, message: "请输入 512x512 大小的 logo 链接" }]}
 
               tooltip="512x512 大小的 logo，用于实现可安装的 web 应用"
-              labelCol={{ span: 4 }}
+
             >
               <Input placeholder="512x512 大小的 logo 链接"></Input>
+            </Form.Item>
+            <Form.Item label="隐藏管理员后台按钮" name="hideAdmin" tooltip="默认展示，开启后将在前台隐藏管理员按钮" >
+              <Switch defaultChecked={store?.setting?.hideAdmin} />
             </Form.Item>
             <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
               <Button type="primary" htmlType="submit">
