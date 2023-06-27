@@ -14,7 +14,6 @@ import (
 	"github.com/mereith/nav/goscraper"
 
 	"github.com/gin-contrib/gzip"
-	"github.com/gin-gonic/contrib/static"
 	"github.com/gin-gonic/gin"
 	_ "modernc.org/sqlite"
 	// _ "github.com/mattn/go-sqlite3"
@@ -368,7 +367,7 @@ func main() {
 	// router.StaticFS("/",http.FS(fs))
 
 	router.GET("/manifest.json", ManifastHanlder)
-	router.Use(static.Serve("/", BinaryFileSystem(fs, "public")))
+	router.Use(Serve("/", BinaryFileSystem(fs, "public")))
 	// router.Use(static.Serve("/", static.LocalFile("./public", true)))
 	api := router.Group("/api")
 	{
