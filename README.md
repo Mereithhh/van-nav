@@ -16,6 +16,8 @@
 - 搜索完按回车会直接在新标签页打开第一个结果。
 - 搜索完按一下对应卡片右上角的数字按钮 + Ctrl(mac 也可以用 command 键) ，也会直接打开对应结果。
 
+另外可以设置跳转方式哦。
+
 ## 安装方法
 ### Docker
 
@@ -135,6 +137,8 @@ sudo systemctl daemon-reload && sudo systemctl enable --now VanNav.service
 - [x] github 按钮可隐藏
 - [x] 支持登录后才能查看的隐藏卡片
 - [x] 搜索引擎集成功能
+- [x] 增加一些搜索后快捷键直接打开卡片
+- [x] 支持自定义跳转方式
 - [ ] 自动主题切换
 - [ ] 国际化
 - [ ] 增加 ServiceWork ,离线可用,可安装

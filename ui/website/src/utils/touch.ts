@@ -1,0 +1,1 @@
+export const canTouch = 'ontouchstart' in document.documentElement;

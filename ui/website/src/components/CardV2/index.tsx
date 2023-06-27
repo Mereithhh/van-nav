@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import "./index.css";
 import { getLogoUrl } from "../../utils/check";
+import { getJumpTarget } from "../../utils/setting";
 const Card = ({ title, url, des, logo, catelog, onClick, index, isSearching }) => {
   const el = useMemo(() => {
     if (url === "admin") {
@@ -16,11 +17,11 @@ const Card = ({ title, url, des, logo, catelog, onClick, index, isSearching }) =
   const showNumIndex = index < 10 && isSearching;
   return (
     <a
-      href={url}
+      href={url == "toggleJumpTarget" ? undefined : url}
       onClick={() => {
         onClick();
       }}
-      target="_blank"
+      target={getJumpTarget() === "blank" ? "_blank" : "_self"}
       rel="noreferrer"
       className="card-box"
     >

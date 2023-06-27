@@ -12,6 +12,7 @@ import GithubLink from "../GithubLink";
 import DarkSwitch from "../DarkSwitch";
 import { isLogin } from "../../utils/check";
 import { generateSearchEngineCard } from "../../utils/serachEngine";
+import { toggleJumpTarget } from "../../utils/setting";
 
 const mutiSearch = (s, t) => {
   const source = (s as string).toLowerCase();
@@ -39,7 +40,6 @@ const Content = (props: any) => {
       setLoading(true);
       const r = await FetchList();
       setData(r);
-      console.log(r)
       const tagInLocalStorage = window.localStorage.getItem("tag");
       if (tagInLocalStorage && tagInLocalStorage !== "") {
         if (r?.catelogs && r?.catelogs.includes(tagInLocalStorage)) {
@@ -145,6 +145,10 @@ const Content = (props: any) => {
           isSearching={searchString.trim() !== ""}
           onClick={() => {
             resetSearch();
+            if (item.url == "toggleJumpTarget") {
+              toggleJumpTarget();
+              loadData();
+            }
           }}
         />
       );
