@@ -109,7 +109,7 @@ export const Setting: React.FC<SettingProps> = (props) => {
             >
               <Input placeholder="512x512 大小的 logo 链接"></Input>
             </Form.Item>
-            <Form.Item label="隐藏管理员后台按钮" name="hideAdmin" tooltip="默认展示，开启后将在前台隐藏管理员按钮" >
+            <Form.Item label="隐藏管理员后台卡片" name="hideAdmin" tooltip="默认展示，开启后将在前台隐藏管理员卡片" >
               <Switch defaultChecked={store?.setting?.hideAdmin} />
             </Form.Item>
             <Form.Item label="隐藏 Github 按钮" name="hideGithub" tooltip="默认展示，开启后将在前台 Github 按钮" >
