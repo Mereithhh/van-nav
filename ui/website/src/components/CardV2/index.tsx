@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import "./index.css";
 import { getLogoUrl } from "../../utils/check";
-const Card = ({ title, url, des, logo, catelog, onClick }) => {
+const Card = ({ title, url, des, logo, catelog, onClick, index, isSearching }) => {
   const el = useMemo(() => {
     if (url === "admin") {
       return <img src={logo} alt={title} />
@@ -13,6 +13,7 @@ const Card = ({ title, url, des, logo, catelog, onClick }) => {
       }
     }
   }, [logo, title, url])
+  const showNumIndex = index < 10 && isSearching;
   return (
     <a
       href={url}
@@ -23,6 +24,7 @@ const Card = ({ title, url, des, logo, catelog, onClick }) => {
       rel="noreferrer"
       className="card-box"
     >
+      {showNumIndex && <span className="card-index">{index + 1}</span>}
       <div className="card-content">
         <div className="card-left">
           {el}

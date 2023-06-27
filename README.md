@@ -10,7 +10,13 @@
 <div align=center><img alt="预览 phone"  width=450 src="images/phone-dark.png"/></div>
 <div align=center><img alt="后台设置" src="images/admin.png"/></div>
 
-## 使用方法
+## 快捷键
+其实这个导航站有很多小设计，合理使用可以提高使用效率：
+- 只要在这个页面里，直接输入键盘任何按键，可以直接聚焦到搜索框开始输入。
+- 搜索完按回车会直接在新标签页打开第一个结果。
+- 搜索完按一下对应卡片右上角的数字按钮 + Ctrl(mac 也可以用 command 键) ，也会直接打开对应结果。
+
+## 安装方法
 ### Docker
 
 ```

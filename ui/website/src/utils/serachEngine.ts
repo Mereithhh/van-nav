@@ -11,7 +11,7 @@ export const generateSearchEngineCard = (searchString: string) => {
     },
     {
       name: "使用 Bing 搜索",
-      url: searchBaidu(searchString),
+      url: searchBing(searchString),
       desc: `在 Bing 中搜索 「${searchString}」`,
       id: 8800880002,
       logo: "bing.ico",
@@ -19,7 +19,7 @@ export const generateSearchEngineCard = (searchString: string) => {
     },
     {
       name: "使用 Google 搜索",
-      url: searchBaidu(searchString),
+      url: searchGoogle(searchString),
       desc: `在 Google 中搜索 「${searchString}」`,
       id: 8800880003,
       logo: "google.ico",

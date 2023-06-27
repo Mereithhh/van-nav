@@ -9,17 +9,17 @@ interface SearchBarProps {
 const SearchBar = (props: SearchBarProps) => {
   const onKeyDown = (ev) => {
     const reg = /[a-zA-Z0-9]|[\u4e00-\u9fa5]/g;
-    if(ev.code === "Enter" || reg.test(ev.key)) {
+    if (ev.code === "Enter" || reg.test(ev.key)) {
       const el = document.getElementById("search-bar");
       if (el) {
         el.focus();
       }
     }
   }
-  useEffect(()=> {
-    document.addEventListener("keydown",onKeyDown);
+  useEffect(() => {
+    document.addEventListener("keydown", onKeyDown);
     return () => {
-      document.removeEventListener("keydown",onKeyDown)
+      document.removeEventListener("keydown", onKeyDown)
     }
   })
   return (
@@ -28,7 +28,7 @@ const SearchBar = (props: SearchBarProps) => {
         <input
           id="search-bar"
           type="search"
-          placeholder="按任意键开始搜索应用"
+          placeholder="按任意键直接开始搜索"
           value={props.searchString}
           onChange={(ev) => {
             const v = ev.target.value.trim();

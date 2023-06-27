@@ -120,8 +120,19 @@ const Content = (props: any) => {
     filteredDataRef.current = filteredData
   }, [filteredData])
 
+  useEffect(() => {
+    if (searchString.trim() == "") {
+      document.removeEventListener("keydown", onKeyEnter);
+    } else {
+      document.addEventListener("keydown", onKeyEnter);
+    }
+    return () => {
+      document.removeEventListener("keydown", onKeyEnter);
+    }
+  }, [searchString])
+
   const renderCardsV2 = useCallback(() => {
-    return filteredData.map((item) => {
+    return filteredData.map((item, index) => {
       return (
         <CardV2
           title={item.name}
@@ -130,15 +141,17 @@ const Content = (props: any) => {
           logo={item.logo}
           key={item.id}
           catelog={item.catelog}
+          index={index}
+          isSearching={searchString.trim() !== ""}
           onClick={() => {
             resetSearch();
           }}
         />
       );
     });
-  }, [filteredData]);
+  }, [filteredData, searchString]);
 
-  const onKeyEnter = (ev) => {
+  const onKeyEnter = (ev: KeyboardEvent) => {
     const cards = filteredDataRef.current;
     if (ev.code === "Enter") {
       if (cards && cards.length) {
@@ -146,7 +159,18 @@ const Content = (props: any) => {
         resetSearch();
       }
     }
-    document.removeEventListener("keydown", onKeyEnter);
+    // 如果按了数字键 + ctrl/meta，打开对应的卡片
+    if (ev.ctrlKey || ev.metaKey) {
+      const num = Number(ev.key);
+      if (isNaN(num)) return;
+      ev.preventDefault()
+      const index = Number(ev.key) - 1;
+      if (index >= 0 && index < cards.length) {
+        window.open(cards[index]?.url, "_blank");
+        resetSearch();
+      }
+    }
+
   };
 
   return (
@@ -168,7 +192,6 @@ const Content = (props: any) => {
             setSearchText={(t) => {
               setVal(t);
               handleSetSearch(t);
-              document.addEventListener("keydown", onKeyEnter);
             }}
           />
           <TagSelector

@@ -75,7 +75,11 @@
     grid-template-columns: repeat(3, 1fr);
   }
 
+  .card-index {
+    display: none;
+  }
   .card-box {
+
     max-width: 200px;
     display: flex;
     margin-bottom: 10vw;
@@ -214,6 +218,9 @@
     justify-content: center;
     margin: 0 5vw;
   }
+  .card-index {
+    display: none;
+  }
   .card-box {
     max-width: 200px;
     margin-bottom: 10vw;
@@ -347,6 +354,9 @@
     grid-gap: 15px;
     justify-content: center;
     margin: 0 5vw;
+  }
+  .card-index {
+    display: none;
   }
   .card-box {
     max-width: 299.67px;
