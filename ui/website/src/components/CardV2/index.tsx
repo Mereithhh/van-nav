@@ -1,17 +1,18 @@
 import { useMemo } from "react";
 import "./index.css";
+import { getLogoUrl } from "../../utils/check";
 const Card = ({ title, url, des, logo, catelog, onClick }) => {
-  const el = useMemo(()=>{
+  const el = useMemo(() => {
     if (url === "admin") {
       return <img src={logo} alt={title} />
     } else {
-      if (logo.split(".").pop().includes("svg") ) {
-        return <embed src={`/api/img?url=${logo}`} type="image/svg+xml" />
+      if (logo.split(".").pop().includes("svg")) {
+        return <embed src={getLogoUrl(logo)} type="image/svg+xml" />
       } else {
-        return <img src={`/api/img?url=${logo}`} alt={title} />
+        return <img src={getLogoUrl(logo)} alt={title} />
       }
     }
-  },[logo,title,url])
+  }, [logo, title, url])
   return (
     <a
       href={url}

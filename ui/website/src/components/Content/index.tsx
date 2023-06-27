@@ -3,7 +3,7 @@ import CardV2 from "../CardV2";
 import SearchBar from "../SearchBar";
 import { Loading } from "../Loading";
 import { Helmet } from "react-helmet";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import FetchList from "../../utils/api";
 import TagSelector from "../TagSelector";
 import { useDebounce } from "../../utils/tools";
@@ -11,6 +11,7 @@ import pinyin from "pinyin-match";
 import GithubLink from "../GithubLink";
 import DarkSwitch from "../DarkSwitch";
 import { isLogin } from "../../utils/check";
+import { generateSearchEngineCard } from "../../utils/serachEngine";
 
 const mutiSearch = (s, t) => {
   const source = (s as string).toLowerCase();
@@ -26,6 +27,8 @@ const Content = (props: any) => {
   const [currTag, setCurrTag] = useState("全部工具");
   const [searchString, setSearchString] = useState("");
   const [val, setVal] = useState("");
+
+  const filteredDataRef = useRef<any>([]);
 
   const showGithub = useMemo(() => {
     const hide = data?.setting?.hideGithub === true
@@ -80,9 +83,11 @@ const Content = (props: any) => {
     }
   }, 500);
 
+
+
   const filteredData = useMemo(() => {
     if (data.tools) {
-      return data.tools
+      const localResult = data.tools
         .filter((item: any) => {
           const hide = item.hide;
           if (!hide) return true;
@@ -105,10 +110,15 @@ const Content = (props: any) => {
             mutiSearch(item.url, searchString)
           );
         });
+      return [...localResult, ...generateSearchEngineCard(searchString)]
     } else {
-      return [];
+      return [...generateSearchEngineCard(searchString)];
     }
   }, [data, currTag, searchString]);
+
+  useEffect(() => {
+    filteredDataRef.current = filteredData
+  }, [filteredData])
 
   const renderCardsV2 = useCallback(() => {
     return filteredData.map((item) => {
@@ -129,17 +139,7 @@ const Content = (props: any) => {
   }, [filteredData]);
 
   const onKeyEnter = (ev) => {
-    const searchEl: any = document.getElementById("search-bar");
-    const cards = data?.tools?.filter((item: any) => {
-      if (searchEl?.value === "") {
-        return true;
-      }
-      return (
-        mutiSearch(item.name, searchEl?.value) ||
-        mutiSearch(item.desc, searchEl?.value) ||
-        mutiSearch(item.url, searchEl?.value)
-      );
-    });
+    const cards = filteredDataRef.current;
     if (ev.code === "Enter") {
       if (cards && cards.length) {
         window.open(cards[0]?.url, "_blank");
