@@ -8,6 +8,8 @@ import FetchList from "../../utils/api";
 import TagSelector from "../TagSelector";
 import { useDebounce } from "../../utils/tools";
 import pinyin from "pinyin-match";
+import GithubLink from "../GithubLink";
+import DarkSwitch from "../DarkSwitch";
 
 const mutiSearch = (s, t) => {
   const source = (s as string).toLowerCase();
@@ -23,11 +25,17 @@ const Content = (props: any) => {
   const [currTag, setCurrTag] = useState("全部工具");
   const [searchString, setSearchString] = useState("");
   const [val, setVal] = useState("");
+
+  const showGithub = useMemo(() => {
+    const hide = data?.setting?.hideGithub === true
+    return !hide;
+  }, [data])
   const loadData = useCallback(async () => {
     try {
       setLoading(true);
       const r = await FetchList();
       setData(r);
+      console.log(r)
       const tagInLocalStorage = window.localStorage.getItem("tag");
       if (tagInLocalStorage && tagInLocalStorage !== "") {
         if (r?.catelogs && r?.catelogs.includes(tagInLocalStorage)) {
@@ -57,7 +65,7 @@ const Content = (props: any) => {
     setVal("");
     setSearchString("");
     const tagInLocalStorage = window.localStorage.getItem("tag");
-    if (!notSetTag &&tagInLocalStorage && tagInLocalStorage !== "" && tagInLocalStorage !== "管理后台") {
+    if (!notSetTag && tagInLocalStorage && tagInLocalStorage !== "" && tagInLocalStorage !== "管理后台") {
       setCurrTag(tagInLocalStorage);
     }
   };
@@ -86,7 +94,7 @@ const Content = (props: any) => {
           }
           return (
             mutiSearch(item.name, searchString) ||
-            mutiSearch(item.desc, searchString) || 
+            mutiSearch(item.desc, searchString) ||
             mutiSearch(item.url, searchString)
           );
         });
@@ -121,8 +129,8 @@ const Content = (props: any) => {
       }
       return (
         mutiSearch(item.name, searchEl?.value) ||
-        mutiSearch(item.desc, searchEl?.value) || 
-        mutiSearch(item.url,  searchEl?.value)
+        mutiSearch(item.desc, searchEl?.value) ||
+        mutiSearch(item.url, searchEl?.value)
       );
     });
     if (ev.code === "Enter") {
@@ -168,6 +176,8 @@ const Content = (props: any) => {
           {loading ? <Loading></Loading> : renderCardsV2()}
         </div>
       </div>
+      {showGithub && <GithubLink />}
+      <DarkSwitch showGithub={showGithub} />
     </>
   );
 };

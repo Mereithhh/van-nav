@@ -19,6 +19,9 @@
     right: 10px;
     bottom: 40px;
   }
+    .theme-switch-box.hide-github {
+    bottom: 10px;
+   }
   .theme-switch-box svg {
     width: 24px;
     height: 24px;
@@ -154,6 +157,9 @@
     right: 14px;
     bottom: 46px;
   }
+  .theme-switch-box.hide-github {
+    bottom: 15px;
+   }
   .theme-switch-box svg {
     width: 30px;
     height: 30px;
@@ -289,8 +295,10 @@
   .theme-switch-box {
     right: 10px;
     bottom: 50px;
-    
   }
+  .theme-switch-box.hide-github {
+    bottom: 20px;
+   }
   .theme-switch-box svg {
     width: 30px;
     height: 30px;
@@ -434,8 +442,11 @@
   .theme-switch-box {
     right: 10px;
     bottom: 70px;
-    
   }
+   .theme-switch-box.hide-github {
+    bottom: 20px;
+   }
+
   .theme-switch-box svg {
     width: 40px;
     height: 40px;

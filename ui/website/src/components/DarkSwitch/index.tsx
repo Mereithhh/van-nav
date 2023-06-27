@@ -2,7 +2,7 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { applyTheme, decodeTheme, initTheme } from "../../utils/theme";
 import "./index.css";
 
-const DarkSwitch = () => {
+const DarkSwitch = ({ showGithub }: { showGithub: boolean }) => {
   const [theme, setTheme] = useState(initTheme());
   const { current } = useRef<any>({ hasInit: false });
   const { current: currentTimer } = useRef<any>({ timer: null });
@@ -12,17 +12,17 @@ const DarkSwitch = () => {
       clearInterval(currentTimer.timer);
       currentTimer.timer = null;
     }
-    localStorage.setItem("theme",theme)
+    localStorage.setItem("theme", theme)
     const realTheme = decodeTheme(theme as any);
-    applyTheme(realTheme,'setTheme',true);
+    applyTheme(realTheme, 'setTheme', true);
     if (realTheme.includes("auto")) {
       currentTimer.timer = setInterval(() => {
         const realTheme = decodeTheme("auto");
         applyTheme(realTheme, "autoThemeTimer", true);
       }, 10000);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[ theme])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [theme])
 
 
   useLayoutEffect(() => {
@@ -36,8 +36,8 @@ const DarkSwitch = () => {
         setTheme(iTheme);
       }
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const lightIcon = (<svg
     xmlns="http://www.w3.org/2000/svg"
@@ -78,7 +78,7 @@ const DarkSwitch = () => {
     }
   };
   return (
-    <div className="theme-switch-box" onClick={handleSwitch}>
+    <div className={`theme-switch-box ${showGithub ? "" : "hide-github"}`} onClick={handleSwitch}>
       {theme === "light" ? lightIcon : theme === "dark" ? darkIcon : autoIcon}
     </div>
   );

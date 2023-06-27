@@ -6,6 +6,7 @@ import "./index.css";
 export interface SettingProps { }
 export const Setting: React.FC<SettingProps> = (props) => {
   const { store, reload, loading } = useContext(GlobalContext);
+  console.log(store.setting)
   const handleUpdateUser = useCallback(
     async (values: any) => {
       try {
@@ -110,6 +111,9 @@ export const Setting: React.FC<SettingProps> = (props) => {
             </Form.Item>
             <Form.Item label="隐藏管理员后台按钮" name="hideAdmin" tooltip="默认展示，开启后将在前台隐藏管理员按钮" >
               <Switch defaultChecked={store?.setting?.hideAdmin} />
+            </Form.Item>
+            <Form.Item label="隐藏 Github 按钮" name="hideGithub" tooltip="默认展示，开启后将在前台 Github 按钮" >
+              <Switch defaultChecked={store?.setting?.hideGithub} />
             </Form.Item>
             <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
               <Button type="primary" htmlType="submit">

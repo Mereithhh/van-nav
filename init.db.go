@@ -27,7 +27,8 @@ func initDB() {
 		title TEXT,
 		logo192 TEXT,
 		logo512 TEXT,
-		hideAdmin BOOLEAN
+		hideAdmin BOOLEAN,
+		hideGithub BOOLEAN
 	);
 	`
 	_, err = db.Exec(sql_create_table)
@@ -82,6 +83,13 @@ func initDB() {
 	_, err = db.Exec(sql_create_table)
 	checkErr(err)
 
+	// 设置表表结构升级-20230627
+	sql_create_table = `
+		ALTER TABLE nav_setting ADD COLUMN hideGithub BOOLEAN;
+		`
+	_, err = db.Exec(sql_create_table)
+	checkErr(err)
+
 	// api token 表
 	sql_create_table = `
 		CREATE TABLE IF NOT EXISTS nav_api_token (
@@ -131,12 +139,12 @@ func initDB() {
 	checkErr(err)
 	if !rows.Next() {
 		sql_add_setting := `
-			INSERT INTO nav_setting (id, favicon, title, logo192, logo512, hideAdmin)
-			VALUES (?, ?, ?, ?, ?, ?);
+			INSERT INTO nav_setting (id, favicon, title, logo192, logo512, hideAdmin, hideGithub)
+			VALUES (?, ?, ?, ?, ?, ?, ?);
 			`
 		stmt, err := db.Prepare(sql_add_setting)
 		checkErr(err)
-		res, err := stmt.Exec(0, "favicon.ico", "Van Nav", "logo192.png", "logo512.png", false)
+		res, err := stmt.Exec(0, "favicon.ico", "Van Nav", "logo192.png", "logo512.png", false, false)
 		checkErr(err)
 		_, err = res.LastInsertId()
 		checkErr(err)
@@ -144,4 +152,5 @@ func initDB() {
 	}
 	rows.Close()
 	fmt.Println("数据库初始化成功。。。")
+	migration()
 }
