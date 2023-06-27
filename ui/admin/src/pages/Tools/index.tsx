@@ -383,15 +383,16 @@ export const Tools: React.FC<ToolsProps> = (props) => {
           />
         </Table>
       </Spin>
-      <Modal
-        visible={showAddModel}
+      {<Modal
+        open={showAddModel}
         title={"新建工具"}
         onCancel={() => {
           setShowAddModel(false);
+          addForm.resetFields();
         }}
+        destroyOnClose={true}
         onOk={() => {
           const values = addForm?.getFieldsValue();
-          console.log(values);
           handleCreate(values);
         }}
       >
@@ -472,10 +473,11 @@ export const Tools: React.FC<ToolsProps> = (props) => {
             </Form.Item>
           </Form>
         </Spin>
-      </Modal>
-      <Modal
-        visible={showEdit}
+      </Modal>}
+      {<Modal
+        open={showEdit}
         title={"修改工具"}
+        destroyOnClose
         onCancel={() => {
           setShowEdit(false);
         }}
@@ -544,7 +546,7 @@ export const Tools: React.FC<ToolsProps> = (props) => {
             </Form.Item>
           </Form>
         </Spin>
-      </Modal>
+      </Modal>}
     </Card>
   );
 };
