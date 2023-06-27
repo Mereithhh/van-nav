@@ -118,3 +118,5 @@ package-lock.json
 .tern-port
 
 dist/
+
+public/*
