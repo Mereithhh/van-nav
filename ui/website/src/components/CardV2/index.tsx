@@ -17,7 +17,7 @@ const Card = ({ title, url, des, logo, catelog, onClick, index, isSearching }) =
   const showNumIndex = index < 10 && isSearching;
   return (
     <a
-      href={url == "toggleJumpTarget" ? undefined : url}
+      href={url === "toggleJumpTarget" ? undefined : url}
       onClick={() => {
         onClick();
       }}

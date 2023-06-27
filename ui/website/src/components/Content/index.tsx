@@ -121,7 +121,7 @@ const Content = (props: any) => {
   }, [filteredData])
 
   useEffect(() => {
-    if (searchString.trim() == "") {
+    if (searchString.trim() === "") {
       document.removeEventListener("keydown", onKeyEnter);
     } else {
       document.addEventListener("keydown", onKeyEnter);
@@ -129,6 +129,7 @@ const Content = (props: any) => {
     return () => {
       document.removeEventListener("keydown", onKeyEnter);
     }
+    // eslint-disable-next-line
   }, [searchString])
 
   const renderCardsV2 = useCallback(() => {
@@ -145,7 +146,7 @@ const Content = (props: any) => {
           isSearching={searchString.trim() !== ""}
           onClick={() => {
             resetSearch();
-            if (item.url == "toggleJumpTarget") {
+            if (item.url === "toggleJumpTarget") {
               toggleJumpTarget();
               loadData();
             }
@@ -153,6 +154,7 @@ const Content = (props: any) => {
         />
       );
     });
+    // eslint-disable-next-line
   }, [filteredData, searchString]);
 
   const onKeyEnter = (ev: KeyboardEvent) => {

@@ -35,10 +35,10 @@ export const FetchList = async () => {
     data.tools.push({
         id: 999099999978,
         catelogs: "偏好设置",
-        name: jumpTarget == "blank" ? "新建窗口" : "原地跳转",
+        name: jumpTarget === "blank" ? "新建窗口" : "原地跳转",
         desc: `点击切换跳转方式`,
         url: "toggleJumpTarget",
-        logo: jumpTarget == "blank" ? blankJumpIcon : selfJumpIcon
+        logo: jumpTarget === "blank" ? blankJumpIcon : selfJumpIcon
     })
 
     data.catelogs = catelogs;
