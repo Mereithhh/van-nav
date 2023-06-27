@@ -139,7 +139,7 @@ sudo systemctl daemon-reload && sudo systemctl enable --now VanNav.service
 - [x] 搜索引擎集成功能
 - [x] 增加一些搜索后快捷键直接打开卡片
 - [x] 支持自定义跳转方式
-- [ ] 自动主题切换
+- [x] 自动主题切换
 - [ ] 国际化
-- [ ] 增加 ServiceWork ,离线可用,可安装
+- [x] 增加 ServiceWork ,离线可用,可安装
 - [ ] 网站状态检测
