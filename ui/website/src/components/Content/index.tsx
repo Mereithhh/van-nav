@@ -10,6 +10,7 @@ import { useDebounce } from "../../utils/tools";
 import pinyin from "pinyin-match";
 import GithubLink from "../GithubLink";
 import DarkSwitch from "../DarkSwitch";
+import { isLogin } from "../../utils/check";
 
 const mutiSearch = (s, t) => {
   const source = (s as string).toLowerCase();
@@ -82,6 +83,12 @@ const Content = (props: any) => {
   const filteredData = useMemo(() => {
     if (data.tools) {
       return data.tools
+        .filter((item: any) => {
+          const hide = item.hide;
+          if (!hide) return true;
+          if (hide && isLogin()) return false;
+          return false;
+        })
         .filter((item: any) => {
           if (currTag === "全部工具") {
             return true;

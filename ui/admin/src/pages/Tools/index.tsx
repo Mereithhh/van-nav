@@ -12,7 +12,8 @@ import {
   Select,
   Upload,
   message,
-  Tooltip
+  Tooltip,
+  Switch
 } from "antd";
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import { useCallback, useContext, useState } from "react";
@@ -26,7 +27,7 @@ import {
   fetchUpdateTool,
 } from "../../utils/api";
 import "./index.css";
-export interface ToolsProps {}
+export interface ToolsProps { }
 export const Tools: React.FC<ToolsProps> = (props) => {
   const { store, setStore, reload, loading } = useContext(GlobalContext);
   const [showEdit, setShowEdit] = useState(false);
@@ -55,7 +56,7 @@ export const Tools: React.FC<ToolsProps> = (props) => {
       setRequestLoading(true);
       try {
         await fetchUpdateTool(record);
-        message.success("更新成功! Logo 将在 3 秒后刷新并加载！",3);
+        message.success("更新成功! Logo 将在 3 秒后刷新并加载！", 3);
         setTimeout(() => {
           reload();
         }, 3000);
@@ -74,7 +75,7 @@ export const Tools: React.FC<ToolsProps> = (props) => {
       setRequestLoading(true);
       try {
         await fetchAddTool(record);
-        message.success("添加成功! Logo 将在 3 秒后刷新并加载！",3);
+        message.success("添加成功! Logo 将在 3 秒后刷新并加载！", 3);
         setTimeout(() => {
           reload();
         }, 3000);
@@ -106,11 +107,11 @@ export const Tools: React.FC<ToolsProps> = (props) => {
       for (const each of selectedRows) {
         try {
           await fetchDeleteTool(each.id);
-        } catch (err) {}
+        } catch (err) { }
       }
       message.success("删除成功!");
     } catch (err) {
-      message.success( "删除失败!" );
+      message.success("删除失败!");
     } finally {
       reload();
     }
@@ -120,11 +121,11 @@ export const Tools: React.FC<ToolsProps> = (props) => {
       for (const each of selectedRows) {
         try {
           await fetchUpdateTool({ ...each, logo: "" });
-        } catch (err) {}
+        } catch (err) { }
       }
       message.success("重置成功!");
     } catch (err) {
-      message.success("重置失败!" );
+      message.success("重置失败!");
     } finally {
       reload();
     }
@@ -134,7 +135,7 @@ export const Tools: React.FC<ToolsProps> = (props) => {
       for (const each of selectedRows) {
         try {
           await fetchUpdateTool(each);
-        } catch (err) {}
+        } catch (err) { }
       }
       message.success("重置成功!");
     } catch (err) {
@@ -272,7 +273,7 @@ export const Tools: React.FC<ToolsProps> = (props) => {
                 show = mutiSearch(item.name, searchString) || mutiSearch(item.desc, searchString);
               }
               // 过滤分类
-              if (!catelogName || catelogName === ""){
+              if (!catelogName || catelogName === "") {
                 show = show && true;
               } else {
                 show = show && mutiSearch(item.catelog, catelogName);
@@ -296,8 +297,8 @@ export const Tools: React.FC<ToolsProps> = (props) => {
             render={(_, record: any) => {
               return (
                 <div style={{
-                  display:"flex",
-                  flexDirection:"row",
+                  display: "flex",
+                  flexDirection: "row",
                   alignItems: "center"
                 }}>
                   {" "}
@@ -330,17 +331,27 @@ export const Tools: React.FC<ToolsProps> = (props) => {
             }}
           />
           <Table.Column title="网址" dataIndex="url" width={150} />
-          <Table.Column 
+          <Table.Column
             title={
-              <span>排序 
+              <span>排序
                 <Tooltip title="升序，按数字从小到大排序">
                   <QuestionCircleOutlined style={{ marginLeft: '5px' }} />
                 </Tooltip>
               </span>
             }
-            dataIndex="sort" 
-            width={30} 
+            dataIndex="sort"
+            width={30}
           />
+          <Table.Column title={
+            <span>隐藏
+              <Tooltip title="开启后只有登录后才会展示该工具">
+                <QuestionCircleOutlined style={{ marginLeft: '5px' }} />
+              </Tooltip>
+            </span>
+          } dataIndex={"hide"} width={50} render={(val) => {
+            return Boolean(val) ? "是" : "否"
+          }} />
+
           <Table.Column
             title="操作"
             width={40}
@@ -428,7 +439,7 @@ export const Tools: React.FC<ToolsProps> = (props) => {
             >
               <Input placeholder="请输入描述" />
             </Form.Item>
-            <Form.Item 
+            <Form.Item
               rules={[{ required: true, message: "请排序" }]}
               name="sort"
               initialValue={1}
@@ -438,11 +449,26 @@ export const Tools: React.FC<ToolsProps> = (props) => {
                   <Tooltip title="升序，按数字从小到大排序">
                     <QuestionCircleOutlined style={{ marginLeft: '5px' }} />
                   </Tooltip>
-                  &nbsp;排序 
+                  &nbsp;排序
                 </span>
-              } 
+              }
               labelCol={{ span: 4 }}>
-              <InputNumber placeholder="请输入排序"/>
+              <InputNumber placeholder="请输入排序" />
+            </Form.Item>
+            <Form.Item
+              name="hide"
+              initialValue={false}
+              required
+              label={
+                <span>
+                  <Tooltip title="开启后只有登录后才会展示该工具">
+                    <QuestionCircleOutlined style={{ marginLeft: '5px' }} />
+                  </Tooltip>
+                  &nbsp;隐藏
+                </span>
+              }
+              labelCol={{ span: 4 }}>
+              <Switch checkedChildren="开" unCheckedChildren="关" />
             </Form.Item>
           </Form>
         </Spin>
@@ -486,7 +512,7 @@ export const Tools: React.FC<ToolsProps> = (props) => {
             <Form.Item name="desc" required label="描述" labelCol={{ span: 4 }}>
               <Input placeholder="请输入描述" />
             </Form.Item>
-            
+
             <Form.Item
               name="sort"
               required
@@ -495,11 +521,26 @@ export const Tools: React.FC<ToolsProps> = (props) => {
                   <Tooltip title="升序，按数字从小到大排序">
                     <QuestionCircleOutlined style={{ marginLeft: '5px' }} />
                   </Tooltip>
-                  &nbsp;排序 
+                  &nbsp;排序
                 </span>
-              } 
+              }
               labelCol={{ span: 4 }}>
-              <InputNumber placeholder="请输入排序" defaultValue={1}/>
+              <InputNumber placeholder="请输入排序" defaultValue={1} />
+            </Form.Item>
+
+            <Form.Item
+              name="hide"
+              required
+              label={
+                <span>
+                  <Tooltip title="开启后只有登录后才会展示该工具">
+                    <QuestionCircleOutlined style={{ marginLeft: '5px' }} />
+                  </Tooltip>
+                  &nbsp;隐藏
+                </span>
+              }
+              labelCol={{ span: 4 }}>
+              <Switch checkedChildren="开" unCheckedChildren="关" />
             </Form.Item>
           </Form>
         </Spin>

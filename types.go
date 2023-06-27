@@ -54,6 +54,7 @@ type Tool struct {
 	Catelog string `json:"catelog"`
 	Desc    string `json:"desc"`
 	Sort    int    `json:"sort"`
+	Hide    bool   `json:"hide"`
 }
 
 type addToolDto struct {
@@ -63,6 +64,7 @@ type addToolDto struct {
 	Catelog string `json:"catelog"`
 	Desc    string `json:"desc"`
 	Sort    int    `json:"sort"`
+	Hide    bool   `json:"hide"`
 }
 
 type updateToolDto struct {
@@ -73,6 +75,7 @@ type updateToolDto struct {
 	Catelog string `json:"catelog"`
 	Desc    string `json:"desc"`
 	Sort    int    `json:"sort"`
+	Hide    bool   `json:"hide"`
 }
 type updateCatelogDto struct {
 	Id   int    `json:"id"`

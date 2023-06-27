@@ -158,12 +158,12 @@ func updateTool(data updateToolDto, db *sql.DB) {
 	// 除了更新工具本身之外，也要更新 img 表
 	sql_update_tool := `
 		UPDATE nav_table
-		SET name = ?, url = ?, logo = ?, catelog = ?, desc = ?, sort = ?
+		SET name = ?, url = ?, logo = ?, catelog = ?, desc = ?, sort = ?, hide = ?
 		WHERE id = ?;
 		`
 	stmt, err := db.Prepare(sql_update_tool)
 	checkErr(err)
-	res, err := stmt.Exec(data.Name, data.Url, data.Logo, data.Catelog, data.Desc, data.Sort, data.Id)
+	res, err := stmt.Exec(data.Name, data.Url, data.Logo, data.Catelog, data.Desc, data.Sort, data.Hide, data.Id)
 	checkErr(err)
 	_, err = res.RowsAffected()
 	checkErr(err)
@@ -244,12 +244,12 @@ func addCatelog(data addCatelogDto, db *sql.DB) {
 
 func addTool(data addToolDto, db *sql.DB) int64 {
 	sql_add_tool := `
-		INSERT INTO nav_table (name, url, logo, catelog, desc, sort)
-		VALUES (?, ?, ?, ?, ?, ?);
+		INSERT INTO nav_table (name, url, logo, catelog, desc, sort, hide)
+		VALUES (?, ?, ?, ?, ?, ?, ?);
 		`
 	stmt, err := db.Prepare(sql_add_tool)
 	checkErr(err)
-	res, err := stmt.Exec(data.Name, data.Url, data.Logo, data.Catelog, data.Desc, data.Sort)
+	res, err := stmt.Exec(data.Name, data.Url, data.Logo, data.Catelog, data.Desc, data.Sort, data.Hide)
 	checkErr(err)
 	id, err := res.LastInsertId()
 	checkErr(err)
@@ -267,7 +267,17 @@ func getAllTool(db *sql.DB) []Tool {
 	checkErr(err)
 	for rows.Next() {
 		var tool Tool
-		err = rows.Scan(&tool.Id, &tool.Name, &tool.Url, &tool.Logo, &tool.Catelog, &tool.Desc, &tool.Sort)
+		var hide interface{}
+		err = rows.Scan(&tool.Id, &tool.Name, &tool.Url, &tool.Logo, &tool.Catelog, &tool.Desc, &tool.Sort, &hide)
+		if hide == nil {
+			tool.Hide = false
+		} else {
+			if hide.(int64) == 0 {
+				tool.Hide = false
+			} else {
+				tool.Hide = true
+			}
+		}
 		checkErr(err)
 		results = append(results, tool)
 	}

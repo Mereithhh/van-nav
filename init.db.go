@@ -66,6 +66,13 @@ func initDB() {
 	_, err = db.Exec(sql_create_table)
 	checkErr(err)
 
+	// tools数据表结构升级-20230627
+	sql_create_table = `
+		ALTER TABLE nav_table ADD COLUMN hide BOOLEAN;
+		`
+	_, err = db.Exec(sql_create_table)
+	checkErr(err)
+
 	// 分类表
 	sql_create_table = `
 		CREATE TABLE IF NOT EXISTS nav_catelog (
