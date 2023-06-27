@@ -9,6 +9,9 @@
 <div align=center><img  alt="预览 phone" width=450 src="images/phone-light.png"/></div>
 <div align=center><img alt="预览 phone"  width=450 src="images/phone-dark.png"/></div>
 <div align=center><img alt="后台设置" src="images/admin.png"/></div>
+<div align=center><img alt="交流群"  width=450 src="images/qqqun.jpg"/></div>
+
+> qq 交流群： 873773083
 
 ## 快捷键
 其实这个导航站有很多小设计，合理使用可以提高使用效率：
