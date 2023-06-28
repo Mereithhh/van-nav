@@ -90,6 +90,13 @@ func initDB() {
 	_, err = db.Exec(sql_create_table)
 	checkErr(err)
 
+	// 设置表表结构升级-20230628
+	sql_create_table = `
+		ALTER TABLE nav_setting ADD COLUMN hideAdmin BOOLEAN;
+		`
+	_, err = db.Exec(sql_create_table)
+	checkErr(err)
+
 	// 设置表表结构升级-20230627
 	sql_create_table = `
 		ALTER TABLE nav_setting ADD COLUMN hideGithub BOOLEAN;

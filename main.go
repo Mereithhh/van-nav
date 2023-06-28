@@ -267,7 +267,8 @@ func getAllTool(db *sql.DB) []Tool {
 	for rows.Next() {
 		var tool Tool
 		var hide interface{}
-		err = rows.Scan(&tool.Id, &tool.Name, &tool.Url, &tool.Logo, &tool.Catelog, &tool.Desc, &tool.Sort, &hide)
+		var sort interface{}
+		err = rows.Scan(&tool.Id, &tool.Name, &tool.Url, &tool.Logo, &tool.Catelog, &tool.Desc, &sort, &hide)
 		if hide == nil {
 			tool.Hide = false
 		} else {
@@ -276,6 +277,11 @@ func getAllTool(db *sql.DB) []Tool {
 			} else {
 				tool.Hide = true
 			}
+		}
+		if sort == nil {
+			tool.Sort = 0
+		} else {
+			tool.Sort = sort.(int)
 		}
 		checkErr(err)
 		results = append(results, tool)
@@ -447,8 +453,19 @@ func getSetting(db *sql.DB) Setting {
 	row := db.QueryRow(sql_get_user, 0)
 	// 建立一个空变量
 	var hideGithub interface{}
-	err := row.Scan(&setting.Id, &setting.Favicon, &setting.Title, &setting.Logo192, &setting.Logo512, &setting.HideAdmin, &hideGithub)
-	checkErr(err)
+	var hideAdmin interface{}
+	err := row.Scan(&setting.Id, &setting.Favicon, &setting.Title, &setting.Logo192, &setting.Logo512, &hideAdmin, &hideGithub)
+	if err != nil {
+		return Setting{
+			Id:         0,
+			Favicon:    "favicon.ico",
+			Title:      "Van Nav",
+			Logo192:    "logo192.png",
+			Logo512:    "logo512.png",
+			HideAdmin:  false,
+			HideGithub: false,
+		}
+	}
 	if hideGithub == nil {
 		setting.HideGithub = false
 	} else {
@@ -456,6 +473,15 @@ func getSetting(db *sql.DB) Setting {
 			setting.HideGithub = false
 		} else {
 			setting.HideGithub = true
+		}
+	}
+	if hideAdmin == nil {
+		setting.HideAdmin = false
+	} else {
+		if hideAdmin.(int64) == 0 {
+			setting.HideAdmin = false
+		} else {
+			setting.HideAdmin = true
 		}
 	}
 	return setting
