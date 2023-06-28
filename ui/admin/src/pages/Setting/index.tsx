@@ -6,7 +6,12 @@ import "./index.css";
 export interface SettingProps { }
 export const Setting: React.FC<SettingProps> = (props) => {
   const { store, reload, loading } = useContext(GlobalContext);
-  console.log(store.setting)
+  const [userForm] = Form.useForm();
+  const [settingForm] = Form.useForm();
+  useEffect(() => {
+    userForm.setFieldsValue(store?.user ?? {})
+    settingForm.setFieldsValue(store?.setting ?? {})
+  }, [store])
   const handleUpdateUser = useCallback(
     async (values: any) => {
       try {
@@ -37,7 +42,7 @@ export const Setting: React.FC<SettingProps> = (props) => {
     <div>
       <Card title={`修改用户信息`} style={{ marginBottom: 32 }}>
         <Spin spinning={loading}>
-          <Form onFinish={handleUpdateUser} initialValues={store?.user ?? {}}>
+          <Form onFinish={handleUpdateUser} initialValues={store?.user ?? {}} form={userForm}>
             <Form.Item
               label="用户名"
               name="name"
@@ -68,6 +73,7 @@ export const Setting: React.FC<SettingProps> = (props) => {
             onFinish={handleUpdateWebSite}
             initialValues={store?.setting ?? {}}
             labelCol={{ span: 6 }}
+            form={settingForm}
           >
             <Form.Item
               label="网站 logo"

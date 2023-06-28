@@ -281,7 +281,8 @@ func getAllTool(db *sql.DB) []Tool {
 		if sort == nil {
 			tool.Sort = 0
 		} else {
-			tool.Sort = sort.(int)
+			i64 := sort.(int64)
+			tool.Sort = int(i64)
 		}
 		checkErr(err)
 		results = append(results, tool)
