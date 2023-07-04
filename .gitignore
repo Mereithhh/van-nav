@@ -120,3 +120,4 @@ package-lock.json
 dist/
 
 public/*
+public
