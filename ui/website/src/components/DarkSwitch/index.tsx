@@ -8,7 +8,7 @@ const DarkSwitch = ({ showGithub }: { showGithub: boolean }) => {
   const { current: currentTimer } = useRef<any>({ timer: null });
 
   useEffect(() => {
-    if (current.timer) {
+    if (currentTimer.timer) {
       clearInterval(currentTimer.timer);
       currentTimer.timer = null;
     }
