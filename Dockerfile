@@ -2,8 +2,9 @@ FROM node:18-alpine AS feBuilder
 WORKDIR /app
 # RUN apk add --no-cache g++ gcc make python3
 COPY . .
-RUN cd /app && cd ui/admin && yarn && yarn build && cd ../..
-RUN cd ui/website && yarn && yarn build && cd ../..
+RUN npm i -g pnpm
+RUN cd /app && cd ui/admin && pnpm i && pnpm build && cd ../..
+RUN cd ui/website && pnpm i && pnpm build && cd ../..
 RUN cd /app && mkdir -p public/admin
 RUN cp -r ui/website/build/* public/
 RUN cp -r ui/admin/dist/* public/admin/
