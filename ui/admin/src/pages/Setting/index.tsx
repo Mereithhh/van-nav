@@ -96,6 +96,16 @@ export const Setting: React.FC<SettingProps> = (props) => {
               <Input placeholder="请输入网站标题"></Input>
             </Form.Item>
             <Form.Item
+              label="公信部备案"
+              name="govRecord"
+              required
+              rules={[{ required: true, message: "请输入网站 govRecord" }]}
+
+
+            >
+              <Input placeholder="请输入网站备案信息"></Input>
+            </Form.Item>
+            <Form.Item
               label="logo 192x192"
               name="logo192"
               rules={[{ required: true, message: "请输入 192x192 大小的 logo 链接" }]}

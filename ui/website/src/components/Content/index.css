@@ -607,3 +607,15 @@
   padding-top: 10px;
   padding-bottom: 250px;
 }
+.record-wraper {
+  text-align: center;
+  position: fixed;
+  bottom: 2vh;
+  left: 0;
+  right: 0;
+}
+
+.record-wraper>a {
+  text-decoration: none;
+  color: #bbb;
+}

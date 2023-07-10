@@ -25,6 +25,7 @@ func initDB() {
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
 		favicon TEXT,
 		title TEXT,
+		govRecord TEXT,
 		logo192 TEXT,
 		logo512 TEXT,
 		hideAdmin BOOLEAN,
@@ -44,6 +45,12 @@ func initDB() {
 		ALTER TABLE nav_setting ADD COLUMN logo512 TEXT;
 		`
 	db.Exec(sql_add_logo512)
+
+	// 增加 govRecord 字段
+	sql_add_govRecord := `
+		ALTER TABLE nav_setting ADD COLUMN govRecord TEXT;
+		`
+	db.Exec(sql_add_govRecord)
 
 	// 默认 tools 用的 表
 	sql_create_table = `
@@ -153,12 +160,12 @@ func initDB() {
 	checkErr(err)
 	if !rows.Next() {
 		sql_add_setting := `
-			INSERT INTO nav_setting (id, favicon, title, logo192, logo512, hideAdmin, hideGithub)
-			VALUES (?, ?, ?, ?, ?, ?, ?);
+			INSERT INTO nav_setting (id, favicon, title, govRecord, logo192, logo512, hideAdmin, hideGithub)
+			VALUES (?, ?, ?, ?, ?, ?, ?, ?);
 			`
 		stmt, err := db.Prepare(sql_add_setting)
 		checkErr(err)
-		res, err := stmt.Exec(0, "favicon.ico", "Van Nav", "logo192.png", "logo512.png", false, false)
+		res, err := stmt.Exec(0, "favicon.ico", "Van Nav", "京ICP证XXXXXXXX号", "logo192.png", "logo512.png", false, false)
 		checkErr(err)
 		_, err = res.LastInsertId()
 		checkErr(err)
