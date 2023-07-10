@@ -174,13 +174,13 @@ func updateTool(data updateToolDto, db *sql.DB) {
 func updateSetting(data Setting, db *sql.DB) {
 	sql_update_setting := `
 		UPDATE nav_setting
-		SET favicon = ?, title = ?, logo192 = ?, logo512 = ?, hideAdmin = ?, hideGithub = ?
+		SET favicon = ?, title = ?, govRecord = ?, logo192 = ?, logo512 = ?, hideAdmin = ?, hideGithub = ?
 		WHERE id = ?;
 		`
 
 	stmt, err := db.Prepare(sql_update_setting)
 	checkErr(err)
-	res, err := stmt.Exec(data.Favicon, data.Title, data.Logo192, data.Logo512, data.HideAdmin, data.HideGithub, 0)
+	res, err := stmt.Exec(data.Favicon, data.Title, data.GovRecord, data.Logo192, data.Logo512, data.HideAdmin, data.HideGithub, 0)
 	checkErr(err)
 	_, err = res.RowsAffected()
 	checkErr(err)
@@ -455,12 +455,13 @@ func getSetting(db *sql.DB) Setting {
 	// 建立一个空变量
 	var hideGithub interface{}
 	var hideAdmin interface{}
-	err := row.Scan(&setting.Id, &setting.Favicon, &setting.Title, &setting.Logo192, &setting.Logo512, &hideAdmin, &hideGithub)
+	err := row.Scan(&setting.Id, &setting.Favicon, &setting.Title, &setting.GovRecord, &setting.Logo192, &setting.Logo512, &hideAdmin, &hideGithub)
 	if err != nil {
 		return Setting{
 			Id:         0,
 			Favicon:    "favicon.ico",
 			Title:      "Van Nav",
+			GovRecord:  "京ICP证XXXXXXXX号",
 			Logo192:    "logo192.png",
 			Logo512:    "logo512.png",
 			HideAdmin:  false,
