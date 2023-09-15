@@ -98,10 +98,6 @@ export const Setting: React.FC<SettingProps> = (props) => {
             <Form.Item
               label="公信部备案"
               name="govRecord"
-              required
-              rules={[{ required: true, message: "请输入网站 govRecord" }]}
-
-
             >
               <Input placeholder="请输入网站备案信息"></Input>
             </Form.Item>

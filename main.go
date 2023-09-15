@@ -96,7 +96,7 @@ func updateCatelog(data updateCatelogDto, db *sql.DB) {
 func getImgFromDB(url1 string, db *sql.DB) Img {
 	urlEncoded := url.QueryEscape(url1)
 	sql_get_img := `
-		SELECT * FROM nav_img
+		SELECT id,url,value FROM nav_img
 		WHERE url=?;
 		`
 	rows, err := db.Query(sql_get_img, urlEncoded)
@@ -260,7 +260,7 @@ func addTool(data addToolDto, db *sql.DB) int64 {
 
 func getAllTool(db *sql.DB) []Tool {
 	sql_get_all := `
-		SELECT * FROM nav_table order by sort;
+		SELECT id,name,url,logo,catelog,desc,sort,hide FROM nav_table order by sort;
 		`
 	results := make([]Tool, 0)
 	rows, err := db.Query(sql_get_all)
@@ -294,7 +294,7 @@ func getAllTool(db *sql.DB) []Tool {
 
 func getAllCatelog(db *sql.DB) []Catelog {
 	sql_get_all := `
-		SELECT * FROM nav_catelog order by sort;
+		SELECT id,name,sort FROM nav_catelog order by sort;
 		`
 	results := make([]Catelog, 0)
 	rows, err := db.Query(sql_get_all)
@@ -455,7 +455,7 @@ func importTools(data []Tool) {
 
 func getSetting(db *sql.DB) Setting {
 	sql_get_user := `
-		SELECT * FROM nav_setting WHERE id = ?;
+		SELECT id,favicon,title,govRecord,logo192,logo512,hideAdmin,hideGithub,jumpTargetBlank FROM nav_setting WHERE id = ?;
 		`
 	var setting Setting
 	row := db.QueryRow(sql_get_user, 0)
@@ -469,7 +469,7 @@ func getSetting(db *sql.DB) Setting {
 			Id:         0,
 			Favicon:    "favicon.ico",
 			Title:      "Van Nav",
-			GovRecord:  "京ICP证XXXXXXXX号",
+			GovRecord:  "",
 			Logo192:    "logo192.png",
 			Logo512:    "logo512.png",
 			HideAdmin:  false,
@@ -514,7 +514,7 @@ func getSetting(db *sql.DB) Setting {
 
 func getApiTokens(db *sql.DB) []Token {
 	sql_get_api_tokens := `
-		SELECT * FROM nav_api_token WHERE disabled = 0;
+		SELECT id,name,value,disabled FROM nav_api_token WHERE disabled = 0;
 		`
 	results := make([]Token, 0)
 	rows, err := db.Query(sql_get_api_tokens)
@@ -531,7 +531,7 @@ func getApiTokens(db *sql.DB) []Token {
 
 func getUser(name string, db *sql.DB) User {
 	sql_get_user := `
-		SELECT * FROM nav_user WHERE name = ?;
+		SELECT id,name,password FROM nav_user WHERE name = ?;
 		`
 	var user User
 	row := db.QueryRow(sql_get_user, name)
