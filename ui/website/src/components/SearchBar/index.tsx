@@ -31,7 +31,7 @@ const SearchBar = (props: SearchBarProps) => {
           placeholder="按任意键直接开始搜索"
           value={props.searchString}
           onChange={(ev) => {
-            const v = ev.target.value.trim();
+            const v = ev.target.value
             props.setSearchText(v);
           }}
         ></input>

@@ -6,7 +6,6 @@ import { Helmet } from "react-helmet";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import FetchList from "../../utils/api";
 import TagSelector from "../TagSelector";
-import { useDebounce } from "../../utils/tools";
 import pinyin from "pinyin-match";
 import GithubLink from "../GithubLink";
 import DarkSwitch from "../DarkSwitch";
@@ -74,14 +73,14 @@ const Content = (props: any) => {
     }
   };
 
-  const handleSetSearch = useDebounce((val: string) => {
+  const handleSetSearch = (val: string) => {
     if (val !== "" && val) {
       setCurrTag("全部工具");
-      setSearchString(val);
+      setSearchString(val.trim());
     } else {
       resetSearch();
     }
-  }, 500);
+  }
 
 
 
