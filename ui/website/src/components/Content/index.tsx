@@ -212,7 +212,7 @@ const Content = (props: any) => {
         </div>
       </div>
       <div className="record-wraper">
-        <a href="https://beian.miit.gov.cn" target="_blank">{data?.setting?.govRecord ?? "京ICP证XXXXXXXX号"}</a>
+        <a href="https://beian.miit.gov.cn" target="_blank" rel="noreferrer">{data?.setting?.govRecord ?? "京ICP证XXXXXXXX号"}</a>
       </div>
       {showGithub && <GithubLink />}
       <DarkSwitch showGithub={showGithub} />
