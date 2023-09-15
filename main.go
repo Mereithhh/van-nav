@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"embed"
+	"flag"
 	"fmt"
 	"net/http"
 	"net/url"
@@ -363,7 +364,12 @@ func BinaryFileSystem(data embed.FS, root string) *binaryFileSystem {
 		root,
 	}
 }
+
+
+var port = flag.String("port","6412","指定监听端口")
+
 func main() {
+	flag.Parse()
 	initDB()
 	gin.SetMode(gin.ReleaseMode)
 	router := gin.Default()
@@ -410,8 +416,9 @@ func main() {
 			admin.PUT("/catelog/:id", UpdateCatelogHandler)
 		}
 	}
-	fmt.Println("应用启动成功，网址:   http://localhost:6412")
-	router.Run(":6412")
+	fmt.Printf("应用启动成功，网址: http://localhost:%s", *port)
+	listen := fmt.Sprintf(":%s",*port)
+	router.Run(listen)
 }
 
 func importTools(data []Tool) {
