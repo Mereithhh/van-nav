@@ -15,6 +15,7 @@ type Setting struct {
 	Logo512    string `json:"logo512"`
 	HideAdmin  bool   `json:"hideAdmin"`
 	HideGithub bool   `json:"hideGithub"`
+	JumpTargetBlank bool `json:"jumpTargetBlank"`
 }
 
 type Token struct {

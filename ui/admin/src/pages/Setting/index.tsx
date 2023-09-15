@@ -1,4 +1,4 @@
-import { Button, Card, Form, Input, message, Spin, Switch } from "antd";
+import { Button, Card, Form, Input, message, Select, Spin, Switch } from "antd";
 import { useCallback, useContext, useEffect } from "react";
 import { GlobalContext } from "../../components/GlobalContext";
 import { fetchUpdateSetting, fetchUpdateUser } from "../../utils/api";
@@ -105,6 +105,25 @@ export const Setting: React.FC<SettingProps> = (props) => {
             >
               <Input placeholder="请输入网站备案信息"></Input>
             </Form.Item>
+
+
+            <Form.Item label="默认跳转方式" name="jumpTargetBlank" rules={[{required:true, message:"这是必填项"}]}
+            tooltip="选择点击卡片后默认的跳转方式"
+            >
+              <Select options={[
+                {
+                  label:"原地跳转",
+                  value: false,
+                },
+                {
+                  label:"新标签页",
+                  value: true,
+                },
+              ]}>
+                
+              </Select>
+
+            </Form.Item>
             <Form.Item
               label="logo 192x192"
               name="logo192"
@@ -126,10 +145,10 @@ export const Setting: React.FC<SettingProps> = (props) => {
               <Input placeholder="512x512 大小的 logo 链接"></Input>
             </Form.Item>
             <Form.Item label="隐藏管理员后台卡片" name="hideAdmin" tooltip="默认展示，开启后将在前台隐藏管理员卡片" >
-              <Switch defaultChecked={store?.setting?.hideAdmin} />
+              <Switch defaultChecked={Boolean(store?.setting?.hideAdmin)} />
             </Form.Item>
             <Form.Item label="隐藏 Github 按钮" name="hideGithub" tooltip="默认展示，开启后将在前台 Github 按钮" >
-              <Switch defaultChecked={store?.setting?.hideGithub} />
+              <Switch defaultChecked={Boolean(store?.setting?.hideGithub)} />
             </Form.Item>
             <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
               <Button type="primary" htmlType="submit">

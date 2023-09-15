@@ -29,7 +29,8 @@ func initDB() {
 		logo192 TEXT,
 		logo512 TEXT,
 		hideAdmin BOOLEAN,
-		hideGithub BOOLEAN
+		hideGithub BOOLEAN,
+		jumpTargetBlank BOOLEAN
 	);
 	`
 	_, err = db.Exec(sql_create_table)
@@ -51,6 +52,12 @@ func initDB() {
 		ALTER TABLE nav_setting ADD COLUMN govRecord TEXT;
 		`
 	db.Exec(sql_add_govRecord)
+
+	// 增加 jumpTargetBlank 字段
+	sql_add_jumpTargetBlank := `
+	ALTER TABLE nav_setting ADD COLUMN jumpTargetBlank BOOLEAN;
+	`
+	db.Exec(sql_add_jumpTargetBlank)
 
 	// 默认 tools 用的 表
 	sql_create_table = `
@@ -160,12 +167,12 @@ func initDB() {
 	checkErr(err)
 	if !rows.Next() {
 		sql_add_setting := `
-			INSERT INTO nav_setting (id, favicon, title, govRecord, logo192, logo512, hideAdmin, hideGithub)
-			VALUES (?, ?, ?, ?, ?, ?, ?, ?);
+			INSERT INTO nav_setting (id, favicon, title, govRecord, logo192, logo512, hideAdmin, hideGithub, jumpTargetBlank)
+			VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
 			`
 		stmt, err := db.Prepare(sql_add_setting)
 		checkErr(err)
-		res, err := stmt.Exec(0, "favicon.ico", "Van Nav", "京ICP证XXXXXXXX号", "logo192.png", "logo512.png", false, false)
+		res, err := stmt.Exec(0, "favicon.ico", "Van Nav", "京ICP证XXXXXXXX号", "logo192.png", "logo512.png", false, false, true)
 		checkErr(err)
 		_, err = res.LastInsertId()
 		checkErr(err)

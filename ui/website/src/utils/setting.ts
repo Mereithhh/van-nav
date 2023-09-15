@@ -20,3 +20,15 @@ const setJumpTarget = (target: JumpTarget) => {
 export const getJumpTarget = () => {
   return window.localStorage.getItem('jumpTarget') as JumpTarget;
 }
+
+
+export const initServerJumpTargetConfig = (setting: any) => {
+  if (!window.localStorage.getItem("initedServerJumpTarget")) {
+    window.localStorage.setItem("initedServerJumpTarget", "true");
+    if (setting.jumpTargetBlank === undefined || setting.jumpTargetBlank === undefined || setting.jumpTargetBlank=== true) {
+      setJumpTarget("blank")
+    } else {
+      setJumpTarget("self")
+    }
+  }
+}
