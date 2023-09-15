@@ -146,3 +146,6 @@ sudo systemctl daemon-reload && sudo systemctl enable --now VanNav.service
 - [ ] 国际化
 - [x] 增加 ServiceWork ,离线可用,可安装
 - [ ] 网站状态检测
+- [x] 支持后台设置默认跳转方式
+- [x] 支持指定监听端口
+
