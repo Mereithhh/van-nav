@@ -23,7 +23,6 @@ jobs:
           go-version: 1.17
       - name: build public files
         run: |
-          npm install -g yarn 
           echo "清空原有数据"
           rm -rf ./public
           mkdir -p public/admin
