@@ -41,7 +41,7 @@ docker run -d --name tools --restart always -p 6412:6412 -v /path/to/your/data:/
 
 打开浏览器 [http://localhost:6412](http://localhost:6412) 即可访问。
 
-- 默认端口 6412
+- 默认端口 6412，启动时添加 `-port <port>` 参数可指定运行端口。
 - 默认账号密码 admin admin ，第一次运行后请进入后台修改
 - 数据库会自动创建在当前文件夹中： `nav.db`
 
