@@ -27,13 +27,6 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       -
-        name: Login to AliyunCS
-        uses: docker/login-action@v1
-        with:
-          registry: registry.cn-beijing.aliyuncs.com
-          username: ${{ secrets.ALI_USER  }}
-          password: ${{ secrets.ALI_PASSWORD  }}
-      -
         name: get image name
         run: |
           VERSION=$(cat ./version.txt)
@@ -63,12 +56,17 @@ jobs:
         uses: steebchen/kubectl@v2.0.0
         with: # defaults to latest kubectl binary version
           config: ${{ secrets.K3S_CONFIG_DATA }}
-          command: set image deployment/tools van-nav=${{ steps.image-name.outputs.DOCKER_IMAGE_NAME }}
+          command: set image deployment/tools -n self-tools tools=${{ steps.image-name.outputs.DOCKER_IMAGE_NAME }}
       - name: deploy to cluster for demo
         uses: steebchen/kubectl@v2.0.0
         with: # defaults to latest kubectl binary version
           config: ${{ secrets.K3S_CONFIG_DATA }}
-          command: set image deployment/demo-tools demo=${{ steps.image-name.outputs.DOCKER_IMAGE_NAME }}
+          command: set image deployment/demo-tools -n self-tools demo=${{ steps.image-name.outputs.DOCKER_IMAGE_NAME }}
+      - name: deploy to cluster for plg
+        uses: steebchen/kubectl@v2.0.0
+        with: # defaults to latest kubectl binary version
+          config: ${{ secrets.K3S_CONFIG_DATA }}
+          command: set image deployment/plg-tools -n self-tools tool=${{ steps.image-name.outputs.DOCKER_IMAGE_NAME }}
       - name: send Message To me
         run: |
           curl -X POST -H "Content-Type: application/json" -d '{"source":"github-ci:van-nav","message":"流水线运行完毕，k8s, k3s 已部署。\n版本: ${{ github.ref_name }}" }' ${{ secrets.WEBHOOK_URL }}
