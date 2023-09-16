@@ -158,7 +158,8 @@ const Content = (props: any) => {
 
   const onKeyEnter = (ev: KeyboardEvent) => {
     const cards = filteredDataRef.current;
-    if (ev.code === "Enter") {
+    // 使用 keyCode 防止与中文输入冲突
+    if (ev.keyCode === 13) {
       if (cards && cards.length) {
         window.open(cards[0]?.url, "_blank");
         resetSearch();
@@ -212,7 +213,7 @@ const Content = (props: any) => {
         </div>
       </div>
       <div className="record-wraper">
-        <a href="https://beian.miit.gov.cn" target="_blank" rel="noreferrer">{data?.setting?.govRecord ?? "京ICP证XXXXXXXX号"}</a>
+        <a href="https://beian.miit.gov.cn" target="_blank" rel="noreferrer">{data?.setting?.govRecord ?? ""}</a>
       </div>
       {showGithub && <GithubLink />}
       <DarkSwitch showGithub={showGithub} />
