@@ -7,6 +7,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import FetchList from "../../utils/api";
 import TagSelector from "../TagSelector";
 import pinyin from "pinyin-match";
+import AdminEntrance from "../AdminEntrance";
 import GithubLink from "../GithubLink";
 import DarkSwitch from "../DarkSwitch";
 import { isLogin } from "../../utils/check";
@@ -34,6 +35,11 @@ const Content = (props: any) => {
     const hide = data?.setting?.hideGithub === true
     return !hide;
   }, [data])
+  const showAdmin = useMemo(() => {
+    const hide = data?.setting?.hideAdmin === true
+    return !hide;
+  }, [data])
+
   const loadData = useCallback(async () => {
     try {
       setLoading(true);
@@ -215,6 +221,7 @@ const Content = (props: any) => {
       <div className="record-wraper">
         <a href="https://beian.miit.gov.cn" target="_blank" rel="noreferrer">{data?.setting?.govRecord ?? ""}</a>
       </div>
+      {showAdmin && <AdminEntrance />}
       {showGithub && <GithubLink />}
       <DarkSwitch showGithub={showGithub} />
     </>
