@@ -115,17 +115,16 @@ export const Catelog: React.FC<CatelogProps> = (props) => {
             dataIndex="sort"
             width={150}
           />
-          <Table.Column
-            title={
-              <span>是否隐藏
-                <Tooltip title="“true”时，在未登录状态下将隐藏该分类">
-                  <QuestionCircleOutlined style={{marginLeft: '5px'}}/>
-                </Tooltip>
-              </span>
-            }
-            dataIndex="hide"
-            width={150}
-          />
+
+          <Table.Column title={
+            <span>隐藏
+              <Tooltip title="开启后只有登录后才会展示该分类">
+                <QuestionCircleOutlined style={{ marginLeft: '5px' }} />
+              </Tooltip>
+            </span>
+          } dataIndex={"hide"} width={50} render={(val) => {
+            return Boolean(val) ? "是" : "否"
+          }} />
           <Table.Column
             title="操作"
             width={40}

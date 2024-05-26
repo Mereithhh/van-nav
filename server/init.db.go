@@ -88,20 +88,26 @@ func initDB() {
 	checkErr(err)
 
 	// 分类表
-	sql_create_table = `
+	sql_catelog_table := `
 		CREATE TABLE IF NOT EXISTS nav_catelog (
 			id INTEGER PRIMARY KEY AUTOINCREMENT,
 			name TEXT
 		);
 		`
-	_, err = db.Exec(sql_create_table)
+	_, err = db.Exec(sql_catelog_table)
 	checkErr(err)
 
 	// 分类表表结构升级-20230327
-	sql_create_table = `
+	sql_catelog_table = `
 		ALTER TABLE nav_catelog ADD COLUMN sort INTEGER;
 		`
-	_, err = db.Exec(sql_create_table)
+	_, err = db.Exec(sql_catelog_table)
+	checkErr(err)
+	// 分类表表结构升级-20240303
+	sql_catelog_table = `
+		ALTER TABLE nav_catelog ADD COLUMN hide BOOLEAN;
+		`
+	_, err = db.Exec(sql_catelog_table)
 	checkErr(err)
 
 	// 设置表表结构升级-20230628

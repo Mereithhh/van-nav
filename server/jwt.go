@@ -78,3 +78,11 @@ func JWTMiddleware() gin.HandlerFunc {
 		}
 	}
 }
+
+func JWTCheck(c *ginContext) bool  {
+  rawToken := c.Request.Header.Get("Authorization")
+  if rawToken == "" {
+    return false
+  }
+  return true
+}

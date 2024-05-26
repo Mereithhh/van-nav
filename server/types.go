@@ -83,15 +83,18 @@ type updateCatelogDto struct {
 	Id   int    `json:"id"`
 	Name string `json:"name"`
 	Sort int    `json:"sort"`
+	Hide bool   `json:"hide"`
 }
 
 type addCatelogDto struct {
 	Name string `json:"name"`
 	Sort int    `json:"sort"`
+	Hide string `json:"hide"`
 }
 
 type Catelog struct {
 	Id   int    `json:"id"`
 	Name string `json:"name"`
 	Sort int    `json:"sort"`
+	Hide string `json:"hide"`
 }
