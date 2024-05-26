@@ -3,29 +3,47 @@
   --width-medium: 700px;
   --width-large: 1060px;
 }
+
 @media (max-width: 500px) {
   .main {
     padding-top: 30px;
   }
+
   .github-link-box {
     right: 11px;
     bottom: 10px;
   }
+
   .github-link-box svg {
     width: 22px;
     height: 22px;
   }
+
   .theme-switch-box {
     right: 10px;
     bottom: 40px;
   }
-    .theme-switch-box.hide-github {
+
+  .theme-switch-box.hide-github {
     bottom: 10px;
-   }
+  }
+
   .theme-switch-box svg {
     width: 24px;
     height: 24px;
   }
+
+
+  .admin-entrance-box {
+    right: 10px;
+    bottom: 60px;
+  }
+
+  .admin-entrance-box svg {
+    width: 22px;
+    height: 22px;
+  }
+
   .select-tag {
     font-size: 13px;
     padding: 2px 6px;
@@ -38,20 +56,24 @@
     margin-right: 6px;
     margin-bottom: 6px;
   }
+
   .tag-selector-wrapper {
     margin-right: -6px;
   }
+
   input:hover {
     background-color: #e5e6eb;
     border: 1px solid #e5e6eb;
     cursor: pointer;
   }
+
   input:focus,
   input:focus-visible {
     background-color: #ffffff;
     border: 1px solid #272e3b;
     color: #272e3b;
   }
+
   input {
     height: 30px;
     font-size: 16px;
@@ -62,12 +84,15 @@
     outline: none;
     color: #8a92a6;
   }
+
   .search {
     margin-bottom: 14px;
   }
+
   .tag-selector {
     margin-bottom: 12px;
   }
+
   .content {
     display: grid;
     grid-gap: 0 4px;
@@ -78,6 +103,7 @@
   .card-index {
     display: none;
   }
+
   .card-box {
 
     max-width: 200px;
@@ -95,12 +121,14 @@
     background-color: #ffffff;
     text-decoration: none;
   }
+
   .card-content {
     flex: 1;
     overflow: hidden;
     width: 100%;
     display: block;
   }
+
   .card-right-top {
     display: flex;
     align-content: space-around;
@@ -109,18 +137,22 @@
     height: 36px;
     justify-content: center;
   }
+
   .card-right-bottom {
     display: none;
   }
+
   .card-tag {
     display: none;
   }
+
   .card-left {
     margin-right: 0;
     align-items: center;
     justify-content: center;
     display: flex;
   }
+
   .card-right-title {
     display: inline-block;
     color: #272e3b;
@@ -132,14 +164,17 @@
     text-overflow: ellipsis;
     text-align: center;
   }
+
   .card-left > img {
     width: 32px;
     height: 32px;
   }
+
   .card-left embed {
     width: 32px;
     height: 32px;
   }
+
   .card-right {
     margin-right: 0px;
   }
@@ -149,25 +184,41 @@
   .main {
     padding-top: 40px;
   }
+
   .github-link-box {
     right: 15px;
     bottom: 14px;
   }
+
   .github-link-box svg {
     width: 27px;
     height: 27px;
   }
+
   .theme-switch-box {
     right: 14px;
     bottom: 46px;
   }
+
   .theme-switch-box.hide-github {
     bottom: 15px;
-   }
+  }
+
   .theme-switch-box svg {
     width: 30px;
     height: 30px;
   }
+
+  .admin-entrance-box {
+    right: 14px;
+    bottom: 77px;
+  }
+
+  .admin-entrance-box svg {
+    width: 30px;
+    height: 30px;
+  }
+
   .select-tag {
     font-size: 13px;
     padding: 2px 8px;
@@ -180,20 +231,24 @@
     margin-right: 6px;
     margin-bottom: 6px;
   }
+
   .tag-selector-wrapper {
     margin-right: -6px;
   }
+
   input:hover {
     background-color: #e5e6eb;
     border: 1px solid #e5e6eb;
     cursor: pointer;
   }
+
   input:focus-visible,
   input:focus {
     background-color: #ffffff;
     border: 1px solid #272e3b;
     color: #272e3b;
   }
+
   input {
     height: 36px;
     font-size: 16px;
@@ -204,9 +259,11 @@
     outline: none;
     color: #8a92a6;
   }
+
   .search {
     margin-bottom: 18px;
   }
+
   .tag-selector {
     margin-bottom: 14px;
   }
@@ -218,9 +275,11 @@
     justify-content: center;
     margin: 0 5vw;
   }
+
   .card-index {
     display: none;
   }
+
   .card-box {
     max-width: 200px;
     margin-bottom: 10vw;
@@ -237,12 +296,14 @@
     background-color: #ffffff;
     text-decoration: none;
   }
+
   .card-content {
     flex: 1;
     overflow: hidden;
     width: 100%;
     display: block;
   }
+
   .card-right-top {
     display: flex;
     align-content: space-around;
@@ -251,18 +312,22 @@
     height: 36px;
     justify-content: center;
   }
+
   .card-right-bottom {
     display: none;
   }
+
   .card-tag {
     display: none;
   }
+
   .card-left {
     margin-right: 0;
     align-items: center;
     justify-content: center;
     display: flex;
   }
+
   .card-right-title {
     display: inline-block;
     color: #272e3b;
@@ -274,42 +339,62 @@
     text-overflow: ellipsis;
     text-align: center;
   }
+
   .card-left > img {
     width: 36px;
     height: 36px;
   }
+
   .card-left embed {
     width: 36px;
     height: 36px;
   }
+
   .card-right {
     margin-right: 0px;
   }
 }
+
 @media (max-width: 1060px) and (min-width: 700px) {
   .main {
     padding-top: 60px;
   }
+
   .github-link-box {
     right: 11px;
     bottom: 14px;
-    
+
   }
+
   .github-link-box svg {
     width: 27px;
     height: 27px;
   }
+
   .theme-switch-box {
     right: 10px;
     bottom: 50px;
   }
+
   .theme-switch-box.hide-github {
     bottom: 20px;
-   }
+  }
+
   .theme-switch-box svg {
     width: 30px;
     height: 30px;
   }
+
+  .admin-entrance-box {
+    right: 10px;
+    bottom: 85px;
+  }
+
+  .admin-entrance-box svg {
+    width: 30px;
+    height: 30px;
+  }
+
   .select-tag {
     font-size: 13px;
     padding: 2px 10px;
@@ -321,19 +406,23 @@
     margin-right: 10px;
     margin-bottom: 10px;
   }
+
   .tag-selector-wrapper {
     margin-right: -10px;
   }
+
   input:hover {
     background-color: #e5e6eb;
     border: 1px solid #e5e6eb;
     cursor: pointer;
   }
-  input:focus-visible,input:focus {
+
+  input:focus-visible, input:focus {
     background-color: #ffffff;
     border: 1px solid #272e3b;
     color: #272e3b;
   }
+
   input {
     height: 40px;
     font-size: 16px;
@@ -344,6 +433,7 @@
     outline: none;
     color: #8a92a6;
   }
+
   .tag-selector {
     margin-bottom: 16px;
   }
@@ -355,9 +445,11 @@
     justify-content: center;
     margin: 0 5vw;
   }
+
   .card-index {
     display: none;
   }
+
   .card-box {
     max-width: 299.67px;
     display: flex;
@@ -373,16 +465,19 @@
     background-color: #fafbfc;
     text-decoration: none;
   }
+
   .card-box:hover {
     transform: translateY(-6px);
-      box-shadow: 6px 6px 12px 0px #eceef4;
+    box-shadow: 6px 6px 12px 0px #eceef4;
   }
+
   .card-content {
     flex: 1;
     overflow: hidden;
     width: 100%;
     display: flex;
   }
+
   .card-right-top {
     display: flex;
     align-content: space-around;
@@ -391,13 +486,16 @@
     height: 42px;
     justify-content: left;
   }
+
   .card-right-top span {
     display: block;
     width: 100%;
   }
+
   .card-right-bottom {
     display: none;
   }
+
   .card-tag {
     color: #878a95;
     font-size: 13px;
@@ -411,11 +509,13 @@
     white-space: nowrap;
     text-overflow: ellipsis;
   }
+
   .card-left {
     margin-right: 5%;
     align-items: center;
     display: flex;
   }
+
   .card-right-title {
     display: inline-block;
     color: #272e3b;
@@ -426,10 +526,12 @@
     white-space: nowrap;
     text-overflow: ellipsis;
   }
+
   .card-left > img {
     width: 40px;
     height: 40px;
   }
+
   .card-left embed {
     width: 40px;
     height: 40px;
@@ -440,27 +542,41 @@
   .main {
     padding-top: 80px;
   }
+
   .github-link-box {
     right: 12px;
     bottom: 20px;
-    
   }
+
   .github-link-box svg {
     width: 35px;
     height: 35px;
   }
+
   .theme-switch-box {
     right: 10px;
     bottom: 70px;
   }
-   .theme-switch-box.hide-github {
+
+  .theme-switch-box.hide-github {
     bottom: 20px;
-   }
+  }
 
   .theme-switch-box svg {
     width: 40px;
     height: 40px;
   }
+
+  .admin-entrance-box {
+    right: 12px;
+    bottom: 120px;
+  }
+
+  .admin-entrance-box svg {
+    width: 35px;
+    height: 35px;
+  }
+
   .select-tag {
     font-size: 14px;
     padding: 2px 10px;
@@ -473,19 +589,23 @@
     margin-right: 16px;
     margin-bottom: 16px;
   }
+
   .tag-selector-wrapper {
     margin-right: -16px;
   }
+
   input:hover {
     background-color: #e5e6eb;
-      border: 1px solid #e5e6eb;
-      cursor: pointer;
+    border: 1px solid #e5e6eb;
+    cursor: pointer;
   }
-  input:focus,input:focus-visible {
+
+  input:focus, input:focus-visible {
     background-color: #ffffff;
     border: 1px solid #272e3b;
     color: #272e3b;
   }
+
   input {
     height: 40px;
     font-size: 16px;
@@ -495,8 +615,9 @@
     background-color: #f4f5f7;
     outline: none;
     color: #8a92a6;
-   
+
   }
+
   .content {
     display: grid;
     grid-template-columns: repeat(3, minmax(299.67px, 350px));
@@ -508,6 +629,7 @@
   .tag-selector {
     margin-bottom: 20px;
   }
+
   .card-box {
     display: flex;
     flex-wrap: wrap;
@@ -522,12 +644,14 @@
     background-color: #fafbfc;
     text-decoration: none;
     max-width: 350px;
-   
+
   }
+
   .card-box:hover {
     transform: translateY(-6px);
-      box-shadow: 6px 6px 12px 0px #eceef4;
+    box-shadow: 6px 6px 12px 0px #eceef4;
   }
+
   .card-content {
     flex: 1;
     overflow: hidden;
@@ -535,12 +659,14 @@
     display: flex;
     align-items: center;
   }
+
   .card-right-top {
     display: inline-flex;
     align-items: center;
     margin-bottom: 4px;
     width: 100%;
   }
+
   .card-right-bottom {
     color: #86909c;
     font-size: 13px;
@@ -549,6 +675,7 @@
     width: 100%;
     overflow: hidden;
   }
+
   .card-tag {
     color: #878a95;
     font-size: 12px;
@@ -562,11 +689,13 @@
     text-overflow: ellipsis;
     max-width: 68px;
   }
+
   .card-left {
     margin-right: 5%;
     align-items: center;
     display: flex;
   }
+
   .card-right-title {
     display: inline-block;
     color: #272e3b;
@@ -577,6 +706,7 @@
     white-space: nowrap;
     text-overflow: ellipsis;
   }
+
   .card-right {
     display: flex;
     flex-wrap: wrap;
@@ -585,28 +715,34 @@
     flex: 1;
     overflow: hidden;
   }
+
   .card-left > img {
     width: 48px;
     height: 48px;
   }
+
   .card-left embed {
     width: 48px;
     height: 48px;
   }
 }
+
 .content-wraper::-webkit-scrollbar {
   display: none; /* Chrome Safari */
 }
+
 .content-wraper {
   overflow-y: scroll;
   -ms-overflow-style: none; /* IE 10+ */
   scrollbar-width: none; /* firefox */
   height: 100%;
 }
+
 .cards {
   padding-top: 10px;
   padding-bottom: 250px;
 }
+
 .record-wraper {
   text-align: center;
   position: fixed;
@@ -615,7 +751,7 @@
   right: 0;
 }
 
-.record-wraper>a {
+.record-wraper > a {
   text-decoration: none;
   color: #bbb;
 }

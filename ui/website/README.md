@@ -1,5 +1,5 @@
 ```shell
-pnpm install
+pnpm i
 ```
 
 ```shell

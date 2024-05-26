@@ -4,7 +4,6 @@ go 1.17
 
 require (
 	github.com/gin-contrib/gzip v0.0.5
-	github.com/gin-gonic/contrib v0.0.0-20201101042839-6a891bf89f19
 	github.com/gin-gonic/gin v1.7.7
 	github.com/golang-jwt/jwt v3.2.2+incompatible
 	golang.org/x/net v0.0.0-20201021035429-f5854403a974

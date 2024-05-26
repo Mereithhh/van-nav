@@ -13,7 +13,7 @@ RUN sed -i 's/\/assets/\/admin\/assets/g' public/admin/index.html
 FROM golang:alpine AS binarybuilder
 RUN apk --no-cache --no-progress add  git
 WORKDIR /app
-COPY . .
+COPY ./server .
 COPY --from=feBuilder /app/public /app/public
 RUN cd /app && ls -la && go mod tidy && go build .
 

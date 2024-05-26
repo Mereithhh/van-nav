@@ -12,7 +12,7 @@ import (
 )
 
 func ExportToolsHandler(c *gin.Context) {
-	tools := getAllTool(db)
+	tools := getAllTool(db, true)
 	c.JSON(200, gin.H{
 		"success": true,
 		"message": "导出工具成功",
@@ -174,8 +174,8 @@ func getLogoImgHandler(c *gin.Context) {
 
 func GetAdminAllDataHandler(c *gin.Context) {
 	// 管理员获取全部数据，还有个用户名。
-	tools := getAllTool(db)
-	catelogs := getAllCatelog(db)
+	tools := getAllTool(db, true)
+	catelogs := getAllCatelog(db, true)
 	setting := getSetting(db)
 	tokens := getApiTokens(db)
 	userId, ok := c.Get("uid")

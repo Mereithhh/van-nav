@@ -1,4 +1,18 @@
-import {Button, Card, Form, Input, InputNumber, Modal, message, Popconfirm, Space, Spin, Table, Tooltip} from 'antd';
+import {
+  Button,
+  Card,
+  Form,
+  Input,
+  InputNumber,
+  Modal,
+  message,
+  Popconfirm,
+  Space,
+  Spin,
+  Table,
+  Tooltip,
+  Switch
+} from 'antd';
 import {QuestionCircleOutlined} from '@ant-design/icons';
 import {useCallback, useContext, useState} from 'react';
 import {GlobalContext} from '../../components/GlobalContext';
@@ -189,17 +203,18 @@ export const Catelog: React.FC<CatelogProps> = (props) => {
           </Form.Item>
           <Form.Item
             name="hide"
-            initialValue={'false'}
+            initialValue={false}
+            required
             label={
               <span>
-                  <Tooltip title="设置为“true”后，在未登录状态下将隐藏该分类">
-                    <QuestionCircleOutlined style={{marginLeft: '5px'}}/>
+                  <Tooltip title="开启后只有登录后才会展示该工具">
+                    <QuestionCircleOutlined style={{ marginLeft: '5px' }} />
                   </Tooltip>
-                &nbsp;是否隐藏
+                &nbsp;隐藏
                 </span>
             }
-            labelCol={{span: 6}}>
-            <Input placeholder="默认为false" defaultValue={'false'}/>
+            labelCol={{ span: 4 }}>
+            <Switch checkedChildren="开" unCheckedChildren="关" />
           </Form.Item>
         </Form>
       </Modal>
@@ -239,16 +254,17 @@ export const Catelog: React.FC<CatelogProps> = (props) => {
             </Form.Item>
             <Form.Item
               name="hide"
+              required
               label={
                 <span>
-                  <Tooltip title="设置为“true”后，在未登录状态下将隐藏该分类">
-                    <QuestionCircleOutlined style={{marginLeft: '5px'}}/>
+                  <Tooltip title="开启后只有登录后才会展示该工具">
+                    <QuestionCircleOutlined style={{ marginLeft: '5px' }} />
                   </Tooltip>
-                  &nbsp;是否隐藏
+                  &nbsp;隐藏
                 </span>
               }
-              labelCol={{span: 6}}>
-              <Input placeholder="默认为false" defaultValue={'false'}/>
+              labelCol={{ span: 4 }}>
+              <Switch checkedChildren="开" unCheckedChildren="关" />
             </Form.Item>
           </Form>
         </Spin>

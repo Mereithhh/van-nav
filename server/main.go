@@ -220,7 +220,7 @@ func updateUser(data updateUserDto, db *sql.DB) {
 
 func addCatelog(data addCatelogDto, db *sql.DB) {
 	// 先检查重复不重复
-	existCatelogs := getAllCatelog(db)
+	existCatelogs := getAllCatelog(db, true)
 	var existCatelogsArr []string
 	for _, catelogDto := range existCatelogs {
 		existCatelogsArr = append(existCatelogsArr, catelogDto.Name)
@@ -259,9 +259,19 @@ func addTool(data addToolDto, db *sql.DB) int64 {
 }
 
 func getAllTool(db *sql.DB, showHide bool) []Tool {
-	sql_get_all := `SELECT id,name,url,logo,catelog,desc,sort,hide FROM nav_table WHERE hide=$1 order by sort;`
+	var rows *sql.Rows
+	var err error
+	if showHide {
+		sqlGetAll := `SELECT id,name,url,logo,catelog,desc,sort,hide FROM nav_table order by sort;`
+		rows, err = db.Query(sqlGetAll)
+		checkErr(err)
+	} else {
+		sqlGetAll := `SELECT id,name,url,logo,catelog,desc,sort,hide FROM nav_table WHERE hide=? order by sort;`
+		rows, err = db.Query(sqlGetAll, false)
+		checkErr(err)
+	}
+
 	results := make([]Tool, 0)
-	rows, err := db.Query(sql_get_all, !showHide)
 	checkErr(err)
 	for rows.Next() {
 		var tool Tool
@@ -291,10 +301,19 @@ func getAllTool(db *sql.DB, showHide bool) []Tool {
 }
 
 func getAllCatelog(db *sql.DB, showHide bool) []Catelog {
-	sql_get_all := `SELECT id,name,sort,hide FROM nav_catelog WHERE hide=?  order by sort;`
+	var rows *sql.Rows
+	var err error
+	if showHide {
+		sqlGetAll := `SELECT id,name,sort,hide FROM nav_catelog order by sort;`
+		rows, err = db.Query(sqlGetAll)
+		checkErr(err)
+	} else {
+		sqlGetAll := `SELECT id,name,sort,hide FROM nav_catelog WHERE hide=?  order by sort;`
+		rows, err = db.Query(sqlGetAll, false)
+		checkErr(err)
+	}
+
 	results := make([]Catelog, 0)
-	rows, err := db.Query(sql_get_all, !showHide)
-	checkErr(err)
 	for rows.Next() {
 		var catelog Catelog
 		err = rows.Scan(&catelog.Id, &catelog.Name, &catelog.Sort, &catelog.Hide)
@@ -361,8 +380,7 @@ func BinaryFileSystem(data embed.FS, root string) *binaryFileSystem {
 	}
 }
 
-
-var port = flag.String("port","6412","指定监听端口")
+var port = flag.String("port", "6412", "指定监听端口")
 
 func main() {
 	flag.Parse()
@@ -413,7 +431,7 @@ func main() {
 		}
 	}
 	fmt.Printf("应用启动成功，网址: http://localhost:%s", *port)
-	listen := fmt.Sprintf(":%s",*port)
+	listen := fmt.Sprintf(":%s", *port)
 	router.Run(listen)
 }
 
@@ -462,14 +480,14 @@ func getSetting(db *sql.DB) Setting {
 	err := row.Scan(&setting.Id, &setting.Favicon, &setting.Title, &setting.GovRecord, &setting.Logo192, &setting.Logo512, &hideAdmin, &hideGithub, &jumpTargetBlank)
 	if err != nil {
 		return Setting{
-			Id:         0,
-			Favicon:    "favicon.ico",
-			Title:      "Van Nav",
-			GovRecord:  "",
-			Logo192:    "logo192.png",
-			Logo512:    "logo512.png",
-			HideAdmin:  false,
-			HideGithub: false,
+			Id:              0,
+			Favicon:         "favicon.ico",
+			Title:           "Van Nav",
+			GovRecord:       "",
+			Logo192:         "logo192.png",
+			Logo512:         "logo512.png",
+			HideAdmin:       false,
+			HideGithub:      false,
 			JumpTargetBlank: true,
 		}
 	}
@@ -491,8 +509,6 @@ func getSetting(db *sql.DB) Setting {
 			setting.HideAdmin = true
 		}
 	}
-
-
 
 	if jumpTargetBlank == nil {
 		setting.JumpTargetBlank = true
