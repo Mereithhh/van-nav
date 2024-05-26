@@ -81,9 +81,11 @@ func initDB() {
 	checkErr(err)
 
 	// tools数据表结构升级-20230627
-	sql_create_table = `
-		ALTER TABLE nav_table ADD COLUMN hide BOOLEAN;
-		`
+	sql_create_table = `ALTER TABLE nav_table ADD COLUMN hide BOOLEAN;`
+	_, err = db.Exec(sql_create_table)
+	checkErr(err)
+
+	sql_create_table = `UPDATE nav_table SET hide = false where hide IS NULL;`
 	_, err = db.Exec(sql_create_table)
 	checkErr(err)
 
