@@ -1,15 +1,16 @@
-
-import { Button, Card, Form, Input, InputNumber, Modal, message, Popconfirm, Space, Spin, Table, Tooltip } from 'antd';
-import { QuestionCircleOutlined } from '@ant-design/icons';
-import { useCallback, useContext, useState } from 'react';
-import { GlobalContext } from '../../components/GlobalContext';
-import { fetchAddCateLog, fetchDeleteCatelog, fetchUpdateCateLog } from '../../utils/api';
+import {Button, Card, Form, Input, InputNumber, Modal, message, Popconfirm, Space, Spin, Table, Tooltip} from 'antd';
+import {QuestionCircleOutlined} from '@ant-design/icons';
+import {useCallback, useContext, useState} from 'react';
+import {GlobalContext} from '../../components/GlobalContext';
+import {fetchAddCateLog, fetchDeleteCatelog, fetchUpdateCateLog} from '../../utils/api';
 import './index.css'
-export interface CatelogProps  {
+
+export interface CatelogProps {
 
 }
+
 export const Catelog: React.FC<CatelogProps> = (props) => {
-  const {reload,store,loading} = useContext(GlobalContext); 
+  const {reload, store, loading} = useContext(GlobalContext);
   const [requestLoading, setRequestLoading] = useState(false);
   const [addForm] = Form.useForm();
   const [updateForm] = Form.useForm();
@@ -42,7 +43,7 @@ export const Catelog: React.FC<CatelogProps> = (props) => {
     },
     [reload, setShowAddModel]
   );
-  
+
   const handleUpdate = useCallback(
     async (record: any) => {
       setRequestLoading(true);
@@ -88,7 +89,7 @@ export const Catelog: React.FC<CatelogProps> = (props) => {
     >
       <Spin spinning={loading}>
         <Table dataSource={store?.catelogs || []} rowKey="id">
-          <Table.Column title="序号" dataIndex="id" width={30} />
+          <Table.Column title="序号" dataIndex="id" width={30}/>
           <Table.Column
             title="名称"
             dataIndex="name"
@@ -98,21 +99,32 @@ export const Catelog: React.FC<CatelogProps> = (props) => {
                 <div>
                   {" "}
                   <img src={record.logo} width={32}></img>
-                  <span style={{ marginLeft: 8 }}>{record.name}</span>
+                  <span style={{marginLeft: 8}}>{record.name}</span>
                 </div>
               );
             }}
           />
-          <Table.Column 
+          <Table.Column
             title={
-              <span>排序 
+              <span>排序
                 <Tooltip title="升序，按数字从小到大排序">
-                  <QuestionCircleOutlined style={{ marginLeft: '5px' }} />
+                  <QuestionCircleOutlined style={{marginLeft: '5px'}}/>
                 </Tooltip>
               </span>
             }
-            dataIndex="sort" 
-            width={150} 
+            dataIndex="sort"
+            width={150}
+          />
+          <Table.Column
+            title={
+              <span>是否隐藏
+                <Tooltip title="“true”时，在未登录状态下将隐藏该分类">
+                  <QuestionCircleOutlined style={{marginLeft: '5px'}}/>
+                </Tooltip>
+              </span>
+            }
+            dataIndex="hide"
+            width={150}
           />
           <Table.Column
             title="操作"
@@ -157,23 +169,38 @@ export const Catelog: React.FC<CatelogProps> = (props) => {
         }}
       >
         <Form form={addForm}>
-          <Form.Item name="name" required label="名称" labelCol={{ span: 4 }}>
-            <Input placeholder="请输入分类名称" />
+          <Form.Item name="name" required label="名称"
+                     labelCol={{span: 6}}>
+            <Input placeholder="请输入分类名称"/>
           </Form.Item>
-          <Form.Item 
-            name="sort" 
+          <Form.Item
+            name="sort"
             required
             initialValue={1}
             label={
-                <span>
+              <span>
                   <Tooltip title="升序，按数字从小到大排序">
-                    <QuestionCircleOutlined style={{ marginLeft: '5px' }} />
+                    <QuestionCircleOutlined style={{marginLeft: '5px'}}/>
                   </Tooltip>
-                  &nbsp;排序 
+                &nbsp;排序
                 </span>
-              } 
-            labelCol={{ span: 4 }}>
+            }
+            labelCol={{span: 6}}>
             <InputNumber placeholder="请输入分类排序" type="number" defaultValue={1}/>
+          </Form.Item>
+          <Form.Item
+            name="hide"
+            initialValue={'false'}
+            label={
+              <span>
+                  <Tooltip title="设置为“true”后，在未登录状态下将隐藏该分类">
+                    <QuestionCircleOutlined style={{marginLeft: '5px'}}/>
+                  </Tooltip>
+                &nbsp;是否隐藏
+                </span>
+            }
+            labelCol={{span: 6}}>
+            <Input placeholder="默认为false" defaultValue={'false'}/>
           </Form.Item>
         </Form>
       </Modal>
@@ -191,25 +218,38 @@ export const Catelog: React.FC<CatelogProps> = (props) => {
       >
         <Spin spinning={requestLoading}>
           <Form form={updateForm}>
-            <Form.Item name="id" label="序号" labelCol={{ span: 4 }}>
-              <Input disabled />
+            <Form.Item name="id" label="序号" labelCol={{span: 6}}>
+              <Input disabled/>
             </Form.Item>
-            <Form.Item name="name" required label="名称" labelCol={{ span: 4 }}>
-              <Input placeholder="请输入分类名称" />
+            <Form.Item name="name" required label="名称" labelCol={{span: 6}}>
+              <Input placeholder="请输入分类名称"/>
             </Form.Item>
             <Form.Item
-              name="sort" 
-              required 
+              name="sort"
+              required
               label={
                 <span>
                   <Tooltip title="升序，按数字从小到大排序">
-                    <QuestionCircleOutlined style={{ marginLeft: '5px' }} />
+                    <QuestionCircleOutlined style={{marginLeft: '5px'}}/>
                   </Tooltip>
-                  &nbsp;排序 
+                  &nbsp;排序
                 </span>
-              } 
-              labelCol={{ span: 4 }}>
+              }
+              labelCol={{span: 6}}>
               <InputNumber placeholder="请输入分类排序" defaultValue={1}/>
+            </Form.Item>
+            <Form.Item
+              name="hide"
+              label={
+                <span>
+                  <Tooltip title="设置为“true”后，在未登录状态下将隐藏该分类">
+                    <QuestionCircleOutlined style={{marginLeft: '5px'}}/>
+                  </Tooltip>
+                  &nbsp;是否隐藏
+                </span>
+              }
+              labelCol={{span: 6}}>
+              <Input placeholder="默认为false" defaultValue={'false'}/>
             </Form.Item>
           </Form>
         </Spin>

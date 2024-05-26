@@ -23,7 +23,7 @@
   "proxy": "http://localhost:6412",
   "scripts": {
     "start": " NODE_OPTIONS=--openssl-legacy-provider  PORT=2333 react-scripts start",
-    "start-win": "set NODE_OPTIONS=--openssl-legacy-provider && set PORT=2333 && react-scripts start",
+    "start-win": "set NODE_OPTIONS=--openssl-legacy-provider --no-experimental-fetch && set PORT=2333 && react-scripts start",
     "build": " NODE_OPTIONS=--openssl-legacy-provider react-scripts build && sw-precache --config=sw-config.js --root='build/' --static-file-globs='build/**/!(*map*)'",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

@@ -4,7 +4,11 @@
 
 ## 常用命令
 
+```shell
+yarn
 ```
+
+```shell
 pnpm run dev
 pnpm run add < page | c | layout> <name>
 ```

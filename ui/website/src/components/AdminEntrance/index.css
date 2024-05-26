@@ -1,13 +1,13 @@
-.github-link-box {
+.admin-entrance-box {
   position: fixed;
   cursor: pointer;
 }
 
-.github-link-box svg {
+.admin-entrance-box svg {
   fill: #3d3d3d;
   transition: all 0.3s;
 }
 
-.github-link-box svg:hover {
+.admin-entrance-box svg:hover {
   fill: #121212;
 }

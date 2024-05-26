@@ -10,8 +10,7 @@ console.log("项目地址: https://github.com/mereithhh/van-nav")
 
 
 ReactDOM.render(
-    <App />
-,
+  <App/>,
   document.getElementById('root')
 );
 

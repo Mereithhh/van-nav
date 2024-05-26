@@ -1,5 +1,6 @@
 export interface ToolDataList {
   type: string;
+  hide: number;
   list: ToolDataItem[];
 }
 
