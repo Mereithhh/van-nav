@@ -94,12 +94,6 @@ const Content = (props: any) => {
     if (data.tools) {
       const localResult = data.tools
         .filter((item: any) => {
-          const hide = item.hide;
-          if (!hide) return true;
-          if (hide && isLogin()) return false;
-          return false;
-        })
-        .filter((item: any) => {
           if (currTag === "全部工具") {
             return true;
           }
