@@ -135,7 +135,7 @@ func UpdateUserHandler(c *gin.Context) {
 }
 
 func GetAllHandler(c *gin.Context) {
-  showHide := JWTCheck(c)
+	showHide := JWTCheck(c)
 	// 获取全部数据
 	tools := getAllTool(db, showHide)
 	catelogs := getAllCatelog(db, showHide)

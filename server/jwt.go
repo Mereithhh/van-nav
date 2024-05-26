@@ -80,8 +80,13 @@ func JWTMiddleware() gin.HandlerFunc {
 }
 
 func JWTCheck(c *gin.Context) bool {
-	rawToken := c.Request.Header.Get("Authorization")
+	rawToken := c.Request.Header.Get("Token")
 	if rawToken == "" {
+		return false
+	}
+	// 解析 token
+	_, err := ParseJWT(rawToken)
+	if err != nil {
 		return false
 	}
 	return true

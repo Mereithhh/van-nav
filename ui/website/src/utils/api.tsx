@@ -9,7 +9,7 @@ const blankJumpIcon = `data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMwAAADICAY
 export const FetchList = async () => {
     // 设置请求头部信息
     const headers = {
-        'Token': localStorage.getItem('token')
+        'Token': localStorage.getItem('_token')
     };
     const { data: raw } = await axios.get(baseUrl, {headers});
     const { data } = raw;
@@ -17,9 +17,7 @@ export const FetchList = async () => {
     const catelogs = [];
     catelogs.push("全部工具")
     data.catelogs.forEach(item => {
-        if (item.hide !== 'true' || localStorage.getItem("_token")) {
-            catelogs.push(item.name)
-        }
+        catelogs.push(item.name)
     })
     data.tools.forEach(item => {
         if (!catelogs.includes(item.catelog)) {

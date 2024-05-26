@@ -109,6 +109,9 @@ func initDB() {
 		`
 	_, err = db.Exec(sql_catelog_table)
 	checkErr(err)
+	sql_catelog_table = `UPDATE nav_catelog SET hide = false where hide IS NULL;`
+	_, err = db.Exec(sql_catelog_table)
+	checkErr(err)
 
 	// 设置表表结构升级-20230628
 	sql_create_table = `
