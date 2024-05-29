@@ -15,14 +15,26 @@ export const FetchList = async () => {
     const { data } = raw;
     // 获取分类
     const catelogs = [];
+    const tools = [];
     catelogs.push("全部工具")
     data.catelogs.forEach(item => {
         catelogs.push(item.name)
     })
     data.tools.forEach(item => {
-        if (!catelogs.includes(item.catelog)) {
-            catelogs.push(item.catelog);
+        // 如果工具所属分类不存在，则增加分类
+        // 2024-05-29，只对未分类的工具进行分类，已分类但是没有的，可能是隐藏了分类，不做分类
+        if (!item.catelog) {
+            item.catelog = "未分类"   
+            tools.push(item);
+            if (!catelogs.includes(item.catelog)) {
+                catelogs.push(item.catelog);
+            }
+        } else {
+            if (catelogs.includes(item.catelog)) {
+                tools.push(item);
+            }
         }
+        // 提醒：不做分类展示，仍然会在全部工具中显示
     });
     if (data.setting) {
         initServerJumpTargetConfig(data.setting)
@@ -30,7 +42,7 @@ export const FetchList = async () => {
 
     const jumpTarget = getJumpTarget();
 
-    data.tools.push({
+    tools.push({
         id: 999099999978,
         catelogs: "偏好设置",
         name: jumpTarget === "blank" ? "新建窗口" : "原地跳转",
@@ -39,6 +51,7 @@ export const FetchList = async () => {
         logo: jumpTarget === "blank" ? blankJumpIcon : selfJumpIcon
     })
 
+    data.tools = tools;
     data.catelogs = catelogs;
     return data;
 };

@@ -207,7 +207,7 @@ export const Catelog: React.FC<CatelogProps> = (props) => {
             required
             label={
               <span>
-                  <Tooltip title="开启后只有登录后才会展示该工具">
+                  <Tooltip title="开启后只有登录后才会展示该分类">
                     <QuestionCircleOutlined style={{ marginLeft: '5px' }} />
                   </Tooltip>
                 &nbsp;隐藏
@@ -257,7 +257,7 @@ export const Catelog: React.FC<CatelogProps> = (props) => {
               required
               label={
                 <span>
-                  <Tooltip title="开启后只有登录后才会展示该工具">
+                  <Tooltip title="开启后只有登录后才会展示该分类">
                     <QuestionCircleOutlined style={{ marginLeft: '5px' }} />
                   </Tooltip>
                   &nbsp;隐藏
