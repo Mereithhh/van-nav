@@ -22,7 +22,7 @@ export const FetchList = async () => {
     })
     data.tools.forEach(item => {
         // 如果工具所属分类不存在，则增加分类
-        // 2024-05-29，只对未分类的工具进行分类，已分类但是没有的，可能是隐藏了分类，不做分类
+        // 2024-05-29，只对未分类的工具进行分类，已分类但是没有查到对应分类的，大概是是隐藏了分类，不做展示
         if (!item.catelog) {
             item.catelog = "未分类"   
             tools.push(item);
