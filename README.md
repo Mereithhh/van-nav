@@ -2,39 +2,29 @@
 
 一个轻量的导航站，现在有搜索引擎集成了，很适合作为主页使用。有配套的[浏览器插件](https://github.com/Mereithhh/van-nav-extension)和 API。 [在线体验](https://demo-tools.mereith.com) (账号密码均为: admin)
 
-<div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
-  <div style="flex: 1; margin-right: 10px;">
-    <img src="images/pc-light.png" alt="预览 PC (亮色主题)" style="width: 100%;"/>
-  </div>
-  <div style="flex: 1; margin-left: 10px;">
-    <img src="images/pc-dark.png" alt="预览 PC (暗色主题)" style="width: 100%;"/>
-  </div>
-</div>
+## 预览
 
-<div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
-  <div style="flex: 1; margin-right: 10px;">
-    <img src="images/pad-light.png" alt="预览 PAD (亮色主题)" style="width: 100%;"/>
-  </div>
-  <div style="flex: 1; margin-left: 10px;">
-    <img src="images/pad-dark.png" alt="预览 PAD (暗色主题)" style="width: 100%;"/>
-  </div>
-</div>
+### PC
 
-<div style="display: flex; justify-content: center; flex-wrap: wrap; margin-bottom: 20px;">
-  <div style="flex: 0 1 auto; margin: 0 10px;">
-    <img src="images/phone-light.png" alt="预览 Phone (亮色主题)" style="height: 200px;"/>
-  </div>
-  <div style="flex: 0 1 auto; margin: 0 10px;">
-    <img src="images/phone-dark.png" alt="预览 Phone (暗色主题)" style="height: 200px;"/>
-  </div>
-</div>
+<img src="images/pc_preview.png" alt="PC" style="width: 100%;"/>
 
-<div style="flex: 1; margin-right: 10px;">
-    <img src="images/admin.png" alt="后台设置" style="width: 100%;"/>
-  </div>
-<div style="display: flex; justify-content: center; align-items: center; margin: 20px 0;">
-    <img src="images/qqqun.jpg" alt="交流群" style="height: 200px;"/>
-</div>
+### PAD
+
+<img src="images/pad_preview.png" alt="PAD" style="width: 100%;"/>
+
+### PHONE
+
+<img src="images/phone_preview.png" alt="PHONE" style="width: 100%;"/>
+
+### 后台设置
+
+<img src="images/login.jpg" alt="登录" style="width: 100%;"/>
+
+<img src="images/admin.jpg" alt="后台设置" style="width: 100%;"/>
+
+### 交流群
+
+<img src="images/qqqun.jpg" alt="交流群" style="height: 200px;"/>
 
 > qq 交流群： 873773083
 

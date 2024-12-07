@@ -119,3 +119,7 @@ dist/
 
 public/*
 act.secret
+
+.dev
+*.py
+requirements.txt
