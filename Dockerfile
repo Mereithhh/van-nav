@@ -1,6 +1,7 @@
 FROM node:18-alpine AS feBuilder
 WORKDIR /app
 COPY . .
+RUN npm install -g pnpm
 RUN cd /app && cd ui && pnpm install && pnpm build && cd ..
 RUN cd /app && mkdir -p public
 RUN cp -r ui/build/* public/
