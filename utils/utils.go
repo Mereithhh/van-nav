@@ -1,30 +1,34 @@
-package main
+package utils
 
 import (
 	"crypto/tls"
 	"database/sql"
 	"encoding/base64"
-	"fmt"
 	"io/ioutil"
 	"net/http"
+	"os"
+	"runtime/debug"
 	"strings"
+	"time"
+
+	"github.com/mereith/nav/logger"
 )
 
-func checkErr(err error) {
+func CheckErr(err error) {
 	if err != nil {
-		fmt.Println("捕获到错误：", err)
+		logger.LogError("捕获到错误：%s, 堆栈信息：%s", err, string(debug.Stack()))
 	}
 }
 
-func checkTxErr(err error, tx *sql.Tx) {
+func CheckTxErr(err error, tx *sql.Tx) {
 	if err != nil {
-		fmt.Println("出现事务异常，回滚事务:", err)
+		logger.LogError("出现事务异常，回滚事务: %s, 堆栈信息：%s", err, string(debug.Stack()))
 		err2 := tx.Rollback()
-		checkErr(err2)
+		CheckErr(err2)
 	}
 }
 
-func in(target string, str_array []string) bool {
+func In(target string, str_array []string) bool {
 	for _, element := range str_array {
 		if target == element {
 			return true
@@ -33,12 +37,12 @@ func in(target string, str_array []string) bool {
 	return false
 }
 
-func getImgBase64FromUrl(url string) string {
+func GetImgBase64FromUrl(url string) string {
 	imgUrl := url
 	//获取远端图片
 	req, err := http.NewRequest("GET", imgUrl, nil)
 	if err != nil {
-		checkErr(err)
+		CheckErr(err)
 		return ""
 	}
 	req.Header.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.88 Safari/537.36")
@@ -49,7 +53,7 @@ func getImgBase64FromUrl(url string) string {
 	}
 	res, err := client.Do(req)
 	if err != nil {
-		checkErr(err)
+		CheckErr(err)
 		return ""
 	}
 	defer res.Body.Close()
@@ -61,11 +65,11 @@ func getImgBase64FromUrl(url string) string {
 	return imageBase64
 }
 
-func getSuffixFromUrl(url string) string {
+func GetSuffixFromUrl(url string) string {
 	suffix := url[strings.LastIndex(url, "."):]
 	return suffix
 }
-func getMIME(suffix string) string {
+func GetMIME(suffix string) string {
 	var t string = "image/x-icon"
 	if suffix == ".svg" {
 		t = "image/svg+xml"
@@ -74,4 +78,18 @@ func getMIME(suffix string) string {
 		t = "image/png"
 	}
 	return t
+}
+
+func PathExistsOrCreate(path string) {
+	_, err := os.Stat(path)
+	if err == nil {
+		return
+	}
+	os.Mkdir(path, os.ModePerm)
+}
+
+func GenerateId() int {
+	// 生成一个随机 id
+	id := int(time.Now().Unix())
+	return id
 }

@@ -1,12 +1,12 @@
 package main
 
 import (
-	"fmt"
 	"net/http"
 	"strings"
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/mereith/nav/logger"
 )
 
 type ServeFileSystem interface {
@@ -32,7 +32,7 @@ func Serve(urlPrefix string, fs ServeFileSystem) gin.HandlerFunc {
 			} else {
 				adminFile, err := fs.Open("/admin/index.html")
 				if err != nil {
-					fmt.Println("文件不存在", c.Request.URL.Path)
+					logger.LogError("文件不存在: %s", c.Request.URL.Path)
 					return
 				}
 				defer adminFile.Close()

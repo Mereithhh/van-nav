@@ -1,4 +1,4 @@
-package main
+package utils
 
 import (
 	"net/http"
@@ -6,13 +6,14 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt"
+	"github.com/mereith/nav/types"
 )
 
 // JTW 密钥
 var jwtSecret = []byte("boy_next_door")
 
 // 签名一个 JTW
-func SignJWT(user User) (string, error) {
+func SignJWT(user types.User) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"name": user.Name,
 		"id":   user.Id,

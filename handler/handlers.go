@@ -1,18 +1,22 @@
-package main
+package handler
 
 import (
 	"encoding/base64"
-	"fmt"
 	"net/http"
 	"net/url"
 	"strconv"
 	"strings"
 
 	"github.com/gin-gonic/gin"
+	"github.com/mereith/nav/database"
+	"github.com/mereith/nav/logger"
+	"github.com/mereith/nav/service"
+	"github.com/mereith/nav/types"
+	"github.com/mereith/nav/utils"
 )
 
 func ExportToolsHandler(c *gin.Context) {
-	tools := getAllTool(db)
+	tools := service.GetAllTool()
 	c.JSON(200, gin.H{
 		"success": true,
 		"message": "导出工具成功",
@@ -21,10 +25,10 @@ func ExportToolsHandler(c *gin.Context) {
 }
 
 func ImportToolsHandler(c *gin.Context) {
-	var tools []Tool
+	var tools []types.Tool
 	err := c.ShouldBindJSON(&tools)
 	if err != nil {
-		checkErr(err)
+		utils.CheckErr(err)
 		c.JSON(http.StatusBadRequest, gin.H{
 			"success":      false,
 			"errorMessage": err.Error(),
@@ -32,7 +36,7 @@ func ImportToolsHandler(c *gin.Context) {
 		return
 	}
 	// 导入所有工具
-	importTools(tools)
+	service.ImportTools(tools)
 	c.JSON(200, gin.H{
 		"success": true,
 		"message": "导入工具成功",
@@ -47,13 +51,12 @@ func DeleteApiTokenHandler(c *gin.Context) {
 		SET disabled = 1
 		WHERE id = ?;
 		`
-	stmt, err := db.Prepare(sql_delete_api_token)
-	checkErr(err)
+	stmt, err := database.DB.Prepare(sql_delete_api_token)
+	utils.CheckErr(err)
 	res, err := stmt.Exec(id)
-	checkErr(err)
+	utils.CheckErr(err)
 	_, err = res.RowsAffected()
-	checkErr(err)
-	// fmt.Println(affect)
+	utils.CheckErr(err)
 	c.JSON(200, gin.H{
 		"success": true,
 		"message": "删除 API Token 成功",
@@ -61,33 +64,33 @@ func DeleteApiTokenHandler(c *gin.Context) {
 }
 
 func AddApiTokenHandler(c *gin.Context) {
-	var token AddTokenDto
+	var token types.AddTokenDto
 	err := c.ShouldBindJSON(&token)
 	if err != nil {
-		checkErr(err)
+		utils.CheckErr(err)
 		c.JSON(http.StatusBadRequest, gin.H{
 			"success":      false,
 			"errorMessage": err.Error(),
 		})
 		return
 	}
-	newId := generateId()
+	newId := utils.GenerateId()
 	var signedJwt string
-	signedJwt, err = SignJWTForAPI(token.Name, newId)
+	signedJwt, err = utils.SignJWTForAPI(token.Name, newId)
 	if err != nil {
-		checkErr(err)
+		utils.CheckErr(err)
 		c.JSON(http.StatusBadRequest, gin.H{
 			"success":      false,
 			"errorMessage": err.Error(),
 		})
 		return
 	}
-	addApiTokenInDB(Token{
+	service.AddApiTokenInDB(types.Token{
 		Name:     token.Name,
 		Value:    signedJwt,
 		Id:       newId,
 		Disabled: 0,
-	}, db)
+	})
 	// 签名 jwt
 	c.JSON(200, gin.H{
 		"success": true,
@@ -101,16 +104,16 @@ func AddApiTokenHandler(c *gin.Context) {
 }
 
 func UpdateSettingHandler(c *gin.Context) {
-	var data Setting
+	var data types.Setting
 	if err := c.ShouldBindJSON(&data); err != nil {
-		checkErr(err)
+		utils.CheckErr(err)
 		c.JSON(http.StatusBadRequest, gin.H{
 			"success":      false,
 			"errorMessage": err.Error(),
 		})
 		return
 	}
-	updateSetting(data, db)
+	service.UpdateSetting(data)
 	c.JSON(200, gin.H{
 		"success": true,
 		"message": "更新配置成功",
@@ -118,16 +121,16 @@ func UpdateSettingHandler(c *gin.Context) {
 }
 
 func UpdateUserHandler(c *gin.Context) {
-	var data updateUserDto
+	var data types.UpdateUserDto
 	if err := c.ShouldBindJSON(&data); err != nil {
-		checkErr(err)
+		utils.CheckErr(err)
 		c.JSON(http.StatusBadRequest, gin.H{
 			"success":      false,
 			"errorMessage": err.Error(),
 		})
 		return
 	}
-	updateUser(data, db)
+	service.UpdateUser(data)
 	c.JSON(200, gin.H{
 		"success": true,
 		"message": "更新用户成功",
@@ -136,9 +139,9 @@ func UpdateUserHandler(c *gin.Context) {
 
 func GetAllHandler(c *gin.Context) {
 	// 获取全部数据
-	tools := getAllTool(db)
-	catelogs := getAllCatelog(db)
-	setting := getSetting(db)
+	tools := service.GetAllTool()
+	catelogs := service.GetAllCatelog()
+	setting := service.GetSetting()
 	c.JSON(200, gin.H{
 		"success": true,
 		"data": gin.H{
@@ -149,11 +152,10 @@ func GetAllHandler(c *gin.Context) {
 	})
 }
 
-func getLogoImgHandler(c *gin.Context) {
+func GetLogoImgHandler(c *gin.Context) {
 	url := c.Query("url")
 
-	img := getImgFromDB(url, db)
-	// fmt.Println(img.Value)
+	img := service.GetImgFromDB(url)
 	imgBuffer, _ := base64.StdEncoding.DecodeString(img.Value)
 	// 检测不同的格式发送不同的响应头
 	l := strings.Split(url, ".")
@@ -173,10 +175,10 @@ func getLogoImgHandler(c *gin.Context) {
 
 func GetAdminAllDataHandler(c *gin.Context) {
 	// 管理员获取全部数据，还有个用户名。
-	tools := getAllTool(db)
-	catelogs := getAllCatelog(db)
-	setting := getSetting(db)
-	tokens := getApiTokens(db)
+	tools := service.GetAllTool()
+	catelogs := service.GetAllCatelog()
+	setting := service.GetSetting()
+	tokens := service.GetApiTokens()
 	userId, ok := c.Get("uid")
 	if !ok {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -201,16 +203,16 @@ func GetAdminAllDataHandler(c *gin.Context) {
 }
 
 func LoginHandler(c *gin.Context) {
-	var data loginDto
+	var data types.LoginDto
 	if err := c.ShouldBindJSON(&data); err != nil {
-		checkErr(err)
+		utils.CheckErr(err)
 		c.JSON(http.StatusBadRequest, gin.H{
 			"success":      false,
 			"errorMessage": err.Error(),
 		})
 		return
 	}
-	user := getUser(data.Name, db)
+	user := service.GetUser(data.Name)
 	if user.Name == "" {
 		c.JSON(200, gin.H{
 			"success":      false,
@@ -226,8 +228,8 @@ func LoginHandler(c *gin.Context) {
 		return
 	}
 	// 生成 token
-	token, err := SignJWT(user)
-	checkErr(err)
+	token, err := utils.SignJWT(user)
+	utils.CheckErr(err)
 
 	c.JSON(200, gin.H{
 		"success": true,
@@ -242,7 +244,6 @@ func LoginHandler(c *gin.Context) {
 
 // 退出登录
 func LogoutHandler(c *gin.Context) {
-	// fmt.Println("TODO： 销毁 JWT")
 	c.JSON(200, gin.H{
 		"success": true,
 		"message": "登出成功",
@@ -251,19 +252,19 @@ func LogoutHandler(c *gin.Context) {
 
 func AddToolHandler(c *gin.Context) {
 	// 添加工具
-	var data addToolDto
+	var data types.AddToolDto
 	if err := c.ShouldBindJSON(&data); err != nil {
-		checkErr(err)
+		utils.CheckErr(err)
 		c.JSON(http.StatusBadRequest, gin.H{
 			"success":      false,
 			"errorMessage": err.Error(),
 		})
 		return
 	}
-	fmt.Println(data.Name, " 获取 logo: ", data.Logo)
-	id := addTool(data, db)
+	logger.LogInfo("%s 获取 logo: %s", data.Name, data.Logo)
+	id := service.AddTool(data)
 	if data.Logo == "" {
-		go LazyFetchLogo(data.Url, id, db)
+		go service.LazyFetchLogo(data.Url, id)
 	}
 	c.JSON(200, gin.H{
 		"success": true,
@@ -277,27 +278,26 @@ func DeleteToolHandler(c *gin.Context) {
 	sql_delete_tool := `
 		DELETE FROM nav_table WHERE id = ?;
 		`
-	stmt, err := db.Prepare(sql_delete_tool)
-	checkErr(err)
+	stmt, err := database.DB.Prepare(sql_delete_tool)
+	utils.CheckErr(err)
 	res, err := stmt.Exec(id)
-	checkErr(err)
+	utils.CheckErr(err)
 	_, err = res.RowsAffected()
-	checkErr(err)
+	utils.CheckErr(err)
 	// 删除工具的 logo，如果有
 	numberId, err := strconv.Atoi(id)
-	checkErr(err)
-	url1 := getToolLogoUrlById(numberId, db)
+	utils.CheckErr(err)
+	url1 := service.GetToolLogoUrlById(numberId)
 	urlEncoded := url.QueryEscape(url1)
 	sql_delete_tool_img := `
 		DELETE FROM nav_img WHERE url = ?;
 		`
-	stmt, err = db.Prepare(sql_delete_tool_img)
-	checkErr(err)
+	stmt, err = database.DB.Prepare(sql_delete_tool_img)
+	utils.CheckErr(err)
 	res, err = stmt.Exec(urlEncoded)
-	checkErr(err)
+	utils.CheckErr(err)
 	_, err = res.RowsAffected()
-	checkErr(err)
-	// fmt.Println(affect)
+	utils.CheckErr(err)
 	c.JSON(200, gin.H{
 		"success": true,
 		"message": "删除成功",
@@ -306,19 +306,19 @@ func DeleteToolHandler(c *gin.Context) {
 
 func UpdateToolHandler(c *gin.Context) {
 	// 更新工具
-	var data updateToolDto
+	var data types.UpdateToolDto
 	if err := c.ShouldBindJSON(&data); err != nil {
-		checkErr(err)
+		utils.CheckErr(err)
 		c.JSON(http.StatusBadRequest, gin.H{
 			"success":      false,
 			"errorMessage": err.Error(),
 		})
 		return
 	}
-	updateTool(data, db)
+	service.UpdateTool(data)
 	if data.Logo == "" {
-		fmt.Println(data.Name, " 获取 logo: ", data.Logo)
-		go LazyFetchLogo(data.Url, int64(data.Id), db)
+		logger.LogInfo("%s 获取 logo: %s", data.Name, data.Logo)
+		go service.LazyFetchLogo(data.Url, int64(data.Id))
 	}
 
 	c.JSON(200, gin.H{
@@ -329,16 +329,16 @@ func UpdateToolHandler(c *gin.Context) {
 
 func AddCatelogHandler(c *gin.Context) {
 	// 添加分类
-	var data addCatelogDto
+	var data types.AddCatelogDto
 	if err := c.ShouldBindJSON(&data); err != nil {
-		checkErr(err)
+		utils.CheckErr(err)
 		c.JSON(http.StatusBadRequest, gin.H{
 			"success":      false,
 			"errorMessage": err.Error(),
 		})
 		return
 	}
-	addCatelog(data, db)
+	service.AddCatelog(data)
 
 	c.JSON(200, gin.H{
 		"success": true,
@@ -352,13 +352,12 @@ func DeleteCatelogHandler(c *gin.Context) {
 	sql_delete_catelog := `
 		DELETE FROM nav_catelog WHERE id = ?;
 		`
-	stmt, err := db.Prepare(sql_delete_catelog)
-	checkErr(err)
+	stmt, err := database.DB.Prepare(sql_delete_catelog)
+	utils.CheckErr(err)
 	res, err := stmt.Exec(id)
-	checkErr(err)
+	utils.CheckErr(err)
 	_, err = res.RowsAffected()
-	checkErr(err)
-	// fmt.Println(affect)
+	utils.CheckErr(err)
 	c.JSON(200, gin.H{
 		"success": true,
 		"message": "删除分类成功",
@@ -367,16 +366,16 @@ func DeleteCatelogHandler(c *gin.Context) {
 
 func UpdateCatelogHandler(c *gin.Context) {
 	// 更新分类
-	var data updateCatelogDto
+	var data types.UpdateCatelogDto
 	if err := c.ShouldBindJSON(&data); err != nil {
-		checkErr(err)
+		utils.CheckErr(err)
 		c.JSON(http.StatusBadRequest, gin.H{
 			"success":      false,
 			"errorMessage": err.Error(),
 		})
 		return
 	}
-	updateCatelog(data, db)
+	service.UpdateCatelog(data)
 
 	c.JSON(200, gin.H{
 		"success": true,
@@ -386,7 +385,7 @@ func UpdateCatelogHandler(c *gin.Context) {
 
 func ManifastHanlder(c *gin.Context) {
 
-	setting := getSetting(db)
+	setting := service.GetSetting()
 	title := setting.Title
 
 	var icons = []gin.H{}
