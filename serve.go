@@ -25,19 +25,20 @@ func Serve(urlPrefix string, fs ServeFileSystem) gin.HandlerFunc {
 			c.Abort()
 		} else {
 			path := c.Request.URL.Path
-			pathHasAdmin := strings.Contains(path, "/admin")
 			pathHasAPI := strings.Contains(path, "/api")
-			if !pathHasAdmin || pathHasAPI {
+			// pathHasAdmin := strings.Contains(path, "/admin")
+			// pathHasLogin := strings.Contains(path, "/login")
+			if pathHasAPI {
 				return
 			} else {
-				adminFile, err := fs.Open("index.html")
+				file, err := fs.Open("index.html")
 				if err != nil {
 					logger.LogError("文件不存在: %s", c.Request.URL.Path)
 					return
 				}
-				defer adminFile.Close()
+				defer file.Close()
 				// 把文件返回
-				http.ServeContent(c.Writer, c.Request, "index.html", time.Now(), adminFile)
+				http.ServeContent(c.Writer, c.Request, "index.html", time.Now(), file)
 				c.Abort()
 			}
 
