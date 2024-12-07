@@ -30,7 +30,7 @@ func Serve(urlPrefix string, fs ServeFileSystem) gin.HandlerFunc {
 			if !pathHasAdmin || pathHasAPI {
 				return
 			} else {
-				adminFile, err := fs.Open("/admin/index.html")
+				adminFile, err := fs.Open("index.html")
 				if err != nil {
 					logger.LogError("文件不存在: %s", c.Request.URL.Path)
 					return
