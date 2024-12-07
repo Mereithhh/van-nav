@@ -2,13 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
-## [v1.10.0] - 2024-12-07
+## [unreleased]
 
 ### 🚜 Refactor
 
 - 重构后端，结构清晰便于维护
 - 前端更新为 react19
 - 前端整合成一个，ui 优化，路由懒加载
+
+### 📚 Documentation
+
+- 更新文档，增加了 api 文档(beta）
 
 ### ⚙️ Miscellaneous Tasks
 
