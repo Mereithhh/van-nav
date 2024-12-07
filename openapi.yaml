@@ -1,0 +1,330 @@
+openapi: 3.1.0
+info:
+  title: Van Nav API
+  description: Van Nav 导航系统的 API 文档
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8080
+    description: 开发环境服务器
+
+components:
+  schemas:
+    Tool:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        url:
+          type: string
+        logo:
+          type: string
+        desc:
+          type: string
+        catelogId:
+          type: integer
+
+    Catelog:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        desc:
+          type: string
+
+    Setting:
+      type: object
+      properties:
+        title:
+          type: string
+        logo192:
+          type: string
+        logo512:
+          type: string
+
+    LoginDto:
+      type: object
+      required:
+        - name
+        - password
+      properties:
+        name:
+          type: string
+        password:
+          type: string
+
+    ApiToken:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        value:
+          type: string
+        disabled:
+          type: integer
+
+    Error:
+      type: object
+      properties:
+        success:
+          type: boolean
+        errorMessage:
+          type: string
+
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+paths:
+  /api/login:
+    post:
+      summary: 用户登录
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginDto"
+      responses:
+        "200":
+          description: 登录成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      user:
+                        type: object
+                      token:
+                        type: string
+
+  /api/logout:
+    post:
+      summary: 用户登出
+      responses:
+        "200":
+          description: 登出成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+
+  /api/tools:
+    get:
+      summary: 导出所有工具
+      responses:
+        "200":
+          description: 成功获取工具列表
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Tool"
+
+    post:
+      summary: 添加新工具
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - url
+              properties:
+                name:
+                  type: string
+                url:
+                  type: string
+                logo:
+                  type: string
+                desc:
+                  type: string
+                catelogId:
+                  type: integer
+      responses:
+        "200":
+          description: 添加成功
+
+  /api/tools/{id}:
+    delete:
+      summary: 删除工具
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: 删除成功
+
+    put:
+      summary: 更新工具
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Tool"
+      responses:
+        "200":
+          description: 更新成功
+
+  /api/catelogs:
+    post:
+      summary: 添加新分类
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+              properties:
+                name:
+                  type: string
+                desc:
+                  type: string
+      responses:
+        "200":
+          description: 添加分类成功
+
+  /api/catelogs/{id}:
+    delete:
+      summary: 删除分类
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: 删除分类成功
+
+    put:
+      summary: 更新分类
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Catelog"
+      responses:
+        "200":
+          description: 更新分类成功
+
+  /api/settings:
+    put:
+      summary: 更新系统设置
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Setting"
+      responses:
+        "200":
+          description: 更新设置成功
+
+  /api/tokens:
+    post:
+      summary: 添加 API Token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+              properties:
+                name:
+                  type: string
+      responses:
+        "200":
+          description: 添加 Token 成功
+
+  /api/tokens/{id}:
+    delete:
+      summary: 删除 API Token
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: 删除 Token 成功
+
+  /api/logo:
+    get:
+      summary: 获取 Logo 图片
+      parameters:
+        - name: url
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: 成功返回图片
+          content:
+            image/*:
+              schema:
+                type: string
+                format: binary
+
+  /manifest.json:
+    get:
+      summary: 获取应用 manifest 文件
+      responses:
+        "200":
+          description: 成功返回 manifest 配置
+
+security:
+  - BearerAuth: []

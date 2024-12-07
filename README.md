@@ -2,26 +2,58 @@
 
 一个轻量的导航站，现在有搜索引擎集成了，很适合作为主页使用。有配套的[浏览器插件](https://github.com/Mereithhh/van-nav-extension)和 API。 [在线体验](https://demo-tools.mereith.com) (账号密码均为: admin)
 
-<div align=center ><img  src="images/pc-light.png" alt="预览 PC "/></div>
-<div align=center ><img  src="images/pc-dark.png" alt="预览 PC "/></div>
-<div align=center ><img  src="images/pad-light.png" alt="预览 PAD "/></div>
-<div align=center ><img  src="images/pad-dark.png" alt="预览 PAD "/></div>
-<div align=center><img  alt="预览 phone" width=450 src="images/phone-light.png"/></div>
-<div align=center><img alt="预览 phone"  width=450 src="images/phone-dark.png"/></div>
-<div align=center><img alt="后台设置" src="images/admin.png"/></div>
-<div align=center><img alt="交流群"  width=450 src="images/qqqun.jpg"/></div>
+<div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+  <div style="flex: 1; margin-right: 10px;">
+    <img src="images/pc-light.png" alt="预览 PC (亮色主题)" style="width: 100%;"/>
+  </div>
+  <div style="flex: 1; margin-left: 10px;">
+    <img src="images/pc-dark.png" alt="预览 PC (暗色主题)" style="width: 100%;"/>
+  </div>
+</div>
+
+<div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+  <div style="flex: 1; margin-right: 10px;">
+    <img src="images/pad-light.png" alt="预览 PAD (亮色主题)" style="width: 100%;"/>
+  </div>
+  <div style="flex: 1; margin-left: 10px;">
+    <img src="images/pad-dark.png" alt="预览 PAD (暗色主题)" style="width: 100%;"/>
+  </div>
+</div>
+
+<div style="display: flex; justify-content: center; flex-wrap: wrap; margin-bottom: 20px;">
+  <div style="flex: 0 1 auto; margin: 0 10px;">
+    <img src="images/phone-light.png" alt="预览 Phone (亮色主题)" style="height: 200px;"/>
+  </div>
+  <div style="flex: 0 1 auto; margin: 0 10px;">
+    <img src="images/phone-dark.png" alt="预览 Phone (暗色主题)" style="height: 200px;"/>
+  </div>
+</div>
+
+<div style="flex: 1; margin-right: 10px;">
+    <img src="images/admin.png" alt="后台设置" style="width: 100%;"/>
+  </div>
+<div style="display: flex; justify-content: center; align-items: center; margin: 20px 0;">
+    <img src="images/qqqun.jpg" alt="交流群" style="height: 200px;"/>
+</div>
 
 > qq 交流群： 873773083
 
-## 快捷键
+## 使用技巧/快捷键
+
 其实这个导航站有很多小设计，合理使用可以提高使用效率：
+
 - 只要在这个页面里，直接输入键盘任何按键，可以直接聚焦到搜索框开始输入。
 - 搜索完按回车会直接在新标签页打开第一个结果。
 - 搜索完按一下对应卡片右上角的数字按钮 + Ctrl(mac 也可以用 command 键) ，也会直接打开对应结果。
 
 另外可以设置跳转方式哦。
 
+## CHANGELOG
+
+具体请看 [CHANGELOG.md](CHANGELOG.md)
+
 ## 安装方法
+
 ### Docker
 
 ```
@@ -31,9 +63,8 @@ docker run -d --name tools --restart always -p 6412:6412 -v /path/to/your/data:/
 打开浏览器 [http://localhost:6412](http://localhost:6412) 即可访问。
 
 - 默认端口 6412
-- 默认账号密码 admin admin ，第一次运行后请进入后台修改
+- 默认账号密码 admin admin �� 第一次运行后请进入后台修改
 - 数据库会自动创建在当前文件夹中： `nav.db`
-
 
 ### 可执行文件
 
@@ -41,7 +72,7 @@ docker run -d --name tools --restart always -p 6412:6412 -v /path/to/your/data:/
 
 打开浏览器 [http://localhost:6412](http://localhost:6412) 即可访问。
 
-- 默认端口 6412，启动时添加 `-port <port>` 参数可指定运行端口。
+- 默认端口 6412 动时添加 `-port <port>` 参数可指定运行端口。
 - 默认账号密码 admin admin ，第一次运行后请进入后台修改
 - 数据库会自动创建在当前文件夹中： `nav.db`
 
@@ -79,11 +110,13 @@ server {
 ```
 
 ### systemd 服务
+
 可以注册成系统服务，开机启动。
 
 1. 复制二进制文件到 `/usr/local/bin` 目录下，并加上执行权限
 
 2. 新建 `VanNav.serivce` 文件于 `/usr/lib/systemd/system` 目录下:
+
 ```
 [Unit]
 Description=VanNav
@@ -106,18 +139,25 @@ WantedBy=multi-user.target
 ```
 
 3. 执行:
+
 ```
 sudo systemctl daemon-reload && sudo systemctl enable --now VanNav.service
 ```
 
 ## 浏览器插件
+
 具体请看： [浏览器插件仓库](https://github.com/Mereithhh/van-nav-extension)
 
 具有一键增加工具，快速打开管理后台和主站等功能。具体自行探索哦。
+
 ## API
+
 本导航站支持 API，可以用自己的方法添加工具。
 
-文档待完成...
+尝试用 ai 生成 api 文档，具体请看
+
+> [API 文档](./openapi.yaml)
+
 ## 状态
 
 可以优化的点太多了，慢慢完善吧……
@@ -148,4 +188,3 @@ sudo systemctl daemon-reload && sudo systemctl enable --now VanNav.service
 - [ ] 网站状态检测
 - [x] 支持后台设置默认跳转方式
 - [x] 支持指定监听端口
-
