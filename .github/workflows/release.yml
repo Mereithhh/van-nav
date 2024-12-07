@@ -25,7 +25,7 @@ jobs:
           rm -rf ./public
           mkdir -p public
           echo '构建用户页面'
-          cd ui && pnpm install && pnpm build && cd ..
+          cd ui && CI=false pnpm install && CI=false pnpm build && cd ..
           cp -r ui/build/* public/
           echo '构建前端数据完成'
           ls public/static
