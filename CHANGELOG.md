@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## [unreleased]
+## [1.10.0] - 2024-12-07
 
 ### 🚜 Refactor
 
@@ -13,6 +13,8 @@ All notable changes to this project will be documented in this file.
 ### 📚 Documentation
 
 - 更新文档，增加了 api 文档(beta）
+- Update changelog
+- 更新截图
 
 ### ⚙️ Miscellaneous Tasks
 
