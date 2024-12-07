@@ -1,0 +1,97 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji",
+    "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #ffffff;
+  overflow: hidden;
+}
+:root {
+  --width-small: 500px;
+  --width-medium: 700px;
+  --width-large: 1060px;
+}
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+body.dark-mode .github-link-box svg {
+  fill: white;
+}
+body.dark-mode .github-link-box svg:hover {
+  fill: #f1f1f1;
+}
+body.dark-mode .theme-switch-box svg {
+  fill: white;
+}
+body.dark-mode .theme-switch-box svg:hover {
+  fill: #f1f1f1;
+}
+body.dark-mode {
+  background-color: #121212;
+  color: rgba(255, 255, 255, 0.6);
+}
+body.dark-mode .select-tag-active {
+  background-color: #383838;
+  border: 1px solid #383838;
+}
+body.dark-mode .select-tag {
+  border: 1px solid #121212;
+  color: rgba(255, 255, 255, 0.6);
+}
+body.dark-mode .select-tag:hover {
+  background-color: #424242;
+  border: 1px solid #424242;
+}
+body.dark-mode input {
+  background-color: #222222;
+  border: 1px solid #222222;
+  color: rgba(255, 255, 255, 0.6);
+}
+body.dark-mode input:hover {
+  background-color: #303030;
+  border: 1px solid #303030;
+}
+body.dark-mode input:focus,
+input:focus-visible {
+  background-color: #3d3d3d;
+  border: 1px solid #3d3d3d;
+}
+body.dark-mode .card-box {
+  background-color: #222222;
+}
+body.dark-mode .card-box:hover {
+  box-shadow: 2px 2px 12px 0px #292929;
+}
+body.dark-mode .card-right-title {
+  color: rgba(255, 255, 255, 0.6);
+}
+body.dark-mode .card-right-bottom {
+  color: rgba(255, 255, 255, 0.6);
+}
+body.dark-mode .card-tag {
+  background-color: #383838;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+@media (max-width: 1060px) and (min-width: 700px) {
+  body.dark-mode span.card-tag {
+    background-color: #222222 !important;
+  }
+}
+
+@media (max-width: 700px) and (min-width: 500px) {
+  body.dark-mode a.card-box {
+    background-color: #121212;
+  }
+}
+@media (max-width: 500px) {
+  body.dark-mode a.card-box {
+    background-color: #121212;
+  }
+}

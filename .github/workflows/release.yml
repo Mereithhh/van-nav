@@ -3,21 +3,18 @@ name: GoReleaser
 on:
   push:
     tags:
-      - 'v*'
+      - "v*"
 
 jobs:
-
   goreleaser:
     runs-on: ubuntu-20.04
     steps:
-      -
-        name: Checkout
+      - name: Checkout
         uses: actions/checkout@v2
       - uses: actions/setup-node@v3
         with:
-          node-version: '18.14.1'
-      -
-        name: Set up Go
+          node-version: "18.14.1"
+      - name: Set up Go
         uses: actions/setup-go@v2
         with:
           go-version: 1.17
@@ -25,18 +22,13 @@ jobs:
         run: |
           echo "清空原有数据"
           rm -rf ./public
-          mkdir -p public/admin
+          mkdir -p public
           echo '构建用户页面'
-          cd ui/website && yarn install && yarn build && cd ../../
-          cp -r ui/website/build/* public/
-          echo '构建管理页面'
-          cd ui/admin && yarn install && yarn build && cd ../../
-          cp -r ui/admin/dist/* public/admin/
-          sed -i 's/\/assets/\/admin\/assets/g' public/admin/index.html
+          cd ui && pnpm install && pnpm build && cd ..
+          cp -r ui/build/* public/
           echo '构建前端数据完成'
           ls public/static
-      -
-        name: Run GoReleaser
+      - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v2
         with:
           distribution: goreleaser

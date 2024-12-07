@@ -37,8 +37,6 @@ coverage
 # Grunt intermediate storage (https://gruntjs.com/creating-plugins#storing-task-files)
 .grunt
 
-
-
 # Bower dependency directory (https://bower.io/)
 bower_components
 
@@ -120,5 +118,4 @@ package-lock.json
 dist/
 
 public/*
-public
 act.secret
