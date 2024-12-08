@@ -5,7 +5,7 @@ info:
   version: 1.0.0
 
 servers:
-  - url: http://localhost:8080
+  - url: http://localhost:6412
     description: 开发环境服务器
 
 components:
@@ -26,8 +26,55 @@ components:
         catelogId:
           type: integer
 
+    AddToolDto:
+      type: object
+      required:
+        - name
+        - url
+      properties:
+        name:
+          type: string
+        url:
+          type: string
+        logo:
+          type: string
+        desc:
+          type: string
+        catelogId:
+          type: integer
+
+    UpdateToolDto:
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        url:
+          type: string
+        logo:
+          type: string
+        desc:
+          type: string
+        catelogId:
+          type: integer
+
     Catelog:
       type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        desc:
+          type: string
+
+    UpdateCatelogDto:
+      type: object
+      required:
+        - id
       properties:
         id:
           type: integer
@@ -57,6 +104,17 @@ components:
         password:
           type: string
 
+    UpdateUserDto:
+      type: object
+      required:
+        - name
+        - password
+      properties:
+        name:
+          type: string
+        password:
+          type: string
+
     ApiToken:
       type: object
       properties:
@@ -69,7 +127,25 @@ components:
         disabled:
           type: integer
 
-    Error:
+    AddTokenDto:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+
+    StandardResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        data:
+          type: object
+
+    ErrorResponse:
       type: object
       properties:
         success:
@@ -86,6 +162,7 @@ components:
 paths:
   /api/login:
     post:
+      security: []
       summary: 用户登录
       requestBody:
         required: true
@@ -99,22 +176,21 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  success:
-                    type: boolean
-                  message:
-                    type: string
-                  data:
-                    type: object
+                allOf:
+                  - $ref: "#/components/schemas/StandardResponse"
+                  - type: object
                     properties:
-                      user:
+                      data:
                         type: object
-                      token:
-                        type: string
+                        properties:
+                          user:
+                            type: object
+                          token:
+                            type: string
 
   /api/logout:
-    post:
+    get:
+      security: []
       summary: 用户登出
       responses:
         "200":
@@ -122,62 +198,198 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  success:
-                    type: boolean
-                  message:
-                    type: string
+                $ref: "#/components/schemas/StandardResponse"
 
-  /api/tools:
+  /api/:
     get:
-      summary: 导出所有工具
+      security: []
+      summary: 获取所有数据
       responses:
         "200":
-          description: 成功获取工具列表
+          description: 成功获取所有数据
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  success:
-                    type: boolean
-                  message:
-                    type: string
-                  data:
-                    type: array
-                    items:
-                      $ref: "#/components/schemas/Tool"
+                allOf:
+                  - $ref: "#/components/schemas/StandardResponse"
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          tools:
+                            type: array
+                            items:
+                              $ref: "#/components/schemas/Tool"
+                          catelogs:
+                            type: array
+                            items:
+                              $ref: "#/components/schemas/Catelog"
+                          setting:
+                            $ref: "#/components/schemas/Setting"
 
+  /api/admin/all:
+    get:
+      summary: 管理员获取所有数据
+      security:
+        - BearerAuth: []
+      responses:
+        "200":
+          description: 成功获取所有数据
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/StandardResponse"
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          tools:
+                            type: array
+                            items:
+                              $ref: "#/components/schemas/Tool"
+                          catelogs:
+                            type: array
+                            items:
+                              $ref: "#/components/schemas/Catelog"
+                          setting:
+                            $ref: "#/components/schemas/Setting"
+                          user:
+                            type: object
+                            properties:
+                              name:
+                                type: string
+                              id:
+                                type: string
+                          tokens:
+                            type: array
+                            items:
+                              $ref: "#/components/schemas/ApiToken"
+
+  /api/admin/exportTools:
+    get:
+      summary: 导出所有工具
+      security:
+        - BearerAuth: []
+      responses:
+        "200":
+          description: 成功导出工具列表
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/StandardResponse"
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/Tool"
+
+  /api/admin/importTools:
     post:
-      summary: 添加新工具
+      summary: 导入工具列表
+      security:
+        - BearerAuth: []
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              type: object
-              required:
-                - name
-                - url
-              properties:
-                name:
-                  type: string
-                url:
-                  type: string
-                logo:
-                  type: string
-                desc:
-                  type: string
-                catelogId:
-                  type: integer
+              type: array
+              items:
+                $ref: "#/components/schemas/Tool"
+      responses:
+        "200":
+          description: 导入成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StandardResponse"
+
+  /api/img:
+    get:
+      security: []
+      summary: 获取 logo 图片
+      parameters:
+        - name: url
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: 成功获取图片
+          content:
+            image/*:
+              schema:
+                type: string
+                format: binary
+
+  /manifest.json:
+    get:
+      security: []
+      summary: 获取 PWA manifest
+      responses:
+        "200":
+          description: 成功获取 manifest
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  short_name:
+                    type: string
+                  name:
+                    type: string
+                  icons:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        src:
+                          type: string
+                        type:
+                          type: string
+                        sizes:
+                          type: string
+                  start_url:
+                    type: string
+                  display:
+                    type: string
+                  scope:
+                    type: string
+                  theme_color:
+                    type: string
+                  background_color:
+                    type: string
+
+  /api/admin/tool:
+    post:
+      summary: 添加新工具
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AddToolDto"
       responses:
         "200":
           description: 添加成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StandardResponse"
 
-  /api/tools/{id}:
+  /api/admin/tool/{id}:
     delete:
       summary: 删除工具
+      security:
+        - BearerAuth: []
       parameters:
         - name: id
           in: path
@@ -187,9 +399,15 @@ paths:
       responses:
         "200":
           description: 删除成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StandardResponse"
 
     put:
       summary: 更新工具
+      security:
+        - BearerAuth: []
       parameters:
         - name: id
           in: path
@@ -201,14 +419,20 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Tool"
+              $ref: "#/components/schemas/UpdateToolDto"
       responses:
         "200":
           description: 更新成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StandardResponse"
 
-  /api/catelogs:
+  /api/admin/catelog:
     post:
       summary: 添加新分类
+      security:
+        - BearerAuth: []
       requestBody:
         required: true
         content:
@@ -225,10 +449,16 @@ paths:
       responses:
         "200":
           description: 添加分类成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StandardResponse"
 
-  /api/catelogs/{id}:
+  /api/admin/catelog/{id}:
     delete:
       summary: 删除分类
+      security:
+        - BearerAuth: []
       parameters:
         - name: id
           in: path
@@ -238,9 +468,15 @@ paths:
       responses:
         "200":
           description: 删除分类成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StandardResponse"
 
     put:
       summary: 更新分类
+      security:
+        - BearerAuth: []
       parameters:
         - name: id
           in: path
@@ -252,45 +488,51 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Catelog"
+              $ref: "#/components/schemas/UpdateCatelogDto"
       responses:
         "200":
           description: 更新分类成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StandardResponse"
 
-  /api/settings:
-    put:
-      summary: 更新系统设置
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/Setting"
-      responses:
-        "200":
-          description: 更新设置成功
-
-  /api/tokens:
+  /api/admin/apiToken:
     post:
       summary: 添加 API Token
+      security:
+        - BearerAuth: []
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              type: object
-              required:
-                - name
-              properties:
-                name:
-                  type: string
+              $ref: "#/components/schemas/AddTokenDto"
       responses:
         "200":
           description: 添加 Token 成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/StandardResponse"
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                          value:
+                            type: string
+                          name:
+                            type: string
 
-  /api/tokens/{id}:
+  /api/admin/apiToken/{id}:
     delete:
       summary: 删除 API Token
+      security:
+        - BearerAuth: []
       parameters:
         - name: id
           in: path
@@ -300,31 +542,48 @@ paths:
       responses:
         "200":
           description: 删除 Token 成功
-
-  /api/logo:
-    get:
-      summary: 获取 Logo 图片
-      parameters:
-        - name: url
-          in: query
-          required: true
-          schema:
-            type: string
-      responses:
-        "200":
-          description: 成功返回图片
           content:
-            image/*:
+            application/json:
               schema:
-                type: string
-                format: binary
+                $ref: "#/components/schemas/StandardResponse"
 
-  /manifest.json:
-    get:
-      summary: 获取应用 manifest 文件
+  /api/admin/setting:
+    put:
+      summary: 更新系统设置
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Setting"
       responses:
         "200":
-          description: 成功返回 manifest 配置
+          description: 更新设置成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StandardResponse"
+
+  /api/admin/user:
+    put:
+      summary: 更新用户信息
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateUserDto"
+      responses:
+        "200":
+          description: 更新用户信息成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StandardResponse"
 
 security:
   - BearerAuth: []
