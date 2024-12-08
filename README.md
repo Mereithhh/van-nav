@@ -146,7 +146,7 @@ sudo systemctl daemon-reload && sudo systemctl enable --now VanNav.service
 
 尝试用 ai 生成 api 文档，具体请看
 
-> [API 文档](./openapi.yaml)
+> [API 文档](https://van-nav-api.mereith.dev)
 
 ## 状态
 
