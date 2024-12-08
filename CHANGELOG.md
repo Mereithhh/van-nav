@@ -2,7 +2,43 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.11.0]
+
+### 🚀 Features
+
+- Jwt secret 轮换
+- 默认 30 天过期
+- 更新一份 api 文档(beta)
+- 后台增加拖拽排序功能 #48
+
+### 🐛 Bug Fixes
+
+- 去掉后台分类管理冗余图片
+
+### 📚 Documentation
+
+- Update image
+- 更新 api 文档'
+- Update readme
+
 ## [1.10.0] - 2024-12-07
+
+### 🐛 Bug Fixes
+
+- Run errror
+- Build error
+
+### 📚 Documentation
+
+- Update changelog
+- Update image
+
+### ⚙️ Miscellaneous Tasks
+
+- Build failed
+- Build error
+
+## [1.9.3] - 2024-12-07
 
 ### 🚜 Refactor
 
