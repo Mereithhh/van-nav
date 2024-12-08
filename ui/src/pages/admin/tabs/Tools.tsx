@@ -553,12 +553,18 @@ export const Tools: React.FC<ToolsProps> = (props) => {
             </Form.Item>
             <Form.Item
               name="url"
-              rules={[{ required: true, message: "请填写网址" }]}
+              rules={[
+                { required: true, message: "请填写网址" },
+                {
+                  pattern: /^(https?:\/\/)/,
+                  message: "网址必须以 http:// 或 https:// 开头"
+                }
+              ]}
               required
               label="网址"
               labelCol={{ span: 4 }}
             >
-              <Input placeholder="请输入 url" />
+              <Input placeholder="请输入完整URL（以 http:// 或 https:// 开头）" />
             </Form.Item>
             <Form.Item name="logo" label="logo 网址" labelCol={{ span: 4 }}>
               <Input placeholder="请输入 logo url, 为空则自动获取" />
@@ -579,7 +585,7 @@ export const Tools: React.FC<ToolsProps> = (props) => {
               rules={[{ required: true, message: "请填写描述" }]}
               name="desc"
               required
-              label="描���"
+              label="描述"
               labelCol={{ span: 4 }}
             >
               <Input placeholder="请输入描述" />
@@ -652,7 +658,7 @@ export const Tools: React.FC<ToolsProps> = (props) => {
             >
               <Select
                 options={getOptions(store?.catelogs || [])}
-                placeholder="请选择分类"
+                placeholder="请选���分类"
               />
             </Form.Item>
             <Form.Item name="desc" required label="描述" labelCol={{ span: 4 }}>

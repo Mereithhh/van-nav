@@ -1,8 +1,8 @@
 package utils
 
 import (
-	"fmt"
-	"math/rand"
+	"crypto/rand"
+	"encoding/hex"
 	"net/http"
 	"time"
 
@@ -13,7 +13,12 @@ import (
 )
 
 func RandomJWTKey() string {
-	return fmt.Sprintf("%d", rand.Intn(1000000000000000000))
+	bytes := make([]byte, 32)
+	if _, err := rand.Read(bytes); err != nil {
+		logger.LogError("生成随机密钥失败: %v", err)
+		return "fallback_secret_key_12345"
+	}
+	return hex.EncodeToString(bytes)
 }
 
 // JTW 密钥
