@@ -141,3 +141,7 @@ export const fetchDeleteApiToken = async (id: number) => {
     const { data } = await axios.delete(`/api/admin/apiToken/${id}`);
     return data?.data || {};
 };
+export const fetchUpdateToolsSort = async (updates: { id: number; sort: number }[]) => {
+    const { data } = await axios.put(`/api/admin/tools/sort`, updates);
+    return data?.data || {};
+};

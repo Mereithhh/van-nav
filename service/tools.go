@@ -127,3 +127,27 @@ func UpdateToolIcon(id int64, logo string) {
 	utils.CheckErr(err)
 	UpdateImg(logo)
 }
+func UpdateToolsSort(updates []types.UpdateToolsSortDto) error {
+	tx, err := database.DB.Begin()
+	if err != nil {
+		return err
+	}
+
+	sql := `UPDATE nav_table SET sort = ? WHERE id = ?`
+	stmt, err := tx.Prepare(sql)
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+	defer stmt.Close()
+
+	for _, update := range updates {
+		_, err = stmt.Exec(update.Sort, update.Id)
+		if err != nil {
+			tx.Rollback()
+			return err
+		}
+	}
+
+	return tx.Commit()
+}

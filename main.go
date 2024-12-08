@@ -96,6 +96,7 @@ func main() {
 			admin.POST("/tool", handler.AddToolHandler)
 			admin.DELETE("/tool/:id", handler.DeleteToolHandler)
 			admin.PUT("/tool/:id", handler.UpdateToolHandler)
+			admin.PUT("/tools/sort", handler.UpdateToolsSortHandler)
 
 			admin.POST("/catelog", handler.AddCatelogHandler)
 			admin.DELETE("/catelog/:id", handler.DeleteCatelogHandler)

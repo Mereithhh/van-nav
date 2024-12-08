@@ -15,8 +15,8 @@ import {
   Tooltip,
   Switch
 } from "antd";
-import { QuestionCircleOutlined } from '@ant-design/icons';
-import { useCallback, useState } from "react";
+import { QuestionCircleOutlined, HolderOutlined } from '@ant-design/icons';
+import React, { useCallback, useState, useEffect, useContext, useMemo } from "react";
 import { getFilter, getOptions, mutiSearch } from "../../../utils/admin";
 import {
   fetchAddTool,
@@ -24,8 +24,82 @@ import {
   fetchExportTools,
   fetchImportTools,
   fetchUpdateTool,
+  fetchUpdateToolsSort,
 } from "../../../utils/api";
 import { useData } from "../hooks/useData";
+import type { DragEndEvent } from '@dnd-kit/core';
+import { DndContext } from '@dnd-kit/core';
+import type { SyntheticListenerMap } from '@dnd-kit/core/dist/hooks/utilities';
+import { restrictToVerticalAxis } from '@dnd-kit/modifiers';
+import { arrayMove, SortableContext, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+
+interface DataType {
+  id: number;
+  name: string;
+  sort: number;
+  [key: string]: any;
+}
+
+interface RowContextProps {
+  setActivatorNodeRef?: (element: HTMLElement | null) => void;
+  listeners?: SyntheticListenerMap;
+}
+
+const RowContext = React.createContext<RowContextProps>({});
+
+const DragHandle: React.FC = () => {
+  const { setActivatorNodeRef, listeners } = useContext(RowContext);
+  return (
+    <Button
+      type="text"
+      size="small"
+      icon={<HolderOutlined />}
+      style={{ cursor: 'move', touchAction: 'none' }}
+      ref={setActivatorNodeRef}
+      {...listeners}
+    />
+  );
+};
+
+interface RowProps extends React.HTMLAttributes<HTMLTableRowElement> {
+  'data-row-key': React.Key;
+}
+
+const Row = ({ children, ...props }: RowProps) => {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    setActivatorNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({
+    id: props['data-row-key']?.toString() || '',
+  });
+
+  const style: React.CSSProperties = {
+    ...props.style,
+    transform: CSS.Translate.toString(transform),
+    transition,
+    ...(isDragging ? { position: 'relative', zIndex: 9999 } : {}),
+  };
+
+  const contextValue = useMemo<RowContextProps>(
+    () => ({ setActivatorNodeRef, listeners }),
+    [setActivatorNodeRef, listeners],
+  );
+
+  return (
+    <RowContext.Provider value={contextValue}>
+      <tr {...props} ref={setNodeRef} style={style} {...attributes}>
+        {children}
+      </tr>
+    </RowContext.Provider>
+  );
+};
+
 export interface ToolsProps { }
 export const Tools: React.FC<ToolsProps> = (props) => {
   const { store, loading, reload } = useData();
@@ -37,6 +111,8 @@ export const Tools: React.FC<ToolsProps> = (props) => {
   const [catelogName, setCatelogName] = useState("");
   const [updateForm] = Form.useForm();
   const [selectedRows, setSelectRows] = useState<any>([]);
+  const [dataSource, setDataSource] = useState<DataType[]>([]);
+
   const handleDelete = useCallback(
     async (id: number) => {
       try {
@@ -157,12 +233,61 @@ export const Tools: React.FC<ToolsProps> = (props) => {
     message.success("导出成功！");
     reload();
   }, [reload]);
-  const numberText = `当前共 ${store?.tools?.length ?? 0} 条`;
+
+  const onDragEnd = ({ active, over }: DragEndEvent) => {
+    if (active.id !== over?.id) {
+      setDataSource((previous) => {
+        const activeIndex = previous.findIndex((i) => i.id.toString() === active.id);
+        const overIndex = previous.findIndex((i) => i.id.toString() === over?.id);
+
+        // 计算新的排序值
+        const newData = arrayMove(previous, activeIndex, overIndex);
+        const updates = newData.map((item, index) => ({
+          id: item.id,
+          sort: index + 1,
+        }));
+
+        // 调用后端接口更新排序
+        fetchUpdateToolsSort(updates).then(() => {
+          message.success('排序更新成功');
+          reload();
+        }).catch(() => {
+          message.error('排序更新失败');
+        });
+
+        return newData;
+      });
+    }
+  };
+
+  // 在 useEffect 中初始化 dataSource
+  useEffect(() => {
+    if (store?.tools) {
+      const filteredData = store.tools
+        .filter((item: any) => {
+          let show = false;
+          if (searchString === "") {
+            show = true;
+          } else {
+            show = mutiSearch(item.name, searchString) || mutiSearch(item.desc, searchString);
+          }
+          if (!catelogName || catelogName === "") {
+            show = show && true;
+          } else {
+            show = show && mutiSearch(item.catelog, catelogName);
+          }
+          return show;
+        })
+        .sort((a: DataType, b: DataType) => a.sort - b.sort);
+      setDataSource(filteredData);
+    }
+  }, [store?.tools, searchString, catelogName]);
+
   return (
     <Card
       title={
         <Space>
-          <span>{numberText}</span>
+          <span>{`当前共 ${store?.tools?.length ?? 0} 条`}</span>
           {selectedRows.length > 0 && (
             <Popconfirm
               title="确定删除这些吗？"
@@ -190,7 +315,7 @@ export const Tools: React.FC<ToolsProps> = (props) => {
                 handleBulkCacheLogo();
               }}
             >
-              <Button type="link">重新缓存图标</Button>
+              <Button type="link">重置缓存图标</Button>
             </Popconfirm>
           )}
         </Space>
@@ -262,145 +387,145 @@ export const Tools: React.FC<ToolsProps> = (props) => {
       }
     >
       <Spin spinning={loading}>
-        <Table
-          dataSource={
-            store?.tools?.filter((item: any) => {
-              let show = false;
-              // 过滤名称或描述
-              if (searchString === "") {
-                show = true;
-              } else {
-                show = mutiSearch(item.name, searchString) || mutiSearch(item.desc, searchString);
-              }
-              // 过滤分类
-              if (!catelogName || catelogName === "") {
-                show = show && true;
-              } else {
-                show = show && mutiSearch(item.catelog, catelogName);
-              }
-              return show;
-            }) || []
-          }
-          size="small"
-          rowKey="id"
-          rowSelection={{
-            type: "checkbox",
-            onChange: (selectedRowKeys: React.Key[], selectedRows: any[]) => {
-              setSelectRows(selectedRows);
-            },
-          }}
-          pagination={{
-            showSizeChanger: true,
-            pageSizeOptions: ['10', '20', '50', '100'],
-            defaultPageSize: 10,
-            showTotal: (total) => `共 ${total} 条`
-          }}
-        >
-          <Table.Column title="ID" dataIndex="id" width={40} />
-          <Table.Column
-            title="名称"
-            dataIndex="name"
-            width={120}
-            render={(_, record: any) => {
-              return (
-                <div style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  alignItems: "center"
-                }}>
-                  {" "}
-                  {record.logo.split(".").pop().includes("svg") ? (
-                    <embed
-                      src={`/api/img?url=${record.logo}`}
-                      width={32}
-                      height={32}
-                      type="image/svg+xml"
-                    />
-                  ) : (
-                    <img
-                      src={`/api/img?url=${record.logo}`}
-                      width={32}
-                      height={32}
-                    ></img>
-                  )}
-                  <span style={{ marginLeft: 8 }}>{record.name}</span>
-                </div>
-              );
-            }}
-          />
-          <Table.Column
-            title="分类"
-            dataIndex="catelog"
-            width={60}
-            filters={getFilter(store?.catelogs || [])}
-            onFilter={(value: any, record: any) => {
-              return value === record["catelog"];
-            }}
-          />
-          <Table.Column
-            title="网址"
-            dataIndex="url"
-            width={150}
-            render={(url) => (
-              <div style={{
-                wordBreak: 'break-all',
-                whiteSpace: 'normal'
-              }}>
-                {url}
-              </div>
-            )}
-          />
-          <Table.Column
-            title={
-              <span>排序
-                <Tooltip title="升序，按数字从小到大排序">
-                  <QuestionCircleOutlined style={{ marginLeft: '5px' }} />
-                </Tooltip>
-              </span>
-            }
-            dataIndex="sort"
-            width={50}
-          />
-          <Table.Column title={
-            <span>隐藏
-              <Tooltip title="开启后只有登录后才会展示该工具">
-                <QuestionCircleOutlined style={{ marginLeft: '5px' }} />
-              </Tooltip>
-            </span>
-          } dataIndex={"hide"} width={50} render={(val) => {
-            return Boolean(val) ? "是" : "否"
-          }} />
-
-          <Table.Column
-            title="操作"
-            width={40}
-            dataIndex="action"
-            key="action"
-            render={(_, record: any) => {
-              return (
-                <Space>
-                  <Button
-                    type="link"
-                    onClick={() => {
-                      updateForm.setFieldsValue(record);
-                      setShowEdit(true);
-                    }}
-                  >
-                    修改
-                  </Button>
-                  <Popconfirm
-                    onConfirm={() => {
-                      handleDelete(record.id);
-                    }}
-                    title={`确定要删除 ${record.name} 吗？`}
-                  >
-                    <Button type="link">删除</Button>
-                  </Popconfirm>
-                </Space>
-              );
-            }}
-          />
-        </Table>
+        <DndContext modifiers={[restrictToVerticalAxis]} onDragEnd={onDragEnd}>
+          <SortableContext
+            items={dataSource.map((i) => i.id.toString())}
+            strategy={verticalListSortingStrategy}
+          >
+            <Table
+              components={{
+                body: {
+                  row: Row,
+                },
+              }}
+              rowKey="id"
+              dataSource={dataSource}
+              rowSelection={{
+                type: "checkbox",
+                onChange: (selectedRowKeys: React.Key[], selectedRows: any[]) => {
+                  setSelectRows(selectedRows);
+                },
+              }}
+              pagination={{
+                showSizeChanger: true,
+                pageSizeOptions: ['10', '20', '50', '100'],
+                defaultPageSize: 10,
+                showTotal: (total) => `共 ${total} 条`
+              }}
+            >
+              <Table.Column
+                key="sort"
+                align="center"
+                width={50}
+                title="排序"
+                render={() => <DragHandle />}
+              />
+              <Table.Column title="ID" dataIndex="id" width={40} />
+              <Table.Column
+                title="名称"
+                dataIndex="name"
+                width={120}
+                render={(_, record: any) => {
+                  return (
+                    <div style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      alignItems: "center"
+                    }}>
+                      {" "}
+                      {record.logo.split(".").pop().includes("svg") ? (
+                        <embed
+                          src={`/api/img?url=${record.logo}`}
+                          width={32}
+                          height={32}
+                          type="image/svg+xml"
+                        />
+                      ) : (
+                        <img
+                          src={`/api/img?url=${record.logo}`}
+                          width={32}
+                          height={32}
+                        ></img>
+                      )}
+                      <span style={{ marginLeft: 8 }}>{record.name}</span>
+                    </div>
+                  );
+                }}
+              />
+              <Table.Column
+                title="分类"
+                dataIndex="catelog"
+                width={60}
+                filters={getFilter(store?.catelogs || [])}
+                onFilter={(value: any, record: any) => {
+                  return value === record["catelog"];
+                }}
+              />
+              <Table.Column
+                title="网址"
+                dataIndex="url"
+                width={150}
+                render={(url) => (
+                  <div style={{
+                    wordBreak: 'break-all',
+                    whiteSpace: 'normal'
+                  }}>
+                    {url}
+                  </div>
+                )}
+              />
+              {/* <Table.Column
+                title={
+                  <span>排序
+                    <Tooltip title="升序，按数字从小到大排序">
+                      <QuestionCircleOutlined style={{ marginLeft: '5px' }} />
+                    </Tooltip>
+                  </span>
+                }
+                dataIndex="sort"
+                width={50}
+              /> */}
+              <Table.Column title={
+                <span>隐藏
+                  <Tooltip title="开启后只有登录后才会展示该工具">
+                    <QuestionCircleOutlined style={{ marginLeft: '5px' }} />
+                  </Tooltip>
+                </span>
+              } dataIndex={"hide"} width={50} render={(val) => {
+                return Boolean(val) ? "是" : "否"
+              }} />
+              <Table.Column
+                title="操作"
+                width={40}
+                dataIndex="action"
+                key="action"
+                render={(_, record: any) => {
+                  return (
+                    <Space>
+                      <Button
+                        type="link"
+                        onClick={() => {
+                          updateForm.setFieldsValue(record);
+                          setShowEdit(true);
+                        }}
+                      >
+                        修改
+                      </Button>
+                      <Popconfirm
+                        onConfirm={() => {
+                          handleDelete(record.id);
+                        }}
+                        title={`确定要删除 ${record.name} 吗？`}
+                      >
+                        <Button type="link">删除</Button>
+                      </Popconfirm>
+                    </Space>
+                  );
+                }}
+              />
+            </Table>
+          </SortableContext>
+        </DndContext>
       </Spin>
       {<Modal
         open={showAddModel}
@@ -454,7 +579,7 @@ export const Tools: React.FC<ToolsProps> = (props) => {
               rules={[{ required: true, message: "请填写描述" }]}
               name="desc"
               required
-              label="描述"
+              label="描���"
               labelCol={{ span: 4 }}
             >
               <Input placeholder="请输入描述" />

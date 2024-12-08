@@ -47,3 +47,7 @@ type AddToolDto struct {
 	Sort    int    `json:"sort"`
 	Hide    bool   `json:"hide"`
 }
+type UpdateToolsSortDto struct {
+	Id   int `json:"id"`
+	Sort int `json:"sort"`
+}
