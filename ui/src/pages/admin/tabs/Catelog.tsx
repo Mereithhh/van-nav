@@ -95,8 +95,6 @@ export const Catelog: React.FC<CatelogProps> = (props) => {
             render={(_, record: any) => {
               return (
                 <div>
-                  {" "}
-                  <img src={record.logo} width={32} alt="logo"></img>
                   <span style={{ marginLeft: 8 }}>{record.name}</span>
                 </div>
               );
