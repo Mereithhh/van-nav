@@ -1,16 +1,28 @@
 package utils
 
 import (
+	"fmt"
+	"math/rand"
 	"net/http"
 	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt"
+	"github.com/mereith/nav/logger"
 	"github.com/mereith/nav/types"
 )
 
+func RandomJWTKey() string {
+	return fmt.Sprintf("%d", rand.Intn(1000000000000000000))
+}
+
 // JTW 密钥
 var jwtSecret = []byte("boy_next_door")
+
+func init() {
+	jwtSecret = []byte(RandomJWTKey())
+	logger.LogInfo("jwtSecret Setted: %s", jwtSecret)
+}
 
 // 签名一个 JTW
 func SignJWT(user types.User) (string, error) {
