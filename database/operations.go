@@ -6,6 +6,8 @@ func HasApiToken(token string) bool {
 	if err != nil {
 		return false
 	}
+	defer rows.Close()
+
 	for rows.Next() {
 		return true
 	}

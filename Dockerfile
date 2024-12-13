@@ -1,4 +1,4 @@
-FROM node:18-alpine AS feBuilder
+FROM node:18-alpine AS frontendbuilder
 WORKDIR /app
 COPY . .
 RUN npm install -g pnpm
@@ -10,7 +10,7 @@ FROM golang:alpine AS binarybuilder
 RUN apk --no-cache --no-progress add  git
 WORKDIR /app
 COPY . .
-COPY --from=feBuilder /app/public /app/public
+COPY --from=frontendbuilder /app/public /app/public
 RUN cd /app && ls -la && go mod tidy && go build .
 
 

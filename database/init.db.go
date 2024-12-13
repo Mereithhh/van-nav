@@ -2,6 +2,9 @@ package database
 
 import (
 	"database/sql"
+	"path/filepath"
+
+	_ "modernc.org/sqlite"
 
 	"github.com/mereith/nav/logger"
 	"github.com/mereith/nav/utils"
@@ -20,9 +23,15 @@ func columnExists(tableName string, columnName string) bool {
 }
 
 func InitDB() {
+	var err error
 	utils.PathExistsOrCreate("./data")
 	// 创建数据库
-	DB, _ = sql.Open("sqlite", "./data/nav.db")
+	dir := "./data"
+	dbPath := filepath.Join(dir, "nav.db")
+	// 添加连接参数
+	dbPath = dbPath + "?_journal=WAL&_timeout=5000&_busy_timeout=5000&_txlock=immediate"
+	DB, err = sql.Open("sqlite", dbPath)
+	utils.CheckErr(err)
 	// user 表
 	sql_create_table := `
 		CREATE TABLE IF NOT EXISTS nav_user (
@@ -31,7 +40,7 @@ func InitDB() {
 			password TEXT
 		);
 		`
-	_, err := DB.Exec(sql_create_table)
+	_, err = DB.Exec(sql_create_table)
 	utils.CheckErr(err)
 	// setting 表
 	sql_create_table = `
@@ -159,12 +168,12 @@ func InitDB() {
 	utils.CheckErr(err)
 	if !rows.Next() {
 		sql_add_setting := `
-			INSERT INTO nav_setting (id, favicon, title, govRecord, logo192, logo512, hideAdmin, hideGithub, jumpTargetBlank)
-			VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
+			INSERT INTO nav_setting (favicon, title, govRecord, logo192, logo512, hideAdmin, hideGithub, jumpTargetBlank)
+			VALUES (?, ?, ?, ?, ?, ?, ?, ?);
 			`
 		stmt, err := DB.Prepare(sql_add_setting)
 		utils.CheckErr(err)
-		res, err := stmt.Exec(0, "favicon.ico", "Van Nav", "", "logo192.png", "logo512.png", false, false, true)
+		res, err := stmt.Exec("favicon.ico", "Van Nav", "", "logo192.png", "logo512.png", false, false, true)
 		utils.CheckErr(err)
 		_, err = res.LastInsertId()
 		utils.CheckErr(err)

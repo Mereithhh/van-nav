@@ -1,7 +1,10 @@
 package service
 
 import (
+	"sync"
+
 	"github.com/mereith/nav/database"
+	"github.com/mereith/nav/logger"
 	"github.com/mereith/nav/types"
 	"github.com/mereith/nav/utils"
 )
@@ -54,19 +57,54 @@ func UpdateTool(data types.UpdateToolDto) {
 	UpdateImg(data.Logo)
 }
 
-func AddTool(data types.AddToolDto) int64 {
+func AddTool(data types.AddToolDto) (int64, error) {
+	// 创建一个互斥锁来保护数据库操作
+	var mu sync.Mutex
+	mu.Lock()
+	defer mu.Unlock()
+
+	tx, err := database.DB.Begin()
+	if err != nil {
+		return 0, err
+	}
+	defer func() {
+		if err != nil {
+			tx.Rollback()
+		}
+	}()
+
 	sql_add_tool := `
 		INSERT INTO nav_table (name, url, logo, catelog, desc, sort, hide)
 		VALUES (?, ?, ?, ?, ?, ?, ?);
 		`
-	stmt, err := database.DB.Prepare(sql_add_tool)
-	utils.CheckErr(err)
+	stmt, err := tx.Prepare(sql_add_tool)
+	if err != nil {
+		return 0, err
+	}
+	defer stmt.Close()
+
 	res, err := stmt.Exec(data.Name, data.Url, data.Logo, data.Catelog, data.Desc, data.Sort, data.Hide)
-	utils.CheckErr(err)
+	if err != nil {
+		return 0, err
+	}
+
 	id, err := res.LastInsertId()
-	utils.CheckErr(err)
-	UpdateImg(data.Logo)
-	return id
+	if err != nil {
+		return 0, err
+	}
+
+	err = tx.Commit()
+	if err != nil {
+		return 0, err
+	}
+	logger.LogInfo("新增工具: %s", data.Name)
+
+	// 在事务完成后再异步更新图片
+	if data.Logo != "" {
+		UpdateImg(data.Logo)
+	}
+
+	return id, nil
 }
 
 func GetAllTool() []types.Tool {

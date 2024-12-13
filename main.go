@@ -15,7 +15,6 @@ import (
 
 	"github.com/gin-contrib/gzip"
 	"github.com/gin-gonic/gin"
-	_ "modernc.org/sqlite"
 )
 
 const INDEX = "index.html"

@@ -266,8 +266,17 @@ func AddToolHandler(c *gin.Context) {
 		})
 		return
 	}
+
 	logger.LogInfo("%s 获取 logo: %s", data.Name, data.Logo)
-	id := service.AddTool(data)
+	id, err := service.AddTool(data)
+	if err != nil {
+		utils.CheckErr(err)
+		c.JSON(http.StatusBadRequest, gin.H{
+			"success":      false,
+			"errorMessage": err.Error(),
+		})
+		return
+	}
 	if data.Logo == "" {
 		go service.LazyFetchLogo(data.Url, id)
 	}
