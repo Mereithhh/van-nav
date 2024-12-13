@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.11.2] - 2024-12-13
+
+### 🐛 Bug Fixes
+
+- 重构后浏览器插件无法添加工具
+
+### 📚 Documentation
+
+- Update
+
 ## [1.11.1] - 2024-12-13
 
 ### 🐛 Bug Fixes
@@ -13,6 +23,7 @@ All notable changes to this project will be documented in this file.
 ### 📚 Documentation
 
 - Add faq
+- Update
 
 ## [1.11.0] - 2024-12-08
 
@@ -86,7 +97,7 @@ All notable changes to this project will be documented in this file.
 
 ### 🐛 Bug Fixes
 
-- 默认不展示 icp 证
+- 默认不展示icp证
 
 ## [1.9.0] - 2023-09-15
 
@@ -98,8 +109,8 @@ All notable changes to this project will be documented in this file.
 
 ### 💼 Other
 
-- 添加底部 ICP 备案
-- 底部 ICP 备案样式
+- 添加底部ICP备案
+- 底部ICP备案样式
 
 ### 📚 Documentation
 
@@ -115,7 +126,7 @@ All notable changes to this project will be documented in this file.
 
 ### 🐛 Bug Fixes
 
-- 前台 404 #12
+- 前台404 #12
 
 ### ⚙️ Miscellaneous Tasks
 
@@ -125,7 +136,7 @@ All notable changes to this project will be documented in this file.
 
 ### 🐛 Bug Fixes
 
-- 前台 404 #12
+- 前台404 #12
 
 ### ⚙️ Miscellaneous Tasks
 
@@ -184,7 +195,7 @@ All notable changes to this project will be documented in this file.
 
 - 修改文案
 - 新建工具后再打开浮层会保留上次内容 #9
-- 在非 /admin 刷新后台会 404 #9
+- 在非 /admin 刷新后台会404 #9
 
 ### 📚 Documentation
 
@@ -216,19 +227,19 @@ All notable changes to this project will be documented in this file.
 
 ### 🚀 Features
 
-- 数据库增加排序字段，并实现相应 CRU 接口
+- 数据库增加排序字段，并实现相应CRU接口
 - 后台管理页面增加工具、分类排序字段编辑，工具页面增加"分类"查询条件
 - 修改分类名称时，同步修改工具相关分类名称
 
 ### 🐛 Bug Fixes
 
 - Mac 启动脚本还原
-- 修复 排序 默认值无法提交问题，并增加 tip 提示
+- 修复 排序 默认值无法提交问题，并增加tip提示
 - 后台列表样式错位
 
 ### ⚙️ Miscellaneous Tasks
 
-- 增加 windows 开发启动脚本
+- 增加windows开发启动脚本
 - V1.6.0
 
 ## [1.5.4] - 2023-02-20
@@ -314,7 +325,7 @@ All notable changes to this project will be documented in this file.
 
 ### ⚙️ Miscellaneous Tasks
 
-- Webhook 消息错误
+- Webhook消息错误
 - V1.3.1
 - V1.3.2
 
@@ -409,7 +420,7 @@ All notable changes to this project will be documented in this file.
 
 ### 🐛 Bug Fixes
 
-- 调整 ci
+- 调整ci
 
 ## [1.1.4] - 2022-04-12
 
@@ -541,7 +552,7 @@ All notable changes to this project will be documented in this file.
 
 ### 🐛 Bug Fixes
 
-- 可以搜索 url 了
+- 可以搜索url了
 
 ## [1.0.6] - 2022-04-08
 
