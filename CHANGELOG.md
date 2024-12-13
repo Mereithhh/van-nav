@@ -2,7 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
-## [1.11.0]
+## [1.11.1] - 2024-12-13
+
+### 🐛 Bug Fixes
+
+- 隐藏工具失效,改成后端判断 #49
+- Sql error
+- 轮换 jwt secret 后签发 api token 失效
+
+### 📚 Documentation
+
+- Add faq
+
+## [1.11.0] - 2024-12-08
 
 ### 🚀 Features
 
@@ -14,12 +26,14 @@ All notable changes to this project will be documented in this file.
 ### 🐛 Bug Fixes
 
 - 去掉后台分类管理冗余图片
+- Use crypto/rand
 
 ### 📚 Documentation
 
 - Update image
 - 更新 api 文档'
 - Update readme
+- Changelog
 
 ## [1.10.0] - 2024-12-07
 
