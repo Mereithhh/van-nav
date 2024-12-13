@@ -15,12 +15,11 @@ builds:
       - amd64
       - arm64
       - arm
-      - "386"
     ignore:
-    - goos: windows
-      goarch: arm64
-    - goos: windows
-      goarch: arm
+      - goos: windows
+        goarch: arm64
+      - goos: windows
+        goarch: arm
 archives:
   - replacements:
       darwin: MacOs
@@ -29,13 +28,13 @@ archives:
       amd64: x86_64
       "386": x86
 checksum:
-  name_template: 'checksums.txt'
+  name_template: "checksums.txt"
 snapshot:
   name_template: "{{ incpatch .Version }}-next"
 changelog:
   sort: asc
   filters:
     exclude:
-      - '^docs:'
-      - '^test:'
-      - 'version'
+      - "^docs:"
+      - "^test:"
+      - "version"
