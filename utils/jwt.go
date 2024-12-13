@@ -3,7 +3,6 @@ package utils
 import (
 	"crypto/rand"
 	"encoding/hex"
-	"net/http"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -66,42 +65,4 @@ func IsLogin(c *gin.Context) bool {
 	}
 	token, err := ParseJWT(rawToken)
 	return err == nil && token.Valid
-}
-
-// 定义一个 JWT 的中间件
-func JWTMiddleware() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		rawToken := c.Request.Header.Get("Authorization")
-		if rawToken == "" {
-			c.JSON(http.StatusUnauthorized, gin.H{
-				"success":      false,
-				"errorMessage": "未登录",
-			})
-			c.Abort()
-			return
-		}
-		// 解析 token
-		token, err := ParseJWT(rawToken)
-		if err != nil {
-			c.JSON(http.StatusUnauthorized, gin.H{
-				"success":      false,
-				"errorMessage": "未登录",
-			})
-			c.Abort()
-			return
-		}
-		// 把名称加到上下文
-		if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
-			c.Set("username", claims["name"])
-			c.Set("uid", claims["id"])
-			c.Next()
-		} else {
-			c.JSON(http.StatusUnauthorized, gin.H{
-				"success":      false,
-				"errorMessage": "未登录",
-			})
-			c.Abort()
-			return
-		}
-	}
 }

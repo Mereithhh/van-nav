@@ -11,7 +11,7 @@ import (
 	"github.com/mereith/nav/database"
 	"github.com/mereith/nav/handler"
 	"github.com/mereith/nav/logger"
-	"github.com/mereith/nav/utils"
+	"github.com/mereith/nav/middleware"
 
 	"github.com/gin-contrib/gzip"
 	"github.com/gin-gonic/gin"
@@ -79,7 +79,7 @@ func main() {
 		api.GET("/img", handler.GetLogoImgHandler)
 		// 管理员用的
 		admin := api.Group("/admin")
-		admin.Use(utils.JWTMiddleware())
+		admin.Use(middleware.JWTMiddleware())
 		{
 			admin.POST("/apiToken", handler.AddApiTokenHandler)
 			admin.DELETE("/apiToken/:id", handler.DeleteApiTokenHandler)
