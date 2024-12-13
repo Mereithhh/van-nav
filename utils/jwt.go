@@ -59,6 +59,15 @@ func ParseJWT(tokenString string) (*jwt.Token, error) {
 	return token, err
 }
 
+func IsLogin(c *gin.Context) bool {
+	rawToken := c.Request.Header.Get("Authorization")
+	if rawToken == "" {
+		return false
+	}
+	token, err := ParseJWT(rawToken)
+	return err == nil && token.Valid
+}
+
 // 定义一个 JWT 的中间件
 func JWTMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {

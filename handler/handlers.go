@@ -138,8 +138,13 @@ func UpdateUserHandler(c *gin.Context) {
 }
 
 func GetAllHandler(c *gin.Context) {
+
 	// 获取全部数据
 	tools := service.GetAllTool()
+	if !utils.IsLogin(c) {
+		// 过滤掉隐藏工具
+		tools = utils.FilterHideTools(tools)
+	}
 	catelogs := service.GetAllCatelog()
 	setting := service.GetSetting()
 	c.JSON(200, gin.H{

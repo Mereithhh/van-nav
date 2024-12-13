@@ -12,6 +12,7 @@ import (
 	"time"
 
 	"github.com/mereith/nav/logger"
+	"github.com/mereith/nav/types"
 )
 
 func CheckErr(err error) {
@@ -92,4 +93,14 @@ func GenerateId() int {
 	// 生成一个随机 id
 	id := int(time.Now().Unix())
 	return id
+}
+
+func FilterHideTools(tools []types.Tool) []types.Tool {
+	var result []types.Tool
+	for _, tool := range tools {
+		if !tool.Hide {
+			result = append(result, tool)
+		}
+	}
+	return result
 }
