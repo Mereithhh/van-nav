@@ -170,6 +170,6 @@ func InitDB() {
 		utils.CheckErr(err)
 	}
 	rows.Close()
+	migration_2024_12_13()
 	logger.LogInfo("数据库初始化成功💗")
-	migration()
 }
