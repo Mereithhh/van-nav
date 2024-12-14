@@ -2,15 +2,28 @@
 
 All notable changes to this project will be documented in this file.
 
-## [1.11.2] - 2024-12-13
+## [1.11.3] - 2024-12-14
+
+### 🐛 Bug Fixes
+
+- 后台添加工具后，表单信息没重置 #50
+
+## [1.11.2] - 2024-12-14
 
 ### 🐛 Bug Fixes
 
 - 重构后浏览器插件无法添加工具
+- Skip 386
+- 无法展示
 
 ### 📚 Documentation
 
 - Update
+- Update
+
+### ⚙️ Miscellaneous Tasks
+
+- Build error
 
 ## [1.11.1] - 2024-12-13
 
