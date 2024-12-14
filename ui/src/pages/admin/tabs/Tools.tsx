@@ -534,6 +534,9 @@ export const Tools: React.FC<ToolsProps> = (props) => {
           setShowAddModel(false);
           addForm.resetFields();
         }}
+        afterClose={() => {
+          addForm.resetFields(); // Modal完全关闭后再次重置表单
+        }}
         destroyOnClose={true}
         onOk={() => {
           const values = addForm?.getFieldsValue();
