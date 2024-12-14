@@ -58,7 +58,7 @@ jobs:
         uses: steebchen/kubectl@v2.0.0
         with: # defaults to latest kubectl binary version
           config: ${{ secrets.K8S_CONFIG_DATA }}
-          command: set image deployment/tools-demo -n tools demo=${{ steps.image-name.outputs.DOCKER_IMAGE_NAME }}
+          command: set image deployment/tools-demo -n tools tools=${{ steps.image-name.outputs.DOCKER_IMAGE_NAME }}
       - name: send Message To me
         run: |
           curl -X POST -H "Content-Type: application/json" -d '{"source":"github-ci:van-nav","message":"流水线运行完毕，k8s, k3s 已部署。\n版本: ${{ github.ref_name }}" }' ${{ secrets.WEBHOOK_URL }}
