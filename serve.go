@@ -25,7 +25,7 @@ func Serve(urlPrefix string, fs ServeFileSystem) gin.HandlerFunc {
 			c.Abort()
 		} else {
 			path := c.Request.URL.Path
-			pathHasAPI := strings.Contains(path, "/api")
+			pathHasAPI := strings.Contains(path, "/api") && !strings.Contains(path, "/api-token")
 			// pathHasAdmin := strings.Contains(path, "/admin")
 			// pathHasLogin := strings.Contains(path, "/login")
 			if pathHasAPI {

@@ -123,3 +123,5 @@ act.secret
 .dev
 *.py
 requirements.txt
+
+.DS_Store

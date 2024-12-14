@@ -23,6 +23,8 @@ func JWTMiddleware() gin.HandlerFunc {
 		}
 
 		if database.HasApiToken(rawToken) {
+			c.Set("username", "apiToken")
+			c.Set("uid", 1)
 			c.Next()
 			return
 		}
