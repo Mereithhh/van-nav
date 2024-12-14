@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"path/filepath"
 
-	_ "github.com/glebarez/go-sqlite"
+	_ "modernc.org/sqlite"
 
 	"github.com/mereith/nav/logger"
 	"github.com/mereith/nav/utils"
