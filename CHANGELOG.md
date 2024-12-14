@@ -2,11 +2,25 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.11.4] - 2024-12-14
+
+### 🐛 Bug Fixes
+
+- ApiToken 无法获取工具&api-token 页面不能刷新 #51
+
+### ⚙️ Miscellaneous Tasks
+
+- Cd
+
 ## [1.11.3] - 2024-12-14
 
 ### 🐛 Bug Fixes
 
 - 后台添加工具后，表单信息没重置 #50
+
+### 📚 Documentation
+
+- Update
 
 ## [1.11.2] - 2024-12-14
 
