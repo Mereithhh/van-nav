@@ -4,6 +4,9 @@ before:
   hooks:
     # You may remove this if you don't use go modules.
     - go mod tidy
+    # 添加以下配置来允许脏状态
+git:
+  dirty: true  # 允许在"脏"状态下构建
 builds:
   - env:
       - CGO_ENABLED=0
