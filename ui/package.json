@@ -30,7 +30,7 @@
   },
   "proxy": "http://localhost:6412",
   "scripts": {
-    "start": "PORT=2333 react-scripts start",
+    "start": "PORT=2333 DANGEROUSLY_DISABLE_HOST_CHECK=true react-scripts start",
     "start-win": "set PORT=2333 && react-scripts start",
     "build": "react-scripts build && workbox generateSW workbox-config.js",
     "test": "react-scripts test",

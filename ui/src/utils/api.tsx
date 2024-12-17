@@ -39,6 +39,9 @@ export const FetchList = async () => {
     data.catelogs.forEach(item => {
         catelogs.push(item.name)
     })
+    if (!data.tools) {
+        data.tools = []
+    }
     data.tools.forEach(item => {
         if (!catelogs.includes(item.catelog)) {
             catelogs.push(item.catelog);
