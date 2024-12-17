@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.11.4] - 2024-12-18
+
+### 🐛 Bug Fixes
+
+- fix: 管理入口消失，网站修改信息无效 #52 #53
+
 ## [1.11.3] - 2024-12-14
 
 ### 🐛 Bug Fixes
