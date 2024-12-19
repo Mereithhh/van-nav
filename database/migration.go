@@ -18,7 +18,8 @@ func migration_2024_12_13() {
         CREATE TABLE nav_catelog_new (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             name TEXT,
-            sort INTEGER NOT NULL DEFAULT 0
+            sort INTEGER NOT NULL DEFAULT 0,
+						hide BOOLEAN
         );
     `
 
@@ -29,8 +30,8 @@ func migration_2024_12_13() {
 
 	// 3. 复制数据
 	sql_copy_data := `
-        INSERT INTO nav_catelog_new (id, name, sort)
-        SELECT id, name, sort FROM nav_catelog;
+        INSERT INTO nav_catelog_new (id, name, sort, hide)
+        SELECT id, name, sort, hide FROM nav_catelog;
     `
 
 	_, err = DB.Exec(sql_copy_data)

@@ -22,11 +22,13 @@ type UpdateCatelogDto struct {
 	Id   int    `json:"id"`
 	Name string `json:"name"`
 	Sort int    `json:"sort"`
+	Hide bool   `json:"hide"`
 }
 
 type AddCatelogDto struct {
 	Name string `json:"name"`
 	Sort int    `json:"sort"`
+	Hide bool   `json:"hide"`
 }
 type UpdateToolDto struct {
 	Id      int    `json:"id"`

@@ -46,4 +46,5 @@ type Catelog struct {
 	Id   int    `json:"id"`
 	Name string `json:"name"`
 	Sort int    `json:"sort"`
+	Hide bool   `json:"hide"`
 }

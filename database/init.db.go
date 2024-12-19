@@ -71,6 +71,15 @@ func InitDB() {
 	if !columnExists("nav_setting", "jumpTargetBlank") {
 		DB.Exec(`ALTER TABLE nav_setting ADD COLUMN jumpTargetBlank BOOLEAN;`)
 	}
+	// 设置表表结构升级-20230628
+	if !columnExists("nav_setting", "hideAdmin") {
+		DB.Exec(`ALTER TABLE nav_setting ADD COLUMN hideAdmin BOOLEAN;`)
+	}
+	// 设置表表结构升级-20230627
+	if !columnExists("nav_setting", "hideGithub") {
+		DB.Exec(`ALTER TABLE nav_setting ADD COLUMN hideGithub BOOLEAN;`)
+	}
+
 	// 默认 tools 用的 表
 	sql_create_table = `
 		CREATE TABLE IF NOT EXISTS nav_table (
@@ -107,18 +116,14 @@ func InitDB() {
 
 	// 分类表表结构升级-20230327
 	if !columnExists("nav_catelog", "sort") {
-		DB.Exec(`ALTER TABLE nav_catelog ADD COLUMN sort INTEGER;`)
+		DB.Exec(`ALTER TABLE nav_catelog ADD COLUMN sort INTEGER NOT NULL DEFAULT 0;`)
 	}
 
-	// 设置表表结构升级-20230628
-	if !columnExists("nav_setting", "hideAdmin") {
-		DB.Exec(`ALTER TABLE nav_setting ADD COLUMN hideAdmin BOOLEAN;`)
+	// 分类表表结构升级-20241219-【隐藏分类】
+	if !columnExists("nav_catelog", "hide") {
+		DB.Exec(`ALTER TABLE nav_catelog ADD COLUMN hide BOOLEAN;`)
 	}
-
-	// 设置表表结构升级-20230627
-	if !columnExists("nav_setting", "hideGithub") {
-		DB.Exec(`ALTER TABLE nav_setting ADD COLUMN hideGithub BOOLEAN;`)
-	}
+	migration_2024_12_13() // 只涉及 nav_catelog 表，所以可以放在这里
 
 	// api token 表
 	sql_create_table = `
@@ -179,6 +184,5 @@ func InitDB() {
 		utils.CheckErr(err)
 	}
 	rows.Close()
-	migration_2024_12_13()
 	logger.LogInfo("数据库初始化成功💗")
 }
