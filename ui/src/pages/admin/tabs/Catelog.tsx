@@ -1,12 +1,27 @@
-
-import { Button, Card, Form, Input, InputNumber, Modal, message, Popconfirm, Space, Spin, Table, Tooltip } from 'antd';
-import { QuestionCircleOutlined } from '@ant-design/icons';
-import { useCallback, useState } from 'react';
-import { fetchAddCateLog, fetchDeleteCatelog, fetchUpdateCateLog } from '../../../utils/api';
-import { useData } from '../hooks/useData';
-export interface CatelogProps {
-
-}
+import {
+  Button,
+  Card,
+  Form,
+  Input,
+  InputNumber,
+  Modal,
+  message,
+  Popconfirm,
+  Space,
+  Spin,
+  Table,
+  Tooltip,
+  Switch,
+} from "antd";
+import { QuestionCircleOutlined } from "@ant-design/icons";
+import { useCallback, useState } from "react";
+import {
+  fetchAddCateLog,
+  fetchDeleteCatelog,
+  fetchUpdateCateLog,
+} from "../../../utils/api";
+import { useData } from "../hooks/useData";
+export interface CatelogProps {}
 export const Catelog: React.FC<CatelogProps> = (props) => {
   const { store, loading, reload } = useData();
   const [requestLoading, setRequestLoading] = useState(false);
@@ -102,14 +117,30 @@ export const Catelog: React.FC<CatelogProps> = (props) => {
           />
           <Table.Column
             title={
-              <span>排序
+              <span>
+                排序
                 <Tooltip title="升序，按数字从小到大排序">
-                  <QuestionCircleOutlined style={{ marginLeft: '5px' }} />
+                  <QuestionCircleOutlined style={{ marginLeft: "5px" }} />
                 </Tooltip>
               </span>
             }
             dataIndex="sort"
             width={150}
+          />
+          <Table.Column
+            title={
+              <span>
+                隐藏
+                <Tooltip title="开启后只有登录后才会展示该工具分类">
+                  <QuestionCircleOutlined style={{ marginLeft: "5px" }} />
+                </Tooltip>
+              </span>
+            }
+            dataIndex={"hide"}
+            width={50}
+            render={(val) => {
+              return Boolean(val) ? "是" : "否";
+            }}
           />
           <Table.Column
             title="操作"
@@ -143,7 +174,7 @@ export const Catelog: React.FC<CatelogProps> = (props) => {
         </Table>
       </Spin>
       <Modal
-        visible={showAddModel}
+        open={showAddModel}
         title={"新建分类"}
         onCancel={() => {
           setShowAddModel(false);
@@ -164,19 +195,40 @@ export const Catelog: React.FC<CatelogProps> = (props) => {
             label={
               <span>
                 <Tooltip title="升序，按数字从小到大排序">
-                  <QuestionCircleOutlined style={{ marginLeft: '5px' }} />
+                  <QuestionCircleOutlined style={{ marginLeft: "5px" }} />
                 </Tooltip>
                 &nbsp;排序
               </span>
             }
-            labelCol={{ span: 4 }}>
-            <InputNumber placeholder="请输入分类排序" type="number" defaultValue={1} />
+            labelCol={{ span: 4 }}
+          >
+            <InputNumber
+              placeholder="请输入分类排序"
+              type="number"
+              defaultValue={1}
+            />
+          </Form.Item>
+          <Form.Item
+            name="hide"
+            initialValue={false}
+            required
+            label={
+              <span>
+                <Tooltip title="开启后只有登录后才会展示该工具">
+                  <QuestionCircleOutlined style={{ marginLeft: "5px" }} />
+                </Tooltip>
+                &nbsp;隐藏
+              </span>
+            }
+            labelCol={{ span: 4 }}
+          >
+            <Switch checkedChildren="开" unCheckedChildren="关" />
           </Form.Item>
         </Form>
       </Modal>
 
       <Modal
-        visible={showEdit}
+        open={showEdit}
         title={"修改分类"}
         onCancel={() => {
           setShowEdit(false);
@@ -200,17 +252,33 @@ export const Catelog: React.FC<CatelogProps> = (props) => {
               label={
                 <span>
                   <Tooltip title="升序，按数字从小到大排序">
-                    <QuestionCircleOutlined style={{ marginLeft: '5px' }} />
+                    <QuestionCircleOutlined style={{ marginLeft: "5px" }} />
                   </Tooltip>
                   &nbsp;排序
                 </span>
               }
-              labelCol={{ span: 4 }}>
+              labelCol={{ span: 4 }}
+            >
               <InputNumber placeholder="请输入分类排序" defaultValue={1} />
+            </Form.Item>
+            <Form.Item
+              name="hide"
+              required
+              label={
+                <span>
+                  <Tooltip title="开启后只有登录后才会展示该工具">
+                    <QuestionCircleOutlined style={{ marginLeft: "5px" }} />
+                  </Tooltip>
+                  &nbsp;隐藏
+                </span>
+              }
+              labelCol={{ span: 4 }}
+            >
+              <Switch checkedChildren="开" unCheckedChildren="关" />
             </Form.Item>
           </Form>
         </Spin>
       </Modal>
     </Card>
   );
-}
+};
