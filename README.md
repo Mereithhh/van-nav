@@ -154,6 +154,14 @@ sudo systemctl daemon-reload && sudo systemctl enable --now VanNav.service
 
 - 忘记密码了怎么办： #36
 
+## 参与开发
+
+最近重构过一次，整体的代码结构暂时不会有大变动，所以欢迎参与开发！
+
+如果你有 golang 和 react 开发经验，可以很轻松上手。
+
+如果没有方向，可以试试去解决 issue 里的问题或者开发新功能，开发之前可以先提个 issue 让我知道。
+
 ## 状态
 
 可以优化的点太多了，慢慢完善吧……
