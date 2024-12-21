@@ -150,7 +150,6 @@ func GetAllHandler(c *gin.Context) {
 	tools := service.GetAllTool()
 	// 获取全部数据
 	catelogs := service.GetAllCatelog()
-	print(len(catelogs))
 	if !utils.IsLogin(c) {
 		// 过滤掉隐藏工具
 		tools = utils.FilterHideTools(tools, catelogs)
@@ -159,7 +158,6 @@ func GetAllHandler(c *gin.Context) {
 		// 过滤掉隐藏分类
 		catelogs = utils.FilterHideCates(catelogs)
 	}
-	print(len(catelogs))
 	setting := service.GetSetting()
 	c.JSON(200, gin.H{
 		"success": true,
