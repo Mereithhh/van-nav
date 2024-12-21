@@ -95,7 +95,7 @@ export const AdminPage = () => {
       </header>
 
       {/* Main Content */}
-      <div className="flex flex-1 max-w-[1920px] mx-auto h-[calc(100vh-64px)]">
+      <div className="flex flex-1 w-full mx-auto h-[calc(100vh-64px)]">
         {/* Sidebar */}
         <Sidebar items={menuItems} currentKey={currentKey} onChange={setCurrentKey} />
 
