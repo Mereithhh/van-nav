@@ -113,7 +113,16 @@ func UpdateSettingHandler(c *gin.Context) {
 		})
 		return
 	}
-	service.UpdateSetting(data)
+	logger.LogInfo("更新配置: %+v", data)
+	err := service.UpdateSetting(data)
+	if err != nil {
+		utils.CheckErr(err)
+		c.JSON(http.StatusBadRequest, gin.H{
+			"success":      false,
+			"errorMessage": err.Error(),
+		})
+		return
+	}
 	c.JSON(200, gin.H{
 		"success": true,
 		"message": "更新配置成功",

@@ -2,13 +2,16 @@ package service
 
 import (
 	"github.com/mereith/nav/database"
+	"github.com/mereith/nav/logger"
 	"github.com/mereith/nav/types"
-	"github.com/mereith/nav/utils"
 )
 
 func GetSetting() types.Setting {
 	sql_get_user := `
-		SELECT id,favicon,title,govRecord,logo192,logo512,hideAdmin,hideGithub,jumpTargetBlank FROM nav_setting WHERE id = ?;
+		SELECT id,favicon,title,govRecord,logo192,logo512,hideAdmin,hideGithub,jumpTargetBlank 
+		FROM nav_setting 
+		ORDER BY id ASC 
+		LIMIT 1;
 		`
 	var setting types.Setting
 	row := database.DB.QueryRow(sql_get_user, 0)
@@ -18,8 +21,9 @@ func GetSetting() types.Setting {
 	var jumpTargetBlank interface{}
 	err := row.Scan(&setting.Id, &setting.Favicon, &setting.Title, &setting.GovRecord, &setting.Logo192, &setting.Logo512, &hideAdmin, &hideGithub, &jumpTargetBlank)
 	if err != nil {
+		logger.LogError("获取配置失败: %s", err)
 		return types.Setting{
-			Id:              0,
+			Id:              1,
 			Favicon:         "favicon.ico",
 			Title:           "Van Nav",
 			GovRecord:       "",
@@ -62,17 +66,24 @@ func GetSetting() types.Setting {
 	return setting
 }
 
-func UpdateSetting(data types.Setting) {
+func UpdateSetting(data types.Setting) error {
 	sql_update_setting := `
 		UPDATE nav_setting
 		SET favicon = ?, title = ?, govRecord = ?, logo192 = ?, logo512 = ?, hideAdmin = ?, hideGithub = ?, jumpTargetBlank = ?
-		WHERE id = ?;
+		WHERE id = (SELECT id FROM nav_setting ORDER BY id ASC LIMIT 1);
 		`
 
 	stmt, err := database.DB.Prepare(sql_update_setting)
-	utils.CheckErr(err)
-	res, err := stmt.Exec(data.Favicon, data.Title, data.GovRecord, data.Logo192, data.Logo512, data.HideAdmin, data.HideGithub, data.JumpTargetBlank, 0)
-	utils.CheckErr(err)
+	if err != nil {
+		return err
+	}
+	res, err := stmt.Exec(data.Favicon, data.Title, data.GovRecord, data.Logo192, data.Logo512, data.HideAdmin, data.HideGithub, data.JumpTargetBlank)
+	if err != nil {
+		return err
+	}
 	_, err = res.RowsAffected()
-	utils.CheckErr(err)
+	if err != nil {
+		return err
+	}
+	return nil
 }

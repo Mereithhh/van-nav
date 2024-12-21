@@ -104,5 +104,8 @@ func main() {
 	}
 	logger.LogInfo("应用启动成功，网址: http://localhost:%s", *port)
 	listen := fmt.Sprintf(":%s", *port)
-	router.Run(listen)
+	err := router.Run(listen)
+	if err != nil {
+		logger.LogError("应用启动失败，错误: %s", err)
+	}
 }
