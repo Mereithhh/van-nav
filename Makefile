@@ -16,8 +16,7 @@ run-api:
 # Run the application
 run:
 	@go run .  &
-	@pnpm install --prefix ./ui/website
-	@pnpm run start --prefix ./ui/website
+	@cd ./ui && pnpm run start
 
 # Clean the binary
 clean:
