@@ -2,17 +2,62 @@
 
 All notable changes to this project will be documented in this file.
 
-## [1.11.5] - 2024-12-18
+## [1.12.0] - 2024-12-21
+
+### 🚀 Features
+
+- 前台实现隐藏分类，后台实现隐藏编辑 #56
 
 ### 🐛 Bug Fixes
 
-- fix: 管理入口消失，网站修改信息无效 #52 #53
+- 移除多余的 print
+
+## [1.11.5] - 2024-12-21
+
+### 🐛 Bug Fixes
+
+- 管理入口消失，网站修改信息无效 #52 #53
+- Allow dirty
+- Build error
+- Build error
+- 网站修改信息无效 #52 #53
+
+### 📚 Documentation
+
+- Update
+- Update
+- Update
+
+### ⚙️ Miscellaneous Tasks
+
+- 优化流水线速度
+- Build
+- Update deps
+- Build error
 
 ## [1.11.4] - 2024-12-14
 
 ### 🐛 Bug Fixes
 
-- 后台添加工具后，表单信息没重置 & 无法通过插件获取工具列表 #50
+- ApiToken 无法获取工具&api-token 页面不能刷新 #51
+
+### 📚 Documentation
+
+- Update
+
+### ⚙️ Miscellaneous Tasks
+
+- Cd
+
+## [1.11.3] - 2024-12-14
+
+### 🐛 Bug Fixes
+
+- 后台添加工具后，表单信息没重置 #50
+
+### 📚 Documentation
+
+- Update
 
 ## [1.11.2] - 2024-12-14
 
