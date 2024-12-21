@@ -29,11 +29,12 @@ jobs:
           cp -r ui/build/* public/
           echo '构建前端数据完成'
           ls public/static
+          git stash
       - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v2
         with:
           distribution: goreleaser
           version: v1.18.2
-          args: release --skip=validate
+          args: release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
