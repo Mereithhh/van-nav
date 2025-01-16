@@ -7,11 +7,7 @@ const Card = ({ title, url, des, logo, catelog, onClick, index, isSearching }) =
     if (url === "admin") {
       return <img src={logo} alt={title} />
     } else {
-      if (logo.split(".").pop().includes("svg")) {
-        return <embed src={getLogoUrl(logo)} type="image/svg+xml" />
-      } else {
         return <img src={getLogoUrl(logo)} alt={title} />
-      }
     }
   }, [logo, title, url])
   const showNumIndex = index < 10 && isSearching;
