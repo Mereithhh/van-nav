@@ -96,7 +96,7 @@ func GenerateId() int {
 }
 
 func FilterHideTools(tools []types.Tool, cates []types.Catelog) []types.Tool {
-	var result []types.Tool
+	result := make([]types.Tool, 0)
 	var hideCates []string
 	// 提取出需要隐藏的分类
 	for _, cate := range cates {
@@ -114,7 +114,7 @@ func FilterHideTools(tools []types.Tool, cates []types.Catelog) []types.Tool {
 }
 
 func FilterHideCates(cates []types.Catelog) []types.Catelog {
-	var result []types.Catelog
+	result := make([]types.Catelog, 0)
 	for _, cate := range cates {
 		if !cate.Hide {
 			result = append(result, cate)
