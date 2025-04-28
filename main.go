@@ -56,6 +56,7 @@ func BinaryFileSystem(data embed.FS, root string) *binaryFileSystem {
 	}
 }
 
+var addr = flag.String("addr", "127.0.0.1", "指定监听地址")
 var port = flag.String("port", "6412", "指定监听端口")
 
 func main() {
@@ -102,8 +103,8 @@ func main() {
 			admin.PUT("/catelog/:id", handler.UpdateCatelogHandler)
 		}
 	}
-	logger.LogInfo("应用启动成功，网址: http://localhost:%s", *port)
-	listen := fmt.Sprintf(":%s", *port)
+	logger.LogInfo("应用启动成功，网址: http://%s:%s", *addr, *port)
+	listen := fmt.Sprintf("%s:%s", *addr, *port)
 	err := router.Run(listen)
 	if err != nil {
 		logger.LogError("应用启动失败，错误: %s", err)
