@@ -58,6 +58,7 @@ func BinaryFileSystem(data embed.FS, root string) *binaryFileSystem {
 }
 
 var port = flag.String("port", "6412", "指定监听端口")
+var addr = flag.String("addr", "0.0.0.0", "指定监听地址")
 
 func main() {
 	flag.Parse()
@@ -105,7 +106,7 @@ func main() {
 		}
 	}
 	logger.LogInfo("应用启动成功，网址: http://localhost:%s", *port)
-	listen := fmt.Sprintf(":%s", *port)
+	listen := fmt.Sprintf("%s:%s", *addr, *port)
 	srv := &http.Server{
 		Addr:         listen,
 		Handler:      router,
