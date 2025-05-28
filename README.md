@@ -150,9 +150,9 @@ sudo systemctl daemon-reload && sudo systemctl enable --now VanNav.service
 
 > [API 文档](https://van-nav-api.mereith.dev)
 
-## FQA
+## FAQ
 
-- 忘记密码了怎么办： #36
+- 忘记密码了怎么办： [看这里](https://github.com/Mereithhh/van-nav/issues/36)
 
 ## 参与开发
 

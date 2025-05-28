@@ -6,7 +6,7 @@ RUN cd /app && cd ui && pnpm install && CI=false pnpm build && cd ..
 RUN cd /app && mkdir -p public
 RUN cp -r ui/build/* public/
 
-FROM golang:1.19-alpine3.18 AS binarybuilder
+FROM golang:1.23-alpine AS binarybuilder
 RUN apk --no-cache --no-progress add  git
 WORKDIR /app
 COPY . .

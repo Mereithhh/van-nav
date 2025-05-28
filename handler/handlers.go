@@ -171,23 +171,39 @@ func GetAllHandler(c *gin.Context) {
 
 func GetLogoImgHandler(c *gin.Context) {
 	url := c.Query("url")
-
+	if url == "" {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"success":      false,
+			"errorMessage": "URL参数不能为空",
+		})
+		return
+	}
 	img := service.GetImgFromDB(url)
-	imgBuffer, _ := base64.StdEncoding.DecodeString(img.Value)
-	// 检测不同的格式发送不同的响应头
+	if img.Value == "" {
+		c.JSON(http.StatusNotFound, gin.H{
+			"success":      false,
+			"errorMessage": "未找到图片",
+		})
+		return
+	}
+	imgBuffer, err := base64.StdEncoding.DecodeString(img.Value)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"success":      false,
+			"errorMessage": "图片解码失败",
+		})
+		return
+	}
 	l := strings.Split(url, ".")
 	suffix := l[len(l)-1]
-	var t string = "image/x-icon"
+	t := "image/x-icon"
 	if suffix == "svg" || strings.Contains(url, ".svg") {
 		t = "image/svg+xml"
-	}
-	if suffix == "png" {
+	} else if suffix == "png" {
 		t = "image/png"
 	}
-	c.Writer.Header().Set("content-type", t)
-	c.Writer.WriteString(string(imgBuffer))
-	// resStr := "data:image/x-icon;base64," + img.Value
-	// c.Writer.WriteString(resStr)
+	// 直接输出二进制数据，避免string转换导致的内存多分配
+	c.Data(http.StatusOK, t, imgBuffer)
 }
 
 func GetAdminAllDataHandler(c *gin.Context) {

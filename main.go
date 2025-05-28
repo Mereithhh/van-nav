@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"path"
 	"strings"
+	"time"
 
 	"github.com/mereith/nav/database"
 	"github.com/mereith/nav/handler"
@@ -63,7 +64,8 @@ func main() {
 	database.InitDB()
 	gin.SetMode(gin.ReleaseMode)
 	router := gin.Default()
-	router.Use(gzip.Gzip(gzip.DefaultCompression))
+	router.Use(gzip.Gzip(gzip.DefaultCompression, gzip.WithExcludedExtensions([]string{".png", ".jpg", ".jpeg", ".ico", ".svg"})))
+	//router.Use(gzip.Gzip(gzip.DefaultCompression))
 	// 嵌入文件夹
 	router.GET("/manifest.json", handler.ManifastHanlder)
 	router.Use(Serve("/", BinaryFileSystem(fs, "public")))
@@ -104,8 +106,16 @@ func main() {
 	}
 	logger.LogInfo("应用启动成功，网址: http://localhost:%s", *port)
 	listen := fmt.Sprintf(":%s", *port)
-	err := router.Run(listen)
-	if err != nil {
+	srv := &http.Server{
+		Addr:         listen,
+		Handler:      router,
+		ReadTimeout:  3 * time.Second, // 可根据实际需要调整
+		WriteTimeout: 3 * time.Second, // 可根据实际需要调整
+		IdleTimeout:  3 * time.Second, // 建议设置为 10s 或更短
+	}
+
+	err := srv.ListenAndServe()
+	if err != nil && err != http.ErrServerClosed {
 		logger.LogError("应用启动失败，错误: %s", err)
 	}
 }
