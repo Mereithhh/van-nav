@@ -142,8 +142,11 @@ export const Setting: React.FC<SettingProps> = (props) => {
             <Form.Item label="隐藏管理员后台卡片" name="hideAdmin" tooltip="默认展示，开启后将在前台隐藏管理员卡片" >
               <Switch defaultChecked={Boolean(store?.setting?.hideAdmin)} />
             </Form.Item>
-            <Form.Item label="隐藏 Github 按钮" name="hideGithub" tooltip="默认展示，开启后将在前台 Github 按钮" >
+            <Form.Item label="隐藏 Github 按钮" name="hideGithub" tooltip="默认展示，开启后将在前台隐藏 Github 按钮" >
               <Switch defaultChecked={Boolean(store?.setting?.hideGithub)} />
+            </Form.Item>
+            <Form.Item label="隐藏跳转方式卡片" name="hideToggleJumpTarget" tooltip="默认展示，开启后将在前台隐藏跳转方式卡片" >
+              <Switch defaultChecked={Boolean(store?.setting?.hideToggleJumpTarget)} />
             </Form.Item>
             <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
               <Button type="primary" htmlType="submit">

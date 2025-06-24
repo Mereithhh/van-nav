@@ -62,16 +62,16 @@ export const FetchList = async () => {
     }
 
     const jumpTarget = getJumpTarget();
-
-    data.tools.push({
-        id: 999099999978,
-        catelogs: "偏好设置",
-        name: jumpTarget === "blank" ? "新建窗口" : "原地跳转",
-        desc: `点击切换跳转方式`,
-        url: "toggleJumpTarget",
-        logo: jumpTarget === "blank" ? blankJumpIcon : selfJumpIcon
-    })
-
+    if (!data.setting?.hideToggleJumpTarget) {
+        data.tools.push({
+            id: 999099999978,
+            catelogs: "偏好设置",
+            name: jumpTarget === "blank" ? "新建窗口" : "原地跳转",
+            desc: `点击切换跳转方式`,
+            url: "toggleJumpTarget",
+            logo: jumpTarget === "blank" ? blankJumpIcon : selfJumpIcon
+        })
+    }
     data.catelogs = catelogs;
     return data;
 };

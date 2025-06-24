@@ -2,15 +2,16 @@ package types
 
 // 默认是 0
 type Setting struct {
-	Id              int    `json:"id"`
-	Favicon         string `json:"favicon"`
-	Title           string `json:"title"`
-	GovRecord       string `json:"govRecord"`
-	Logo192         string `json:"logo192"`
-	Logo512         string `json:"logo512"`
-	HideAdmin       bool   `json:"hideAdmin"`
-	HideGithub      bool   `json:"hideGithub"`
-	JumpTargetBlank bool   `json:"jumpTargetBlank"`
+	Id                   int    `json:"id"`
+	Favicon              string `json:"favicon"`
+	Title                string `json:"title"`
+	GovRecord            string `json:"govRecord"`
+	Logo192              string `json:"logo192"`
+	Logo512              string `json:"logo512"`
+	HideAdmin            bool   `json:"hideAdmin"`
+	HideGithub           bool   `json:"hideGithub"`
+	HideToggleJumpTarget bool   `json:"hideToggleJumpTarget"`
+	JumpTargetBlank      bool   `json:"jumpTargetBlank"`
 }
 
 type Token struct {
