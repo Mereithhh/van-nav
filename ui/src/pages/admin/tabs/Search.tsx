@@ -49,12 +49,22 @@ const DraggableRow = ({ children, ...props }: any) => {
     ...props.style,
     transform: CSS.Transform.toString(transform),
     transition,
-    cursor: 'move',
     ...(isDragging ? { zIndex: 9999 } : {}),
   };
 
+  // 使用CSS类选择器来限制拖拽区域
+  const modifiedListeners = {
+    ...listeners,
+    onPointerDown: (e: any) => {
+      // 只有点击在拖拽区域时才触发拖拽
+      if (e.target.closest('.drag-handle')) {
+        listeners.onPointerDown?.(e);
+      }
+    }
+  };
+
   return (
-    <tr {...props} ref={setNodeRef} style={style} {...attributes} {...listeners}>
+    <tr {...props} ref={setNodeRef} style={style} {...attributes} {...modifiedListeners}>
       {children}
     </tr>
   );
@@ -89,8 +99,21 @@ const SearchEngineManager: React.FC = () => {
     {
       title: '排序',
       dataIndex: 'sort',
-      width: 30,
-      render: () => <DragOutlined style={{ cursor: 'move', color: '#999' }} />,
+      width: 60,
+      render: (_: any, record: SearchEngine) => (
+        <div 
+          className="drag-handle"
+          style={{ 
+            cursor: 'move', 
+            padding: '8px',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center'
+          }}
+        >
+          <DragOutlined style={{ color: '#999' }} />
+        </div>
+      ),
     },
     {
       title: 'Logo',
