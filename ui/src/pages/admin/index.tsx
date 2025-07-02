@@ -8,6 +8,7 @@ import {
   GearIcon,
   BackpackIcon,
   TableIcon,
+  MagnifyingGlassIcon,
 } from '@radix-ui/react-icons';
 import { useOnce } from '../../utils/useOnce';
 
@@ -23,6 +24,12 @@ const menuItems: MenuItem[] = [
     icon: <TableIcon className="w-5 h-5" />,
     label: '分类管理',
     path: '/admin/categories'
+  },
+  {
+    key: 'search-engines',
+    icon: <MagnifyingGlassIcon className="w-5 h-5" />,
+    label: '搜索引擎管理',
+    path: '/admin/search-engines'
   },
   {
     key: 'api-token',

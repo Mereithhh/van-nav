@@ -48,3 +48,14 @@ type Catelog struct {
 	Sort int    `json:"sort"`
 	Hide bool   `json:"hide"`
 }
+
+// 搜索引擎模型
+type SearchEngine struct {
+	Id          int    `json:"id"`
+	Name        string `json:"name"`
+	BaseUrl     string `json:"baseUrl"`
+	QueryParam  string `json:"queryParam"`
+	Logo        string `json:"logo"`
+	Sort        int    `json:"sort"`
+	Enabled     bool   `json:"enabled"`
+}

@@ -27,6 +27,7 @@ const Content = (props: any) => {
   const [currTag, setCurrTag] = useState("全部工具");
   const [searchString, setSearchString] = useState("");
   const [val, setVal] = useState("");
+  const [searchEngineCards, setSearchEngineCards] = useState<any[]>([]);
 
   const filteredDataRef = useRef<any>([]);
 
@@ -34,6 +35,7 @@ const Content = (props: any) => {
     const hide = data?.setting?.hideGithub === true
     return !hide;
   }, [data])
+  
   const loadData = useCallback(async () => {
     try {
       setLoading(true);
@@ -51,9 +53,25 @@ const Content = (props: any) => {
       setLoading(false);
     }
   }, [setData, setLoading, setCurrTag]);
+  
   useEffect(() => {
     loadData();
   }, [loadData]);
+
+  // 异步加载搜索引擎卡片
+  useEffect(() => {
+    const loadSearchEngineCards = async () => {
+      try {
+        const cards = await generateSearchEngineCard(searchString);
+        setSearchEngineCards(cards);
+      } catch (error) {
+        console.error('加载搜索引擎卡片失败:', error);
+        setSearchEngineCards([]);
+      }
+    };
+
+    loadSearchEngineCards();
+  }, [searchString]);
 
   const handleSetCurrTag = (tag: string) => {
     setCurrTag(tag);
@@ -82,8 +100,6 @@ const Content = (props: any) => {
     }
   }
 
-
-
   const filteredData = useMemo(() => {
     if (data.tools) {
       const localResult = data.tools
@@ -103,11 +119,11 @@ const Content = (props: any) => {
             mutiSearch(item.url, searchString)
           );
         });
-      return [...localResult, ...generateSearchEngineCard(searchString)]
+      return [...localResult, ...searchEngineCards]
     } else {
-      return [...generateSearchEngineCard(searchString)];
+      return [...searchEngineCards];
     }
-  }, [data, currTag, searchString]);
+  }, [data, currTag, searchString, searchEngineCards]);
 
   useEffect(() => {
     filteredDataRef.current = filteredData

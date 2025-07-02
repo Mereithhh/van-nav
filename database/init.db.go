@@ -146,6 +146,58 @@ func InitDB() {
 		`
 	_, err = DB.Exec(sql_create_table)
 	utils.CheckErr(err)
+
+	// 搜索引擎表
+	sql_create_table = `
+		CREATE TABLE IF NOT EXISTS nav_search_engine (
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
+			name TEXT NOT NULL,
+			baseUrl TEXT NOT NULL,
+			queryParam TEXT NOT NULL,
+			logo TEXT,
+			sort INTEGER NOT NULL DEFAULT 0,
+			enabled BOOLEAN NOT NULL DEFAULT 1
+		);
+		`
+	_, err = DB.Exec(sql_create_table)
+	utils.CheckErr(err)
+	
+	// 如果不存在，就初始化默认搜索引擎
+	sql_get_search_engine := `
+		SELECT COUNT(*) FROM nav_search_engine;
+		`
+	var searchEngineCount int
+	err = DB.QueryRow(sql_get_search_engine).Scan(&searchEngineCount)
+	utils.CheckErr(err)
+	if searchEngineCount == 0 {
+		// 初始化默认搜索引擎
+		defaultEngines := []struct {
+			name       string
+			baseUrl    string
+			queryParam string
+			logo       string
+			sort       int
+		}{
+			{"百度", "https://www.baidu.com/s", "wd", "baidu.ico", 1},
+			{"Bing", "https://cn.bing.com/search", "q", "bing.ico", 2},
+			{"Google", "https://www.google.com/search", "q", "google.ico", 3},
+		}
+		
+		sql_add_search_engine := `
+			INSERT INTO nav_search_engine (name, baseUrl, queryParam, logo, sort, enabled)
+			VALUES (?, ?, ?, ?, ?, ?);
+			`
+		stmt, err := DB.Prepare(sql_add_search_engine)
+		utils.CheckErr(err)
+		defer stmt.Close()
+		
+		for _, engine := range defaultEngines {
+			_, err = stmt.Exec(engine.name, engine.baseUrl, engine.queryParam, engine.logo, engine.sort, true)
+			utils.CheckErr(err)
+		}
+		logger.LogInfo("默认搜索引擎初始化成功")
+	}
+	
 	// 如果不存在，就初始化用户
 	sql_get_user := `
 		SELECT * FROM nav_user;

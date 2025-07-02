@@ -15,6 +15,7 @@ const Tools = React.lazy(() => import('./pages/admin/tabs/Tools').then(module =>
 const Catelog = React.lazy(() => import('./pages/admin/tabs/Catelog').then(module => ({ default: module.Catelog })));
 const ApiToken = React.lazy(() => import('./pages/admin/tabs/ApiToken').then(module => ({ default: module.ApiToken })));
 const Setting = React.lazy(() => import('./pages/admin/tabs/Setting').then(module => ({ default: module.Setting })));
+const SearchEngine = React.lazy(() => import('./pages/admin/tabs/Search'));
 
 // 加载中的占位组件
 const LoadingFallback = () => {
@@ -71,6 +72,7 @@ function App() {
               <Route index element={<Tools />} />
               <Route path="tools" element={<Tools />} />
               <Route path="categories" element={<Catelog />} />
+              <Route path="search-engines" element={<SearchEngine />} />
               <Route path="api-token" element={<ApiToken />} />
               <Route path="settings" element={<Setting />} />
             </Route>
