@@ -313,10 +313,28 @@ const SearchEngineManager: React.FC = () => {
           </Form.Item>
           <Form.Item
             name="logo"
-            label="Logo文件名"
-            rules={[{ required: true, message: '请输入Logo文件名' }]}
+            label="Logo"
+            rules={[
+              { required: true, message: '请输入Logo文件名或网址' },
+              {
+                validator: (_, value) => {
+                  if (!value) return Promise.resolve();
+                  
+                  // 检查是否是有效的URL
+                  const urlPattern = /^https?:\/\/.+/i;
+                  // 检查是否是文件名（包含文件扩展名）
+                  const filePattern = /\.(ico|png|jpg|jpeg|gif|svg|webp)$/i;
+                  
+                  if (urlPattern.test(value) || filePattern.test(value)) {
+                    return Promise.resolve();
+                  }
+                  
+                  return Promise.reject(new Error('请输入有效的网址(http/https)或图标文件名(.ico/.png/.jpg等)'));
+                }
+              }
+            ]}
           >
-            <Input placeholder="例如：baidu.ico（需要先上传到public目录）" />
+            <Input placeholder="例如：baidu.ico 或 https://example.com/logo.png" />
           </Form.Item>
         </Form>
       </Modal>
