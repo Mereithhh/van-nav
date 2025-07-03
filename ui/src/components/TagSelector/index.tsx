@@ -9,6 +9,11 @@ const TagSelector = (props: TagSelectorProps) => {
   const { tags = ["all"], onTagChange, currTag } = props;
   const renderTags = useCallback(() => {
     const originTags =  tags.map((each) => {
+      // 处理空分类，显示为"未分类"
+      const displayText = each === null || each === undefined || each === "" || (typeof each === 'string' && each.trim() === "") 
+        ? "未分类" 
+        : each;
+      
       return (
         <span
           className={`select-tag ${
@@ -19,7 +24,7 @@ const TagSelector = (props: TagSelectorProps) => {
             onTagChange(each);
           }}
         >
-          {each}
+          {displayText}
         </span>
       );
     });

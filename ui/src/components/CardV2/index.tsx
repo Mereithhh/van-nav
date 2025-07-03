@@ -10,6 +10,14 @@ const Card = ({ title, url, des, logo, catelog, onClick, index, isSearching }) =
         return <img src={getLogoUrl(logo)} alt={title} />
     }
   }, [logo, title, url])
+  
+  // 处理空分类，显示为"未分类"
+  const displayCatelog = useMemo(() => {
+    return catelog === null || catelog === undefined || catelog === "" || (typeof catelog === 'string' && catelog.trim() === "") 
+      ? "未分类" 
+      : catelog;
+  }, [catelog]);
+  
   const showNumIndex = index < 10 && isSearching;
   return (
     <a
@@ -34,7 +42,7 @@ const Card = ({ title, url, des, logo, catelog, onClick, index, isSearching }) =
         <div className="card-right">
           <div className="card-right-top">
             <span className="card-right-title" title={title}>{title}</span>
-            <span className="card-tag" title={catelog}>{catelog}</span>
+            <span className="card-tag" title={displayCatelog}>{displayCatelog}</span>
           </div>
           <div className="card-right-bottom" title={des}>{des}</div>
         </div>
