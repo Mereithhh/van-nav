@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 
 export interface MenuItem {
@@ -20,7 +20,17 @@ export const Sidebar: React.FC<SidebarProps> = ({
   onChange
 }) => {
   const location = useLocation();
-  const [expanded, setExpanded] = useState(false);
+  
+  // 从localStorage读取侧边栏展开状态，默认为false
+  const [expanded, setExpanded] = useState(() => {
+    const saved = localStorage.getItem('admin-sidebar-expanded');
+    return saved ? JSON.parse(saved) : false;
+  });
+
+  // 当展开状态改变时，保存到localStorage
+  useEffect(() => {
+    localStorage.setItem('admin-sidebar-expanded', JSON.stringify(expanded));
+  }, [expanded]);
 
   return (
     <div className={`h-full bg-white border-r border-gray-200 transition-all duration-300 relative
