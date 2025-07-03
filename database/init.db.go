@@ -237,4 +237,26 @@ func InitDB() {
 	}
 	rows.Close()
 	logger.LogInfo("数据库初始化成功💗")
+
+	// 清理空分类记录 - 删除名称为空或只包含空白字符的分类
+	cleanupEmptyCategories()
+}
+
+// cleanupEmptyCategories 清理空分类记录
+func cleanupEmptyCategories() {
+	// 删除名称为空或只包含空白字符的分类记录
+	sql_cleanup := `
+		DELETE FROM nav_catelog 
+		WHERE name IS NULL OR name = '' OR TRIM(name) = '';
+	`
+	result, err := DB.Exec(sql_cleanup)
+	if err != nil {
+		logger.LogInfo("清理空分类记录时出错: %v", err)
+		return
+	}
+	
+	rowsAffected, err := result.RowsAffected()
+	if err == nil && rowsAffected > 0 {
+		logger.LogInfo("已清理 %d 条空分类记录", rowsAffected)
+	}
 }
