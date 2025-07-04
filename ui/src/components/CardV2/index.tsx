@@ -6,16 +6,36 @@ import { getJumpTarget } from "../../utils/setting";
 const Card = ({ title, url, des, logo, catelog, onClick, index, isSearching, noImageMode, compactMode }) => {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
+  const [showLoading, setShowLoading] = useState(true);
   
   const imageSrc = useMemo(() => {
     return url === "admin" ? logo : getLogoUrl(logo);
   }, [logo, url]);
   
-  // 当图片源变化时重置状态
+  // 当图片源变化时重置状态，并添加超时保护
   useEffect(() => {
     setImageLoaded(false);
     setImageError(false);
+    setShowLoading(true);
+    
+    // 10秒超时保护
+    const timeout = setTimeout(() => {
+      setShowLoading(false);
+      console.warn('Image loading timeout:', imageSrc);
+    }, 10000);
+    
+    return () => clearTimeout(timeout);
   }, [imageSrc]);
+  
+  const handleImageLoad = () => {
+    setImageLoaded(true);
+    setShowLoading(false);
+  };
+  
+  const handleImageError = () => {
+    setImageError(true);
+    setShowLoading(false);
+  };
   
   const el = useMemo(() => {
     if (imageError) {
@@ -30,15 +50,15 @@ const Card = ({ title, url, des, logo, catelog, onClick, index, isSearching, noI
     
     return (
       <>
-        {!imageLoaded && (
+        {showLoading && !imageLoaded && (
           <div className="card-loading-spinner"></div>
         )}
         <img 
           src={imageSrc}
           alt={title}
           loading="lazy"
-          onLoad={() => setImageLoaded(true)}
-          onError={() => setImageError(true)}
+          onLoad={handleImageLoad}
+          onError={handleImageError}
           style={{
             opacity: imageLoaded ? 1 : 0.1,
             transition: 'opacity 0.3s ease'
@@ -46,7 +66,7 @@ const Card = ({ title, url, des, logo, catelog, onClick, index, isSearching, noI
         />
       </>
     );
-  }, [imageSrc, title, imageLoaded, imageError]);
+  }, [imageSrc, title, imageLoaded, imageError, showLoading]);
   
   // 处理空分类，显示为"未分类"
   const displayCatelog = useMemo(() => {
