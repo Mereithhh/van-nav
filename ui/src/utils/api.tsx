@@ -131,6 +131,11 @@ export const fetchUpdateSetting = async (payload: any) => {
     return data?.data || {};
 };
 
+export const fetchUpdateSiteConfig = async (payload: any) => {
+    const { data } = await axios.put(`/api/admin/siteConfig`, payload);
+    return data?.data || {};
+};
+
 export const fetchUpdateUser = async (payload: any) => {
     const { data } = await axios.put(`/api/admin/user`, payload);
     return data?.data || {};

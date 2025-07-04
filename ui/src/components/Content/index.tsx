@@ -153,6 +153,7 @@ const Content = (props: any) => {
           catelog={item.catelog}
           index={index}
           isSearching={searchString.trim() !== ""}
+          noImageMode={data?.siteConfig?.noImageMode || false}
           onClick={() => {
             resetSearch();
             if (item.url === "toggleJumpTarget") {
@@ -164,7 +165,7 @@ const Content = (props: any) => {
       );
     });
     // eslint-disable-next-line
-  }, [filteredData, searchString]);
+  }, [filteredData, searchString, data?.siteConfig?.noImageMode]);
 
   const onKeyEnter = (ev: KeyboardEvent) => {
     const cards = filteredDataRef.current;

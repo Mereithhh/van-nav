@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import "./index.css";
 import { getLogoUrl } from "../../utils/check";
 import { getJumpTarget } from "../../utils/setting";
-const Card = ({ title, url, des, logo, catelog, onClick, index, isSearching }) => {
+const Card = ({ title, url, des, logo, catelog, onClick, index, isSearching, noImageMode }) => {
   const el = useMemo(() => {
     if (url === "admin") {
       return <img src={logo} alt={title} />
@@ -31,14 +31,11 @@ const Card = ({ title, url, des, logo, catelog, onClick, index, isSearching }) =
     >
       {showNumIndex && <span className="card-index">{index + 1}</span>}
       <div className="card-content">
-        <div className="card-left">
-          {el}
-          {/* {url === "admin" ? (
-            <img src={logo} alt={title} />
-          ) : (
-            <img src={`/api/img?url=${logo}`} alt={title} />
-          )} */}
-        </div>
+        {!noImageMode && (
+          <div className="card-left">
+            {el}
+          </div>
+        )}
         <div className="card-right">
           <div className="card-right-top">
             <span className="card-right-title" title={title}>{title}</span>

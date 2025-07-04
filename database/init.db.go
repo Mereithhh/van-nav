@@ -161,6 +161,16 @@ func InitDB() {
 		`
 	_, err = DB.Exec(sql_create_table)
 	utils.CheckErr(err)
+
+	// 网站配置表
+	sql_create_table = `
+		CREATE TABLE IF NOT EXISTS nav_site_config (
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
+			noImageMode BOOLEAN NOT NULL DEFAULT 0
+		);
+		`
+	_, err = DB.Exec(sql_create_table)
+	utils.CheckErr(err)
 	
 	// 如果不存在，就初始化默认搜索引擎
 	sql_get_search_engine := `
@@ -231,6 +241,26 @@ func InitDB() {
 		stmt, err := DB.Prepare(sql_add_setting)
 		utils.CheckErr(err)
 		res, err := stmt.Exec("favicon.ico", "Van Nav", "", "logo192.png", "logo512.png", false, false, true)
+		utils.CheckErr(err)
+		_, err = res.LastInsertId()
+		utils.CheckErr(err)
+	}
+	rows.Close()
+
+	// 如果不存在网站配置，就初始化
+	sql_get_site_config := `
+		SELECT * FROM nav_site_config;
+		`
+	rows, err = DB.Query(sql_get_site_config)
+	utils.CheckErr(err)
+	if !rows.Next() {
+		sql_add_site_config := `
+			INSERT INTO nav_site_config (noImageMode)
+			VALUES (?);
+			`
+		stmt, err := DB.Prepare(sql_add_site_config)
+		utils.CheckErr(err)
+		res, err := stmt.Exec(false)
 		utils.CheckErr(err)
 		_, err = res.LastInsertId()
 		utils.CheckErr(err)

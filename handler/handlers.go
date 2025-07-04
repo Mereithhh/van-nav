@@ -146,6 +146,32 @@ func UpdateUserHandler(c *gin.Context) {
 	})
 }
 
+func UpdateSiteConfigHandler(c *gin.Context) {
+	var data types.SiteConfig
+	if err := c.ShouldBindJSON(&data); err != nil {
+		utils.CheckErr(err)
+		c.JSON(http.StatusBadRequest, gin.H{
+			"success":      false,
+			"errorMessage": err.Error(),
+		})
+		return
+	}
+	logger.LogInfo("更新网站配置: %+v", data)
+	err := service.UpdateSiteConfig(data)
+	if err != nil {
+		utils.CheckErr(err)
+		c.JSON(http.StatusBadRequest, gin.H{
+			"success":      false,
+			"errorMessage": err.Error(),
+		})
+		return
+	}
+	c.JSON(200, gin.H{
+		"success": true,
+		"message": "更新网站配置成功",
+	})
+}
+
 func GetAllHandler(c *gin.Context) {
 	tools := service.GetAllTool()
 	// 获取全部数据
@@ -159,12 +185,14 @@ func GetAllHandler(c *gin.Context) {
 		catelogs = utils.FilterHideCates(catelogs)
 	}
 	setting := service.GetSetting()
+	siteConfig := service.GetSiteConfig()
 	c.JSON(200, gin.H{
 		"success": true,
 		"data": gin.H{
-			"tools":    tools,
-			"catelogs": catelogs,
-			"setting":  setting,
+			"tools":      tools,
+			"catelogs":   catelogs,
+			"setting":    setting,
+			"siteConfig": siteConfig,
 		},
 	})
 }
@@ -211,6 +239,7 @@ func GetAdminAllDataHandler(c *gin.Context) {
 	tools := service.GetAllTool()
 	catelogs := service.GetAllCatelog()
 	setting := service.GetSetting()
+	siteConfig := service.GetSiteConfig()
 	tokens := service.GetApiTokens()
 	userId, ok := c.Get("uid")
 	if !ok {
@@ -223,9 +252,10 @@ func GetAdminAllDataHandler(c *gin.Context) {
 	c.JSON(200, gin.H{
 		"success": true,
 		"data": gin.H{
-			"tools":    tools,
-			"catelogs": catelogs,
-			"setting":  setting,
+			"tools":      tools,
+			"catelogs":   catelogs,
+			"setting":    setting,
+			"siteConfig": siteConfig,
 			"user": gin.H{
 				"name": c.GetString("username"),
 				"id":   userId,

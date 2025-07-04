@@ -1,15 +1,17 @@
 import { Button, Card, Form, Input, message, Select, Spin, Switch } from "antd";
 import { useCallback, useEffect } from "react";
-import { fetchUpdateSetting, fetchUpdateUser } from "../../../utils/api";
+import { fetchUpdateSetting, fetchUpdateUser, fetchUpdateSiteConfig } from "../../../utils/api";
 import { useData } from "../hooks/useData";
 export interface SettingProps { }
 export const Setting: React.FC<SettingProps> = (props) => {
   const { store, loading, reload } = useData();
   const [userForm] = Form.useForm();
   const [settingForm] = Form.useForm();
+  const [siteConfigForm] = Form.useForm();
   useEffect(() => {
     userForm.setFieldsValue(store?.user ?? {})
     settingForm.setFieldsValue(store?.setting ?? {})
+    siteConfigForm.setFieldsValue(store?.siteConfig ?? {})
   }, [store])
   const handleUpdateUser = useCallback(
     async (values: any) => {
@@ -28,6 +30,19 @@ export const Setting: React.FC<SettingProps> = (props) => {
     async (values: any) => {
       try {
         await fetchUpdateSetting(values);
+        message.success("修改成功!");
+      } catch (err) {
+        message.warning("修改失败!");
+      } finally {
+        reload();
+      }
+    },
+    [reload]
+  );
+  const handleUpdateSiteConfig = useCallback(
+    async (values: any) => {
+      try {
+        await fetchUpdateSiteConfig(values);
         message.success("修改成功!");
       } catch (err) {
         message.warning("修改失败!");
@@ -144,6 +159,25 @@ export const Setting: React.FC<SettingProps> = (props) => {
             </Form.Item>
             <Form.Item label="隐藏 Github 按钮" name="hideGithub" tooltip="默认展示，开启后将在前台 Github 按钮" >
               <Switch defaultChecked={Boolean(store?.setting?.hideGithub)} />
+            </Form.Item>
+            <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+              <Button type="primary" htmlType="submit">
+                提交
+              </Button>
+            </Form.Item>
+          </Form>
+        </Spin>
+      </Card>
+      <Card title={`修改网站配置`} style={{ marginTop: 32 }}>
+        <Spin spinning={loading}>
+          <Form
+            onFinish={handleUpdateSiteConfig}
+            initialValues={store?.siteConfig ?? {}}
+            labelCol={{ span: 6 }}
+            form={siteConfigForm}
+          >
+            <Form.Item label="无图模式" name="noImageMode" tooltip="开启后前台将不展示工具logo等图片">
+              <Switch defaultChecked={Boolean(store?.siteConfig?.noImageMode)} />
             </Form.Item>
             <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
               <Button type="primary" htmlType="submit">

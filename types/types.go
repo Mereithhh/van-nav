@@ -59,3 +59,9 @@ type SearchEngine struct {
 	Sort        int    `json:"sort"`
 	Enabled     bool   `json:"enabled"`
 }
+
+// 网站配置模型
+type SiteConfig struct {
+	Id          int  `json:"id"`
+	NoImageMode bool `json:"noImageMode"`
+}
