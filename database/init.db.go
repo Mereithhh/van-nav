@@ -166,11 +166,17 @@ func InitDB() {
 	sql_create_table = `
 		CREATE TABLE IF NOT EXISTS nav_site_config (
 			id INTEGER PRIMARY KEY AUTOINCREMENT,
-			noImageMode BOOLEAN NOT NULL DEFAULT 0
+			noImageMode BOOLEAN NOT NULL DEFAULT 0,
+			compactMode BOOLEAN NOT NULL DEFAULT 0
 		);
 		`
 	_, err = DB.Exec(sql_create_table)
 	utils.CheckErr(err)
+	
+	// 网站配置表结构升级 - 添加compactMode列
+	if !columnExists("nav_site_config", "compactMode") {
+		DB.Exec(`ALTER TABLE nav_site_config ADD COLUMN compactMode BOOLEAN NOT NULL DEFAULT 0;`)
+	}
 	
 	// 如果不存在，就初始化默认搜索引擎
 	sql_get_search_engine := `
@@ -255,12 +261,12 @@ func InitDB() {
 	utils.CheckErr(err)
 	if !rows.Next() {
 		sql_add_site_config := `
-			INSERT INTO nav_site_config (noImageMode)
-			VALUES (?);
+			INSERT INTO nav_site_config (noImageMode, compactMode)
+			VALUES (?, ?);
 			`
 		stmt, err := DB.Prepare(sql_add_site_config)
 		utils.CheckErr(err)
-		res, err := stmt.Exec(false)
+		res, err := stmt.Exec(false, false)
 		utils.CheckErr(err)
 		_, err = res.LastInsertId()
 		utils.CheckErr(err)

@@ -64,4 +64,5 @@ type SearchEngine struct {
 type SiteConfig struct {
 	Id          int  `json:"id"`
 	NoImageMode bool `json:"noImageMode"`
+	CompactMode bool `json:"compactMode"`
 }

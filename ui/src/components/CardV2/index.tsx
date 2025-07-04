@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import "./index.css";
 import { getLogoUrl } from "../../utils/check";
 import { getJumpTarget } from "../../utils/setting";
-const Card = ({ title, url, des, logo, catelog, onClick, index, isSearching, noImageMode }) => {
+const Card = ({ title, url, des, logo, catelog, onClick, index, isSearching, noImageMode, compactMode }) => {
   const el = useMemo(() => {
     if (url === "admin") {
       return <img src={logo} alt={title} />
@@ -30,7 +30,7 @@ const Card = ({ title, url, des, logo, catelog, onClick, index, isSearching, noI
       className="card-box"
     >
       {showNumIndex && <span className="card-index">{index + 1}</span>}
-      <div className="card-content">
+      <div className={`card-content ${compactMode ? 'compact-mode' : ''}`}>
         {!noImageMode && (
           <div className="card-left">
             {el}
@@ -39,9 +39,9 @@ const Card = ({ title, url, des, logo, catelog, onClick, index, isSearching, noI
         <div className="card-right">
           <div className="card-right-top">
             <span className="card-right-title" title={title}>{title}</span>
-            <span className="card-tag" title={displayCatelog}>{displayCatelog}</span>
+            {!compactMode && <span className="card-tag" title={displayCatelog}>{displayCatelog}</span>}
           </div>
-          <div className="card-right-bottom" title={des}>{des}</div>
+          {!compactMode && <div className="card-right-bottom" title={des}>{des}</div>}
         </div>
       </div>
     </a>

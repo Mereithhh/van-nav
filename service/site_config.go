@@ -8,7 +8,7 @@ import (
 
 func GetSiteConfig() types.SiteConfig {
 	sql_get_site_config := `
-		SELECT id, noImageMode 
+		SELECT id, noImageMode, compactMode 
 		FROM nav_site_config 
 		ORDER BY id ASC 
 		LIMIT 1;
@@ -16,12 +16,14 @@ func GetSiteConfig() types.SiteConfig {
 	var siteConfig types.SiteConfig
 	row := database.DB.QueryRow(sql_get_site_config)
 	var noImageMode interface{}
-	err := row.Scan(&siteConfig.Id, &noImageMode)
+	var compactMode interface{}
+	err := row.Scan(&siteConfig.Id, &noImageMode, &compactMode)
 	if err != nil {
 		logger.LogError("获取网站配置失败: %s", err)
 		return types.SiteConfig{
 			Id:          1,
 			NoImageMode: false,
+			CompactMode: false,
 		}
 	}
 	
@@ -35,13 +37,23 @@ func GetSiteConfig() types.SiteConfig {
 		}
 	}
 
+	if compactMode == nil {
+		siteConfig.CompactMode = false
+	} else {
+		if compactMode.(int64) == 0 {
+			siteConfig.CompactMode = false
+		} else {
+			siteConfig.CompactMode = true
+		}
+	}
+
 	return siteConfig
 }
 
 func UpdateSiteConfig(data types.SiteConfig) error {
 	sql_update_site_config := `
 		UPDATE nav_site_config
-		SET noImageMode = ?
+		SET noImageMode = ?, compactMode = ?
 		WHERE id = (SELECT id FROM nav_site_config ORDER BY id ASC LIMIT 1);
 		`
 
@@ -49,7 +61,7 @@ func UpdateSiteConfig(data types.SiteConfig) error {
 	if err != nil {
 		return err
 	}
-	res, err := stmt.Exec(data.NoImageMode)
+	res, err := stmt.Exec(data.NoImageMode, data.CompactMode)
 	if err != nil {
 		return err
 	}

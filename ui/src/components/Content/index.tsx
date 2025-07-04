@@ -154,6 +154,7 @@ const Content = (props: any) => {
           index={index}
           isSearching={searchString.trim() !== ""}
           noImageMode={data?.siteConfig?.noImageMode || false}
+          compactMode={data?.siteConfig?.compactMode || false}
           onClick={() => {
             resetSearch();
             if (item.url === "toggleJumpTarget") {
@@ -165,7 +166,7 @@ const Content = (props: any) => {
       );
     });
     // eslint-disable-next-line
-  }, [filteredData, searchString, data?.siteConfig?.noImageMode]);
+  }, [filteredData, searchString, data?.siteConfig?.noImageMode, data?.siteConfig?.compactMode]);
 
   const onKeyEnter = (ev: KeyboardEvent) => {
     const cards = filteredDataRef.current;
@@ -219,7 +220,7 @@ const Content = (props: any) => {
         </div>
       </div>
       <div className="content-wraper">
-        <div className="content cards">
+        <div className={`content cards ${data?.siteConfig?.compactMode ? 'compact-grid' : ''}`}>
           {loading ? <Loading></Loading> : renderCardsV2()}
         </div>
       </div>

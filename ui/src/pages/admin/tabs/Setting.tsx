@@ -179,6 +179,9 @@ export const Setting: React.FC<SettingProps> = (props) => {
             <Form.Item label="无图模式" name="noImageMode" tooltip="开启后前台将不展示工具logo等图片">
               <Switch defaultChecked={Boolean(store?.siteConfig?.noImageMode)} />
             </Form.Item>
+            <Form.Item label="精简模式" name="compactMode" tooltip="开启后卡片只显示标题和logo，如果同时开启无图模式则只显示标题">
+              <Switch defaultChecked={Boolean(store?.siteConfig?.compactMode)} />
+            </Form.Item>
             <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
               <Button type="primary" htmlType="submit">
                 提交

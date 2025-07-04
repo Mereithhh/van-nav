@@ -16,3 +16,58 @@
 body.dark-mode .card-index {
     color: rgba(255,255,255, 0.6)
 }
+
+/* 精简模式样式 - 单行布局 */
+.card-content.compact-mode {
+    display: flex;
+    align-items: center;
+    min-height: auto;
+    height: auto;
+    flex-direction: row;
+    text-align: left;
+}
+
+.card-content.compact-mode .card-left {
+    margin-right: 8px;
+    margin-bottom: 0;
+    flex-shrink: 0;
+}
+
+.card-content.compact-mode .card-right {
+    flex: 1;
+    overflow: hidden;
+    height: auto;
+    display: flex;
+    align-items: center;
+}
+
+.card-content.compact-mode .card-right-top {
+    margin-bottom: 0;
+    height: auto;
+    width: 100%;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.card-content.compact-mode .card-right-title {
+    line-height: 1.2;
+    text-align: left;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    width: 100%;
+}
+
+.card-content.compact-mode .card-right-bottom {
+    display: none;
+}
+
+.card-content.compact-mode .card-tag {
+    display: none;
+}
+
+.card-content.compact-mode .card-left > img,
+.card-content.compact-mode .card-left embed {
+    width: 24px;
+    height: 24px;
+}
