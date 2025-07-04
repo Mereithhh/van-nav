@@ -1,15 +1,52 @@
-import { useMemo } from "react";
+import { useMemo, useState, useEffect } from "react";
 import "./index.css";
 import { getLogoUrl } from "../../utils/check";
 import { getJumpTarget } from "../../utils/setting";
+
 const Card = ({ title, url, des, logo, catelog, onClick, index, isSearching, noImageMode, compactMode }) => {
+  const [imageLoaded, setImageLoaded] = useState(false);
+  const [imageError, setImageError] = useState(false);
+  
+  const imageSrc = useMemo(() => {
+    return url === "admin" ? logo : getLogoUrl(logo);
+  }, [logo, url]);
+  
+  // 当图片源变化时重置状态
+  useEffect(() => {
+    setImageLoaded(false);
+    setImageError(false);
+  }, [imageSrc]);
+  
   const el = useMemo(() => {
-    if (url === "admin") {
-      return <img src={logo} alt={title} />
-    } else {
-        return <img src={getLogoUrl(logo)} alt={title} />
+    if (imageError) {
+      return <div style={{ 
+        display: 'flex', 
+        alignItems: 'center', 
+        justifyContent: 'center',
+        fontSize: '20px',
+        opacity: 0.6
+      }}>🖼️</div>;
     }
-  }, [logo, title, url])
+    
+    return (
+      <>
+        {!imageLoaded && (
+          <div className="card-loading-spinner"></div>
+        )}
+        <img 
+          src={imageSrc}
+          alt={title}
+          loading="lazy"
+          onLoad={() => setImageLoaded(true)}
+          onError={() => setImageError(true)}
+          style={{
+            opacity: imageLoaded ? 1 : 0.1,
+            transition: 'opacity 0.3s ease'
+          }}
+        />
+      </>
+    );
+  }, [imageSrc, title, imageLoaded, imageError]);
   
   // 处理空分类，显示为"未分类"
   const displayCatelog = useMemo(() => {
