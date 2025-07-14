@@ -4,6 +4,7 @@ import (
 	"github.com/mereith/nav/database"
 	"github.com/mereith/nav/types"
 	"github.com/mereith/nav/utils"
+	"strings"
 )
 
 func UpdateCatelog(data types.UpdateCatelogDto) {
@@ -51,6 +52,11 @@ func UpdateCatelog(data types.UpdateCatelogDto) {
 }
 
 func AddCatelog(data types.AddCatelogDto) {
+	// 检查分类名称是否为空，如果为空则不创建
+	if data.Name == "" || strings.TrimSpace(data.Name) == "" {
+		return
+	}
+	
 	// 先检查重复不重复
 	existCatelogs := GetAllCatelog()
 	var existCatelogsArr []string

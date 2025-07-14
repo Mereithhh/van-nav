@@ -146,6 +146,32 @@ func UpdateUserHandler(c *gin.Context) {
 	})
 }
 
+func UpdateSiteConfigHandler(c *gin.Context) {
+	var data types.SiteConfig
+	if err := c.ShouldBindJSON(&data); err != nil {
+		utils.CheckErr(err)
+		c.JSON(http.StatusBadRequest, gin.H{
+			"success":      false,
+			"errorMessage": err.Error(),
+		})
+		return
+	}
+	logger.LogInfo("更新网站配置: %+v", data)
+	err := service.UpdateSiteConfig(data)
+	if err != nil {
+		utils.CheckErr(err)
+		c.JSON(http.StatusBadRequest, gin.H{
+			"success":      false,
+			"errorMessage": err.Error(),
+		})
+		return
+	}
+	c.JSON(200, gin.H{
+		"success": true,
+		"message": "更新网站配置成功",
+	})
+}
+
 func GetAllHandler(c *gin.Context) {
 	tools := service.GetAllTool()
 	// 获取全部数据
@@ -159,12 +185,14 @@ func GetAllHandler(c *gin.Context) {
 		catelogs = utils.FilterHideCates(catelogs)
 	}
 	setting := service.GetSetting()
+	siteConfig := service.GetSiteConfig()
 	c.JSON(200, gin.H{
 		"success": true,
 		"data": gin.H{
-			"tools":    tools,
-			"catelogs": catelogs,
-			"setting":  setting,
+			"tools":      tools,
+			"catelogs":   catelogs,
+			"setting":    setting,
+			"siteConfig": siteConfig,
 		},
 	})
 }
@@ -211,6 +239,7 @@ func GetAdminAllDataHandler(c *gin.Context) {
 	tools := service.GetAllTool()
 	catelogs := service.GetAllCatelog()
 	setting := service.GetSetting()
+	siteConfig := service.GetSiteConfig()
 	tokens := service.GetApiTokens()
 	userId, ok := c.Get("uid")
 	if !ok {
@@ -223,9 +252,10 @@ func GetAdminAllDataHandler(c *gin.Context) {
 	c.JSON(200, gin.H{
 		"success": true,
 		"data": gin.H{
-			"tools":    tools,
-			"catelogs": catelogs,
-			"setting":  setting,
+			"tools":      tools,
+			"catelogs":   catelogs,
+			"setting":    setting,
+			"siteConfig": siteConfig,
 			"user": gin.H{
 				"name": c.GetString("username"),
 				"id":   userId,
@@ -489,6 +519,166 @@ func UpdateToolsSortHandler(c *gin.Context) {
 		return
 	}
 
+	c.JSON(200, gin.H{
+		"success": true,
+		"message": "更新排序成功",
+	})
+}
+
+// ==================== 搜索引擎相关处理函数 ====================
+
+// 获取所有搜索引擎
+func GetAllSearchEnginesHandler(c *gin.Context) {
+	engines, err := database.GetAllSearchEngines()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"success":      false,
+			"errorMessage": err.Error(),
+		})
+		return
+	}
+	c.JSON(200, gin.H{
+		"success": true,
+		"data":    engines,
+	})
+}
+
+// 获取启用的搜索引擎（用于前端搜索功能）
+func GetEnabledSearchEnginesHandler(c *gin.Context) {
+	engines, err := database.GetEnabledSearchEngines()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"success":      false,
+			"errorMessage": err.Error(),
+		})
+		return
+	}
+	c.JSON(200, gin.H{
+		"success": true,
+		"data":    engines,
+	})
+}
+
+// 添加搜索引擎
+func AddSearchEngineHandler(c *gin.Context) {
+	var engine types.SearchEngine
+	err := c.ShouldBindJSON(&engine)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"success":      false,
+			"errorMessage": err.Error(),
+		})
+		return
+	}
+	
+	id, err := database.AddSearchEngine(engine)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"success":      false,
+			"errorMessage": err.Error(),
+		})
+		return
+	}
+	
+	c.JSON(200, gin.H{
+		"success": true,
+		"message": "添加搜索引擎成功",
+		"data": gin.H{
+			"id": id,
+		},
+	})
+}
+
+// 更新搜索引擎
+func UpdateSearchEngineHandler(c *gin.Context) {
+	var engine types.SearchEngine
+	err := c.ShouldBindJSON(&engine)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"success":      false,
+			"errorMessage": err.Error(),
+		})
+		return
+	}
+	
+	// 从URL参数获取ID
+	idStr := c.Param("id")
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"success":      false,
+			"errorMessage": "无效的ID",
+		})
+		return
+	}
+	engine.Id = id
+	
+	err = database.UpdateSearchEngine(engine)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"success":      false,
+			"errorMessage": err.Error(),
+		})
+		return
+	}
+	
+	c.JSON(200, gin.H{
+		"success": true,
+		"message": "更新搜索引擎成功",
+	})
+}
+
+// 删除搜索引擎
+func DeleteSearchEngineHandler(c *gin.Context) {
+	idStr := c.Param("id")
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"success":      false,
+			"errorMessage": "无效的ID",
+		})
+		return
+	}
+	
+	err = database.DeleteSearchEngine(id)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"success":      false,
+			"errorMessage": err.Error(),
+		})
+		return
+	}
+	
+	c.JSON(200, gin.H{
+		"success": true,
+		"message": "删除搜索引擎成功",
+	})
+}
+
+// 更新搜索引擎排序
+func UpdateSearchEngineSortHandler(c *gin.Context) {
+	var sortData []struct {
+		Id   int `json:"id"`
+		Sort int `json:"sort"`
+	}
+	err := c.ShouldBindJSON(&sortData)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"success":      false,
+			"errorMessage": err.Error(),
+		})
+		return
+	}
+	
+	err = database.UpdateSearchEngineSort(sortData)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"success":      false,
+			"errorMessage": err.Error(),
+		})
+		return
+	}
+	
 	c.JSON(200, gin.H{
 		"success": true,
 		"message": "更新排序成功",

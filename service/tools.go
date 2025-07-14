@@ -1,6 +1,7 @@
 package service
 
 import (
+	"strings"
 	"sync"
 
 	"github.com/mereith/nav/database"
@@ -12,7 +13,8 @@ import (
 func ImportTools(data []types.Tool) {
 	var catelogs []string
 	for _, v := range data {
-		if !utils.In(v.Catelog, catelogs) {
+		// 过滤掉空分类，只收集有效的分类名称
+		if v.Catelog != "" && strings.TrimSpace(v.Catelog) != "" && !utils.In(v.Catelog, catelogs) {
 			catelogs = append(catelogs, v.Catelog)
 		}
 		sql_add_tool := `

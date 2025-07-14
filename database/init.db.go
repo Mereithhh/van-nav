@@ -146,6 +146,74 @@ func InitDB() {
 		`
 	_, err = DB.Exec(sql_create_table)
 	utils.CheckErr(err)
+
+	// 搜索引擎表
+	sql_create_table = `
+		CREATE TABLE IF NOT EXISTS nav_search_engine (
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
+			name TEXT NOT NULL,
+			baseUrl TEXT NOT NULL,
+			queryParam TEXT NOT NULL,
+			logo TEXT,
+			sort INTEGER NOT NULL DEFAULT 0,
+			enabled BOOLEAN NOT NULL DEFAULT 1
+		);
+		`
+	_, err = DB.Exec(sql_create_table)
+	utils.CheckErr(err)
+
+	// 网站配置表
+	sql_create_table = `
+		CREATE TABLE IF NOT EXISTS nav_site_config (
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
+			noImageMode BOOLEAN NOT NULL DEFAULT 0,
+			compactMode BOOLEAN NOT NULL DEFAULT 0
+		);
+		`
+	_, err = DB.Exec(sql_create_table)
+	utils.CheckErr(err)
+	
+	// 网站配置表结构升级 - 添加compactMode列
+	if !columnExists("nav_site_config", "compactMode") {
+		DB.Exec(`ALTER TABLE nav_site_config ADD COLUMN compactMode BOOLEAN NOT NULL DEFAULT 0;`)
+	}
+	
+	// 如果不存在，就初始化默认搜索引擎
+	sql_get_search_engine := `
+		SELECT COUNT(*) FROM nav_search_engine;
+		`
+	var searchEngineCount int
+	err = DB.QueryRow(sql_get_search_engine).Scan(&searchEngineCount)
+	utils.CheckErr(err)
+	if searchEngineCount == 0 {
+		// 初始化默认搜索引擎
+		defaultEngines := []struct {
+			name       string
+			baseUrl    string
+			queryParam string
+			logo       string
+			sort       int
+		}{
+			{"百度", "https://www.baidu.com/s", "wd", "baidu.ico", 1},
+			{"Bing", "https://cn.bing.com/search", "q", "bing.ico", 2},
+			{"Google", "https://www.google.com/search", "q", "google.ico", 3},
+		}
+		
+		sql_add_search_engine := `
+			INSERT INTO nav_search_engine (name, baseUrl, queryParam, logo, sort, enabled)
+			VALUES (?, ?, ?, ?, ?, ?);
+			`
+		stmt, err := DB.Prepare(sql_add_search_engine)
+		utils.CheckErr(err)
+		defer stmt.Close()
+		
+		for _, engine := range defaultEngines {
+			_, err = stmt.Exec(engine.name, engine.baseUrl, engine.queryParam, engine.logo, engine.sort, true)
+			utils.CheckErr(err)
+		}
+		logger.LogInfo("默认搜索引擎初始化成功")
+	}
+	
 	// 如果不存在，就初始化用户
 	sql_get_user := `
 		SELECT * FROM nav_user;
@@ -184,5 +252,47 @@ func InitDB() {
 		utils.CheckErr(err)
 	}
 	rows.Close()
+
+	// 如果不存在网站配置，就初始化
+	sql_get_site_config := `
+		SELECT * FROM nav_site_config;
+		`
+	rows, err = DB.Query(sql_get_site_config)
+	utils.CheckErr(err)
+	if !rows.Next() {
+		sql_add_site_config := `
+			INSERT INTO nav_site_config (noImageMode, compactMode)
+			VALUES (?, ?);
+			`
+		stmt, err := DB.Prepare(sql_add_site_config)
+		utils.CheckErr(err)
+		res, err := stmt.Exec(false, false)
+		utils.CheckErr(err)
+		_, err = res.LastInsertId()
+		utils.CheckErr(err)
+	}
+	rows.Close()
 	logger.LogInfo("数据库初始化成功💗")
+
+	// 清理空分类记录 - 删除名称为空或只包含空白字符的分类
+	cleanupEmptyCategories()
+}
+
+// cleanupEmptyCategories 清理空分类记录
+func cleanupEmptyCategories() {
+	// 删除名称为空或只包含空白字符的分类记录
+	sql_cleanup := `
+		DELETE FROM nav_catelog 
+		WHERE name IS NULL OR name = '' OR TRIM(name) = '';
+	`
+	result, err := DB.Exec(sql_cleanup)
+	if err != nil {
+		logger.LogInfo("清理空分类记录时出错: %v", err)
+		return
+	}
+	
+	rowsAffected, err := result.RowsAffected()
+	if err == nil && rowsAffected > 0 {
+		logger.LogInfo("已清理 %d 条空分类记录", rowsAffected)
+	}
 }

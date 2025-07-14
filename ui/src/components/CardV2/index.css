@@ -16,3 +16,102 @@
 body.dark-mode .card-index {
     color: rgba(255,255,255, 0.6)
 }
+
+/* 精简模式样式 - 单行布局 */
+.card-content.compact-mode {
+    display: flex;
+    align-items: center;
+    min-height: auto;
+    height: auto;
+    flex-direction: row;
+    text-align: left;
+}
+
+.card-content.compact-mode .card-left {
+    margin-right: 8px;
+    margin-bottom: 0;
+    flex-shrink: 0;
+}
+
+.card-content.compact-mode .card-right {
+    flex: 1;
+    overflow: hidden;
+    height: auto;
+    display: flex;
+    align-items: center;
+}
+
+.card-content.compact-mode .card-right-top {
+    margin-bottom: 0;
+    height: auto;
+    width: 100%;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.card-content.compact-mode .card-right-title {
+    line-height: 1.2;
+    text-align: left;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    width: 100%;
+}
+
+.card-content.compact-mode .card-right-bottom {
+    display: none;
+}
+
+.card-content.compact-mode .card-tag {
+    display: none;
+}
+
+.card-content.compact-mode .card-left > img,
+.card-content.compact-mode .card-left embed {
+    width: 24px;
+    height: 24px;
+}
+
+/* 确保card-left有相对定位以便加载指示器正确显示 */
+.card-left {
+    position: relative;
+}
+
+/* 加载指示器基础样式 */
+.card-loading-spinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 16px;
+    height: 16px;
+    border: 2px solid #e5e5e5;
+    border-top: 2px solid #999;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    z-index: 1;
+}
+
+/* 精简模式下的加载指示器调整 */
+.card-content.compact-mode .card-loading-spinner {
+    width: 12px;
+    height: 12px;
+    border-width: 1.5px;
+}
+
+/* 懒加载动画 */
+@keyframes spin {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* 暗色模式下的加载样式 */
+body.dark-mode .card-loading-spinner {
+    border: 2px solid #404040;
+    border-top: 2px solid #888;
+}
+
+body.dark-mode .card-content.compact-mode .card-loading-spinner {
+    border-width: 1.5px;
+}
+

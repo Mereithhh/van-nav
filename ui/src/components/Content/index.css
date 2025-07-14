@@ -619,3 +619,116 @@
   text-decoration: none;
   color: #bbb;
 }
+
+/* 精简模式样式 - 6列布局 */
+@media (min-width: 1060px) {
+  .content.compact-grid {
+    grid-template-columns: repeat(6, minmax(149px, 175px));
+    grid-auto-rows: 48px;
+    grid-gap: 10px;
+    max-width: 1170px;
+    margin: 0 auto;
+  }
+  
+  .content.compact-grid .card-box {
+    padding: 8px 12px;
+    max-width: none;
+    min-height: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+  }
+  
+  .content.compact-grid .card-box:hover {
+    transform: none;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    background-color: #f0f1f3;
+  }
+}
+
+@media (max-width: 1060px) and (min-width: 700px) {
+  .content.compact-grid {
+    grid-template-columns: repeat(4, minmax(140px, 160px));
+    grid-auto-rows: 42px;
+    grid-gap: 8px;
+    max-width: 720px;
+    margin: 0 auto;
+  }
+  
+  .content.compact-grid .card-box {
+    padding: 6px 10px;
+    max-width: none;
+    min-height: 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+  }
+  
+  .content.compact-grid .card-box:hover {
+    transform: none;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    background-color: #f0f1f3;
+  }
+}
+
+@media (max-width: 700px) and (min-width: 500px) {
+  .content.compact-grid {
+    grid-template-columns: repeat(3, minmax(120px, 150px));
+    grid-auto-rows: 36px;
+    grid-gap: 6px;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+  
+  .content.compact-grid .card-box {
+    padding: 4px 8px;
+    max-width: none;
+    min-height: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+  }
+  
+  .content.compact-grid .card-box:hover {
+    transform: none;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+    background-color: #f0f1f3;
+  }
+}
+
+@media (max-width: 500px) {
+  .content.compact-grid {
+    grid-template-columns: repeat(2, minmax(140px, 180px));
+    grid-auto-rows: 32px;
+    grid-gap: 8px;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+  
+  .content.compact-grid .card-box {
+    padding: 4px 6px;
+    max-width: none;
+    min-height: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+  }
+  
+  .content.compact-grid .card-box:hover {
+    transform: none;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+    background-color: #f0f1f3;
+  }
+}
+
+/* 暗色模式下的精简模式样式 */
+body.dark-mode .content.compact-grid .card-box {
+  background-color: #2a2a2a;
+}
+
+body.dark-mode .content.compact-grid .card-box:hover {
+  background-color: #3a3a3a;
+  box-shadow: 0 2px 8px rgba(255,255,255,0.1);
+}
+
+
