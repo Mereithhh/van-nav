@@ -14,6 +14,7 @@ import (
 	"github.com/mereith/nav/logger"
 	"github.com/mereith/nav/middleware"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-contrib/gzip"
 	"github.com/gin-gonic/gin"
 )
@@ -65,11 +66,21 @@ func main() {
 	database.InitDB()
 	gin.SetMode(gin.ReleaseMode)
 	router := gin.Default()
+
+	// 添加CORS中间件，允许跨域请求
+	router.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"*"},
+		AllowMethods:     []string{"GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS"},
+		AllowHeaders:     []string{"Origin", "Content-Length", "Content-Type", "Authorization"},
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: true,
+		MaxAge:           12 * time.Hour,
+	}))
+
 	router.Use(gzip.Gzip(gzip.DefaultCompression, gzip.WithExcludedExtensions([]string{".png", ".jpg", ".jpeg", ".ico", ".svg"})))
 	//router.Use(gzip.Gzip(gzip.DefaultCompression))
-	// 嵌入文件夹
-	router.GET("/manifest.json", handler.ManifastHanlder)
-	router.Use(Serve("/", BinaryFileSystem(fs, "public")))
+
+	// 先定义API路由，避免被Serve中间件拦截
 	api := router.Group("/api")
 	{
 		// 获取数据的路由
@@ -105,6 +116,11 @@ func main() {
 			admin.PUT("/catelog/:id", handler.UpdateCatelogHandler)
 		}
 	}
+
+	// 嵌入文件夹 - 放在API路由之后
+	router.GET("/manifest.json", handler.ManifastHanlder)
+	router.Use(Serve("/", BinaryFileSystem(fs, "public")))
+
 	logger.LogInfo("应用启动成功，网址: http://localhost:%s", *port)
 	listen := fmt.Sprintf("%s:%s", *addr, *port)
 	srv := &http.Server{
