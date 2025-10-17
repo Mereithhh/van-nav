@@ -115,3 +115,37 @@ body.dark-mode .card-content.compact-mode .card-loading-spinner {
     border-width: 1.5px;
 }
 
+/* 网络模式指示器样式 */
+.network-indicator {
+    position: absolute;
+    left: 8px;
+    top: 8px;
+    background: rgba(24, 144, 255, 0.9);
+    color: white;
+    font-size: 10px;
+    font-weight: bold;
+    padding: 2px 4px;
+    border-radius: 3px;
+    z-index: 10;
+    line-height: 1;
+    min-width: 12px;
+    text-align: center;
+}
+
+.network-indicator.intranet {
+    background: rgba(82, 196, 26, 0.9);
+}
+
+.network-indicator.internet {
+    background: rgba(24, 144, 255, 0.9);
+}
+
+/* 暗色模式下的网络指示器 */
+body.dark-mode .network-indicator {
+    background: rgba(24, 144, 255, 0.8);
+}
+
+body.dark-mode .network-indicator.intranet {
+    background: rgba(82, 196, 26, 0.8);
+}
+

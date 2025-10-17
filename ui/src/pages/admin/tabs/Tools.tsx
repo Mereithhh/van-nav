@@ -557,10 +557,23 @@ export const Tools: React.FC<ToolsProps> = (props) => {
                 }
               ]}
               required
-              label="网址"
+              label="外网网址"
               labelCol={{ span: 4 }}
             >
-              <Input placeholder="请输入完整URL（以 http:// 或 https:// 开头）" />
+              <Input placeholder="请输入外网URL（以 http:// 或 https:// 开头）" />
+            </Form.Item>
+            <Form.Item
+              name="intranetUrl"
+              label="内网网址"
+              labelCol={{ span: 4 }}
+              rules={[
+                {
+                  pattern: /^(https?:\/\/)/,
+                  message: "内网网址必须以 http:// 或 https:// 开头"
+                }
+              ]}
+            >
+              <Input placeholder="请输入内网URL（可选，以 http:// 或 https:// 开头）" />
             </Form.Item>
             <Form.Item name="logo" label="logo 网址" labelCol={{ span: 4 }}>
               <Input placeholder="请输入 logo url, 为空则自动获取" />
@@ -640,8 +653,11 @@ export const Tools: React.FC<ToolsProps> = (props) => {
             <Form.Item name="name" required label="名称" labelCol={{ span: 4 }}>
               <Input placeholder="请输入工具名称" />
             </Form.Item>
-            <Form.Item name="url" required label="网址" labelCol={{ span: 4 }}>
-              <Input placeholder="请输入 url" />
+            <Form.Item name="url" required label="外网网址" labelCol={{ span: 4 }}>
+              <Input placeholder="请输入外网 url" />
+            </Form.Item>
+            <Form.Item name="intranetUrl" label="内网网址" labelCol={{ span: 4 }}>
+              <Input placeholder="请输入内网 url（可选）" />
             </Form.Item>
             <Form.Item name="logo" label="logo 网址" labelCol={{ span: 4 }}>
               <Input placeholder="请输入 logo url, 为空则自动获取" />
@@ -696,3 +712,4 @@ export const Tools: React.FC<ToolsProps> = (props) => {
     </Card>
   );
 };
+

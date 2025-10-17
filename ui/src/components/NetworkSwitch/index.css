@@ -1,0 +1,9 @@
+.network-switch-box {
+  position: fixed;
+  cursor: pointer;
+}
+.network-switch-box svg {
+  fill: #ffffff;
+}
+
+

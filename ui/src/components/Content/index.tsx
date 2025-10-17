@@ -9,6 +9,7 @@ import TagSelector from "../TagSelector";
 import pinyin from "pinyin-match";
 import GithubLink from "../GithubLink";
 import DarkSwitch from "../DarkSwitch";
+import NetworkSwitch from "../NetworkSwitch";
 import { isLogin } from "../../utils/check";
 import { generateSearchEngineCard } from "../../utils/serachEngine";
 import { toggleJumpTarget } from "../../utils/setting";
@@ -28,6 +29,7 @@ const Content = (props: any) => {
   const [searchString, setSearchString] = useState("");
   const [val, setVal] = useState("");
   const [searchEngineCards, setSearchEngineCards] = useState<any[]>([]);
+  const [networkMode, setNetworkMode] = useState<'internet' | 'intranet'>('internet');
 
   const filteredDataRef = useRef<any>([]);
 
@@ -57,6 +59,25 @@ const Content = (props: any) => {
   useEffect(() => {
     loadData();
   }, [loadData]);
+
+  // 监听网络模式切换
+  useEffect(() => {
+    const handleNetworkModeChange = (event: CustomEvent) => {
+      setNetworkMode(event.detail.mode);
+    };
+
+    window.addEventListener('networkModeChanged', handleNetworkModeChange as EventListener);
+    
+    // 初始化网络模式
+    const savedMode = localStorage.getItem("networkMode");
+    if (savedMode === 'intranet' || savedMode === 'internet') {
+      setNetworkMode(savedMode);
+    }
+
+    return () => {
+      window.removeEventListener('networkModeChanged', handleNetworkModeChange as EventListener);
+    };
+  }, []);
 
   // 异步加载搜索引擎卡片
   useEffect(() => {
@@ -143,10 +164,13 @@ const Content = (props: any) => {
 
   const renderCardsV2 = useCallback(() => {
     return filteredData.map((item, index) => {
+      // 根据网络模式选择URL
+      const currentUrl = networkMode === 'intranet' && item.intranetUrl ? item.intranetUrl : item.url;
+      
       return (
         <CardV2
           title={item.name}
-          url={item.url}
+          url={currentUrl}
           des={item.desc}
           logo={item.logo}
           key={item.id}
@@ -155,6 +179,8 @@ const Content = (props: any) => {
           isSearching={searchString.trim() !== ""}
           noImageMode={data?.siteConfig?.noImageMode || false}
           compactMode={data?.siteConfig?.compactMode || false}
+          networkMode={networkMode}
+          hasIntranetUrl={!!item.intranetUrl}
           onClick={() => {
             resetSearch();
             if (item.url === "toggleJumpTarget") {
@@ -166,7 +192,7 @@ const Content = (props: any) => {
       );
     });
     // eslint-disable-next-line
-  }, [filteredData, searchString, data?.siteConfig?.noImageMode, data?.siteConfig?.compactMode]);
+  }, [filteredData, searchString, data?.siteConfig?.noImageMode, data?.siteConfig?.compactMode, networkMode]);
 
   const onKeyEnter = (ev: KeyboardEvent) => {
     const cards = filteredDataRef.current;
@@ -229,6 +255,7 @@ const Content = (props: any) => {
       </div>
       {showGithub && <GithubLink />}
       <DarkSwitch showGithub={showGithub} />
+      <NetworkSwitch showGithub={showGithub} />
     </>
   );
 };
