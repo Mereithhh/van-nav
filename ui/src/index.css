@@ -32,6 +32,9 @@ body.dark-mode .theme-switch-box svg {
 body.dark-mode .theme-switch-box svg:hover {
   fill: #f1f1f1;
 }
+body.dark-mode .network-switch-box svg {
+  fill: white;
+}
 body.dark-mode {
   background-color: #121212;
   color: rgba(255, 255, 255, 0.6);

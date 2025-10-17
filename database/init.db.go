@@ -109,6 +109,11 @@ func InitDB() {
 		DB.Exec(`ALTER TABLE nav_table ADD COLUMN hide BOOLEAN;`)
 	}
 
+	// tools数据表结构升级-20250101-【内外网切换】
+	if !columnExists("nav_table", "intranetUrl") {
+		DB.Exec(`ALTER TABLE nav_table ADD COLUMN intranetUrl TEXT;`)
+	}
+
 	// 分类表
 	sql_create_table = `
 		CREATE TABLE IF NOT EXISTS nav_catelog (

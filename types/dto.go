@@ -31,23 +31,25 @@ type AddCatelogDto struct {
 	Hide bool   `json:"hide"`
 }
 type UpdateToolDto struct {
-	Id      int    `json:"id"`
-	Name    string `json:"name"`
-	Url     string `json:"url"`
-	Logo    string `json:"logo"`
-	Catelog string `json:"catelog"`
-	Desc    string `json:"desc"`
-	Sort    int    `json:"sort"`
-	Hide    bool   `json:"hide"`
+	Id          int    `json:"id"`
+	Name        string `json:"name"`
+	Url         string `json:"url"`
+	IntranetUrl string `json:"intranetUrl"`
+	Logo        string `json:"logo"`
+	Catelog     string `json:"catelog"`
+	Desc        string `json:"desc"`
+	Sort        int    `json:"sort"`
+	Hide        bool   `json:"hide"`
 }
 type AddToolDto struct {
-	Name    string `json:"name"`
-	Url     string `json:"url"`
-	Logo    string `json:"logo"`
-	Catelog string `json:"catelog"`
-	Desc    string `json:"desc"`
-	Sort    int    `json:"sort"`
-	Hide    bool   `json:"hide"`
+	Name        string `json:"name"`
+	Url         string `json:"url"`
+	IntranetUrl string `json:"intranetUrl"`
+	Logo        string `json:"logo"`
+	Catelog     string `json:"catelog"`
+	Desc        string `json:"desc"`
+	Sort        int    `json:"sort"`
+	Hide        bool   `json:"hide"`
 }
 type UpdateToolsSortDto struct {
 	Id   int `json:"id"`

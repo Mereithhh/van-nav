@@ -26,6 +26,17 @@
     width: 24px;
     height: 24px;
   }
+  .network-switch-box {
+    right: 10px;
+    bottom: 75px;
+  }
+  .network-switch-box.hide-github {
+    bottom: 40px;
+  }
+  .network-switch-box svg {
+    width: 24px;
+    height: 24px;
+  }
   .select-tag {
     font-size: 13px;
     padding: 2px 6px;
@@ -168,6 +179,17 @@
     width: 30px;
     height: 30px;
   }
+  .network-switch-box {
+    right: 14px;
+    bottom: 80px;
+  }
+  .network-switch-box.hide-github {
+    bottom: 46px;
+  }
+  .network-switch-box svg {
+    width: 30px;
+    height: 30px;
+  }
   .select-tag {
     font-size: 13px;
     padding: 2px 8px;
@@ -307,6 +329,17 @@
     bottom: 20px;
    }
   .theme-switch-box svg {
+    width: 30px;
+    height: 30px;
+  }
+  .network-switch-box {
+    right: 10px;
+    bottom: 85px;
+  }
+  .network-switch-box.hide-github {
+    bottom: 50px;
+  }
+  .network-switch-box svg {
     width: 30px;
     height: 30px;
   }
@@ -458,6 +491,17 @@
    }
 
   .theme-switch-box svg {
+    width: 40px;
+    height: 40px;
+  }
+  .network-switch-box {
+    right: 10px;
+    bottom: 125px;
+  }
+  .network-switch-box.hide-github {
+    bottom: 70px;
+  }
+  .network-switch-box svg {
     width: 40px;
     height: 40px;
   }

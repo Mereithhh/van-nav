@@ -3,7 +3,7 @@ import "./index.css";
 import { getLogoUrl } from "../../utils/check";
 import { getJumpTarget } from "../../utils/setting";
 
-const Card = ({ title, url, des, logo, catelog, onClick, index, isSearching, noImageMode, compactMode }) => {
+const Card = ({ title, url, des, logo, catelog, onClick, index, isSearching, noImageMode, compactMode, networkMode, hasIntranetUrl }) => {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
   const [showLoading, setShowLoading] = useState(true);
@@ -87,6 +87,11 @@ const Card = ({ title, url, des, logo, catelog, onClick, index, isSearching, noI
       className="card-box"
     >
       {showNumIndex && <span className="card-index">{index + 1}</span>}
+      {hasIntranetUrl && (
+        <span className={`network-indicator ${networkMode}`} title={networkMode === 'intranet' ? '内网模式' : '外网模式'}>
+          {networkMode === 'intranet' ? '内' : '外'}
+        </span>
+      )}
       <div className={`card-content ${compactMode ? 'compact-mode' : ''}`}>
         {!noImageMode && (
           <div className="card-left">
