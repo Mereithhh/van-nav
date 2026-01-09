@@ -2,33 +2,111 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { applyTheme, decodeTheme, initTheme } from "../../utils/theme";
 import "./index.css";
 
-const DarkSwitch = ({ showGithub }: { showGithub: boolean }) => {
+interface DarkSwitchProps {
+  showGithub: boolean;
+  forceAuto?: boolean;
+  hidden?: boolean;
+  disableTimeBasedTheme?: boolean;
+}
+
+const DarkSwitch = ({ showGithub, forceAuto = false, hidden = false, disableTimeBasedTheme = false }: DarkSwitchProps) => {
   const [theme, setTheme] = useState(initTheme());
   const { current } = useRef<any>({ hasInit: false });
   const { current: currentTimer } = useRef<any>({ timer: null });
 
   useEffect(() => {
+    // 清理定时器
     if (currentTimer.timer) {
       clearInterval(currentTimer.timer);
       currentTimer.timer = null;
     }
-    localStorage.setItem("theme", theme)
-    const realTheme = decodeTheme(theme as any);
-    applyTheme(realTheme, 'setTheme', true);
-    if (realTheme.includes("auto")) {
-      currentTimer.timer = setInterval(() => {
-        const realTheme = decodeTheme("auto");
-        applyTheme(realTheme, "autoThemeTimer", true);
-      }, 10000);
+
+    // 清理系统主题监听器
+    if (currentTimer.mediaQueryListener) {
+      try {
+        currentTimer.mediaQuery?.removeEventListener('change', currentTimer.mediaQueryListener);
+      } catch (e) {
+        // 降级：某些旧浏览器可能不支持 removeEventListener
+      }
+      currentTimer.mediaQueryListener = null;
+      currentTimer.mediaQuery = null;
     }
+
+    localStorage.setItem("theme", theme)
+    const realTheme = decodeTheme(theme as any, disableTimeBasedTheme);
+    applyTheme(realTheme);
+
+    if (realTheme.includes("auto")) {
+      // 检查是否支持 matchMedia 和事件监听
+      const supportsMediaQuery = typeof window !== 'undefined' &&
+                                  window.matchMedia &&
+                                  typeof window.matchMedia === 'function';
+
+      let hasMediaListener = false;
+
+      // 尝试添加系统主题变化监听
+      if (supportsMediaQuery) {
+        try {
+          const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+          const listener = () => {
+            const realTheme = decodeTheme("auto", disableTimeBasedTheme);
+            applyTheme(realTheme);
+          };
+
+          // 尝试添加监听器
+          if (mediaQuery.addEventListener) {
+            mediaQuery.addEventListener('change', listener);
+            currentTimer.mediaQuery = mediaQuery;
+            currentTimer.mediaQueryListener = listener;
+            hasMediaListener = true;
+          }
+        } catch (e) {
+          // 静默回退到定时扫描
+        }
+      }
+
+      // 根据配置决定是否需要定时器
+      // 1. 如果开启了"仅跟随系统主题"且成功添加了监听器，则不需要定时器
+      // 2. 如果未开启"仅跟随系统主题"，需要定时器检查时间切换
+      // 3. 如果无法添加监听器，回退到定时器
+      const needTimer = !disableTimeBasedTheme || !hasMediaListener;
+
+      if (needTimer) {
+        currentTimer.timer = setInterval(() => {
+          const realTheme = decodeTheme("auto", disableTimeBasedTheme);
+          applyTheme(realTheme);
+        }, 10000);
+      }
+    }
+
+    // 清理函数
+    return () => {
+      if (currentTimer.timer) {
+        clearInterval(currentTimer.timer);
+        currentTimer.timer = null;
+      }
+      if (currentTimer.mediaQueryListener) {
+        try {
+          currentTimer.mediaQuery?.removeEventListener('change', currentTimer.mediaQueryListener);
+        } catch (e) {
+          // 忽略清理错误
+        }
+        currentTimer.mediaQueryListener = null;
+        currentTimer.mediaQuery = null;
+      }
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [theme])
+  }, [theme, disableTimeBasedTheme])
 
 
   useLayoutEffect(() => {
     if (!current.hasInit) {
       current.hasInit = true;
-      if (!!!localStorage.getItem("theme")) {
+      if (forceAuto) {
+        // 强制使用 auto 模式
+        setTheme("auto");
+        localStorage.setItem("theme", "auto");
+      } else if (!!!localStorage.getItem("theme")) {
         // 第一次用默认的
         setTheme("auto");
       } else {
@@ -38,6 +116,15 @@ const DarkSwitch = ({ showGithub }: { showGithub: boolean }) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // 当 forceAuto 改变时，强制设置为 auto 模式
+  useEffect(() => {
+    if (forceAuto && theme !== "auto") {
+      setTheme("auto");
+      localStorage.setItem("theme", "auto");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [forceAuto]);
 
   const lightIcon = (<svg
     xmlns="http://www.w3.org/2000/svg"
@@ -69,6 +156,10 @@ const DarkSwitch = ({ showGithub }: { showGithub: boolean }) => {
     <path d="M512 992C246.92 992 32 777.08 32 512S246.92 32 512 32s480 214.92 480 480-214.92 480-480 480zm0-840c-198.78 0-360 161.22-360 360 0 198.84 161.22 360 360 360s360-161.16 360-360c0-198.78-161.22-360-360-360zm0 660V212c165.72 0 300 134.34 300 300 0 165.72-134.28 300-300 300z"></path>
   </svg>)
   const handleSwitch = () => {
+    // 如果强制 auto 模式，则禁用点击
+    if (forceAuto) {
+      return;
+    }
     if (theme === "light") {
       setTheme("dark");
     } else if (theme === "dark") {
@@ -78,7 +169,10 @@ const DarkSwitch = ({ showGithub }: { showGithub: boolean }) => {
     }
   };
   return (
-    <div className={`theme-switch-box ${showGithub ? "" : "hide-github"}`} onClick={handleSwitch}>
+    <div
+      className={`theme-switch-box ${showGithub ? "" : "hide-github"} ${hidden ? "hidden" : ""} ${forceAuto ? "disabled" : ""}`}
+      onClick={handleSwitch}
+    >
       {theme === "light" ? lightIcon : theme === "dark" ? darkIcon : autoIcon}
     </div>
   );

@@ -8,9 +8,9 @@ import (
 
 func GetSetting() types.Setting {
 	sql_get_user := `
-		SELECT id,favicon,title,govRecord,logo192,logo512,hideAdmin,hideGithub,hideToggleJumpTarget,jumpTargetBlank 
-		FROM nav_setting 
-		ORDER BY id ASC 
+		SELECT id,favicon,title,govRecord,logo192,logo512,hideAdmin,hideGithub,hideToggleJumpTarget,jumpTargetBlank,hideThemeSwitch,disableTimeBasedTheme
+		FROM nav_setting
+		ORDER BY id ASC
 		LIMIT 1;
 		`
 	var setting types.Setting
@@ -20,20 +20,24 @@ func GetSetting() types.Setting {
 	var hideAdmin interface{}
 	var hideToggleJumpTarget interface{}
 	var jumpTargetBlank interface{}
-	err := row.Scan(&setting.Id, &setting.Favicon, &setting.Title, &setting.GovRecord, &setting.Logo192, &setting.Logo512, &hideAdmin, &hideGithub, &hideToggleJumpTarget, &jumpTargetBlank)
+	var hideThemeSwitch interface{}
+	var disableTimeBasedTheme interface{}
+	err := row.Scan(&setting.Id, &setting.Favicon, &setting.Title, &setting.GovRecord, &setting.Logo192, &setting.Logo512, &hideAdmin, &hideGithub, &hideToggleJumpTarget, &jumpTargetBlank, &hideThemeSwitch, &disableTimeBasedTheme)
 	if err != nil {
 		logger.LogError("获取配置失败: %s", err)
 		return types.Setting{
-			Id:                   1,
-			Favicon:              "favicon.ico",
-			Title:                "Van Nav",
-			GovRecord:            "",
-			Logo192:              "logo192.png",
-			Logo512:              "logo512.png",
-			HideAdmin:            false,
-			HideGithub:           false,
-			HideToggleJumpTarget: false,
-			JumpTargetBlank:      true,
+			Id:                    1,
+			Favicon:               "favicon.ico",
+			Title:                 "Van Nav",
+			GovRecord:             "",
+			Logo192:               "logo192.png",
+			Logo512:               "logo512.png",
+			HideAdmin:             false,
+			HideGithub:            false,
+			HideToggleJumpTarget:  false,
+			JumpTargetBlank:       true,
+			HideThemeSwitch:       false,
+			DisableTimeBasedTheme: false,
 		}
 	}
 	if hideGithub == nil {
@@ -75,13 +79,33 @@ func GetSetting() types.Setting {
 		}
 	}
 
+	if hideThemeSwitch == nil {
+		setting.HideThemeSwitch = false
+	} else {
+		if hideThemeSwitch.(int64) == 0 {
+			setting.HideThemeSwitch = false
+		} else {
+			setting.HideThemeSwitch = true
+		}
+	}
+
+	if disableTimeBasedTheme == nil {
+		setting.DisableTimeBasedTheme = false
+	} else {
+		if disableTimeBasedTheme.(int64) == 0 {
+			setting.DisableTimeBasedTheme = false
+		} else {
+			setting.DisableTimeBasedTheme = true
+		}
+	}
+
 	return setting
 }
 
 func UpdateSetting(data types.Setting) error {
 	sql_update_setting := `
 		UPDATE nav_setting
-		SET favicon = ?, title = ?, govRecord = ?, logo192 = ?, logo512 = ?, hideAdmin = ?, hideGithub = ?, hideToggleJumpTarget = ?, jumpTargetBlank = ?
+		SET favicon = ?, title = ?, govRecord = ?, logo192 = ?, logo512 = ?, hideAdmin = ?, hideGithub = ?, hideToggleJumpTarget = ?, jumpTargetBlank = ?, hideThemeSwitch = ?, disableTimeBasedTheme = ?
 		WHERE id = (SELECT id FROM nav_setting ORDER BY id ASC LIMIT 1);
 		`
 
@@ -89,7 +113,7 @@ func UpdateSetting(data types.Setting) error {
 	if err != nil {
 		return err
 	}
-	res, err := stmt.Exec(data.Favicon, data.Title, data.GovRecord, data.Logo192, data.Logo512, data.HideAdmin, data.HideGithub, data.HideToggleJumpTarget, data.JumpTargetBlank)
+	res, err := stmt.Exec(data.Favicon, data.Title, data.GovRecord, data.Logo192, data.Logo512, data.HideAdmin, data.HideGithub, data.HideToggleJumpTarget, data.JumpTargetBlank, data.HideThemeSwitch, data.DisableTimeBasedTheme)
 	if err != nil {
 		return err
 	}

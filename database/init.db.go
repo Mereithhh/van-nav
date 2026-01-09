@@ -54,7 +54,9 @@ func InitDB() {
 		hideAdmin BOOLEAN,
 		hideGithub BOOLEAN,
 		hideToggleJumpTarget BOOLEAN,
-		jumpTargetBlank BOOLEAN
+		jumpTargetBlank BOOLEAN,
+		hideThemeSwitch BOOLEAN,
+		disableTimeBasedTheme BOOLEAN
 	);
 	`
 	_, err = DB.Exec(sql_create_table)
@@ -83,6 +85,14 @@ func InitDB() {
 	// 设置表表结构升级-20250624
 	if !columnExists("nav_setting", "hideToggleJumpTarget") {
 		DB.Exec(`ALTER TABLE nav_setting ADD COLUMN hideToggleJumpTarget BOOLEAN;`)
+	}
+	// 设置表表结构升级-隐藏主题切换按钮
+	if !columnExists("nav_setting", "hideThemeSwitch") {
+		DB.Exec(`ALTER TABLE nav_setting ADD COLUMN hideThemeSwitch BOOLEAN;`)
+	}
+	// 设置表表结构升级-禁用时间主题切换
+	if !columnExists("nav_setting", "disableTimeBasedTheme") {
+		DB.Exec(`ALTER TABLE nav_setting ADD COLUMN disableTimeBasedTheme BOOLEAN;`)
 	}
 
 	// 默认 tools 用的 表
@@ -246,12 +256,12 @@ func InitDB() {
 	utils.CheckErr(err)
 	if !rows.Next() {
 		sql_add_setting := `
-			INSERT INTO nav_setting (favicon, title, govRecord, logo192, logo512, hideAdmin, hideGithub, hideToggleJumpTarget, jumpTargetBlank)
-			VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
+			INSERT INTO nav_setting (favicon, title, govRecord, logo192, logo512, hideAdmin, hideGithub, hideToggleJumpTarget, jumpTargetBlank, hideThemeSwitch, disableTimeBasedTheme)
+			VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
 			`
 		stmt, err := DB.Prepare(sql_add_setting)
 		utils.CheckErr(err)
-		res, err := stmt.Exec("favicon.ico", "Van Nav", "", "logo192.png", "logo512.png", false, false, false, true)
+		res, err := stmt.Exec("favicon.ico", "Van Nav", "", "logo192.png", "logo512.png", false, false, false, true, false, false)
 		utils.CheckErr(err)
 		_, err = res.LastInsertId()
 		utils.CheckErr(err)

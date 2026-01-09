@@ -35,7 +35,16 @@ const Content = (props: any) => {
     const hide = data?.setting?.hideGithub === true
     return !hide;
   }, [data])
-  
+
+  const showThemeSwitch = useMemo(() => {
+    const hide = data?.setting?.hideThemeSwitch === true
+    return !hide;
+  }, [data])
+
+  const disableTimeBasedTheme = useMemo(() => {
+    return data?.setting?.disableTimeBasedTheme === true
+  }, [data])
+
   const loadData = useCallback(async () => {
     try {
       setLoading(true);
@@ -228,7 +237,12 @@ const Content = (props: any) => {
         <a href="https://beian.miit.gov.cn" target="_blank" rel="noreferrer">{data?.setting?.govRecord ?? ""}</a>
       </div>
       {showGithub && <GithubLink />}
-      <DarkSwitch showGithub={showGithub} />
+      <DarkSwitch
+        showGithub={showGithub}
+        forceAuto={!showThemeSwitch}
+        hidden={!showThemeSwitch}
+        disableTimeBasedTheme={disableTimeBasedTheme}
+      />
     </>
   );
 };

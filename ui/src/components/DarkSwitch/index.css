@@ -10,3 +10,14 @@
 .theme-switch-box svg:hover {
   fill: #121212;
 }
+
+/* 隐藏主题切换按钮 */
+.theme-switch-box.hidden {
+  display: none !important;
+}
+
+/* 禁用状态（强制 auto 模式时） */
+.theme-switch-box.disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}

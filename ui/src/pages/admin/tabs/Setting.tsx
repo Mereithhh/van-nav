@@ -157,6 +157,22 @@ export const Setting: React.FC<SettingProps> = (props) => {
             <Form.Item label="隐藏管理员后台卡片" name="hideAdmin" tooltip="默认展示，开启后将在前台隐藏管理员卡片" >
               <Switch defaultChecked={Boolean(store?.setting?.hideAdmin)} />
             </Form.Item>
+            <Form.Item label="隐藏主题切换按钮" name="hideThemeSwitch" tooltip="开启后主题切换按钮将被隐藏，主题将根据系统主题模式和时间（18:00-08:00）自动切换。" >
+              <Switch defaultChecked={Boolean(store?.setting?.hideThemeSwitch)} />
+            </Form.Item>
+            <Form.Item noStyle shouldUpdate={(prevValues, currentValues) => prevValues.hideThemeSwitch !== currentValues.hideThemeSwitch}>
+              {({ getFieldValue }) =>
+                getFieldValue('hideThemeSwitch') ? (
+                  <Form.Item
+                    label="　└ 仅跟随系统主题"
+                    name="disableTimeBasedTheme"
+                    tooltip="开启后仅根据系统主题模式切换，不根据时间（18:00-08:00）自动切换。"
+                  >
+                    <Switch defaultChecked={Boolean(store?.setting?.disableTimeBasedTheme)} />
+                  </Form.Item>
+                ) : null
+              }
+            </Form.Item>
             <Form.Item label="隐藏 Github 按钮" name="hideGithub" tooltip="默认展示，开启后将在前台隐藏 Github 按钮" >
               <Switch defaultChecked={Boolean(store?.setting?.hideGithub)} />
             </Form.Item>
