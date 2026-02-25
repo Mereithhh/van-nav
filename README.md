@@ -107,7 +107,7 @@ server {
 
 1. 复制二进制文件到 `/usr/local/bin` 目录下，并加上执行权限
 
-2. 新建 `VanNav.serivce` 文件于 `/usr/lib/systemd/system` 目录下:
+2. 新建 `VanNav.service` 文件于 `/usr/lib/systemd/system` 目录下:
 
 ```
 [Unit]
@@ -192,3 +192,4 @@ sudo systemctl daemon-reload && sudo systemctl enable --now VanNav.service
 - [ ] 网站状态检测
 - [x] 支持后台设置默认跳转方式
 - [x] 支持指定监听端口
+
